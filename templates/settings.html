@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Settings</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+            --background-color-light: #f0f2f5;
+            --background-color-dark: #121212;
+            --card-color-light: #fff;
+            --card-color-dark: #1e1e1e;
+            --text-color-light: #333;
+            --text-color-dark: #e0e0e0;
+            --section-bg-light: #f9f9f9;
+            --section-bg-dark: #2c2c2c;
+            --border-color-light: #eee;
+            --border-color-dark: #333;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color-light);
+            margin: 0;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-color-light);
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: var(--background-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        body.dark-mode .header {
+            background-color: var(--card-color-dark);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        body.dark-mode .settings-section {
+            background-color: var(--card-color-dark);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        }
+
+        body.dark-mode .settings-section h2 {
+            border-bottom: 2px solid var(--border-color-dark);
+        }
+        
+        body.dark-mode .toggle-switch-container input:checked + .slider {
+            background-color: #555;
+        }
+
+        body.dark-mode .toggle-switch-container input:checked + .slider:before {
+            background-color: #ccc;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: var(--card-color-light);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        
+        .settings-section {
+            background-color: var(--card-color-light);
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .settings-section h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: var(--text-color-light);
+            border-bottom: 2px solid var(--border-color-light);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .settings-section label,
+        .settings-section p {
+            font-size: 14px;
+            color: var(--text-color-light);
+            margin: 10px 0;
+            display: block;
+        }
+
+        .settings-section select,
+        .settings-section input[type="text"],
+        .settings-section input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 1px solid #ccc;
+            border-radius: var(--medium-radius);
+            box-sizing: border-box;
+            background-color: var(--card-color-light);
+            color: var(--text-color-light);
+        }
+        
+        body.dark-mode .settings-section select,
+        body.dark-mode .settings-section input[type="text"],
+        body.dark-mode .settings-section input[type="password"] {
+            background-color: var(--section-bg-dark);
+            border: 1px solid var(--border-color-dark);
+            color: var(--text-color-dark);
+        }
+
+        .settings-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .settings-option:last-child {
+            margin-bottom: 0;
+        }
+        
+        .toggle-switch-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .toggle-switch-container .switch {
+            position: relative;
+            display: inline-block;
+            width: 40px;
+            height: 20px;
+        }
+
+        .toggle-switch-container .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-switch-container .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 20px;
+        }
+
+        .toggle-switch-container .slider:before {
+            position: absolute;
+            content: "";
+            height: 16px;
+            width: 16px;
+            left: 2px;
+            bottom: 2px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        .toggle-switch-container input:checked + .slider {
+            background-color: var(--primary-blue);
+        }
+
+        .toggle-switch-container input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--medium-radius);
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-btn {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .save-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .cancel-btn {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        .cancel-btn:hover {
+            background-color: #b3b3b3;
+        }
+
+        .blocked-users-list {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color-light);
+            border-radius: var(--medium-radius);
+            padding: 10px;
+            margin-top: 10px;
+        }
+        
+        body.dark-mode .blocked-users-list {
+            border: 1px solid var(--border-color-dark);
+        }
+
+        .blocked-user-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        body.dark-mode .blocked-user-item {
+            border-bottom: 1px solid var(--border-color-dark);
+        }
+
+        .blocked-user-item:last-child {
+            border-bottom: none;
+        }
+
+        .blocked-user-item span {
+            font-size: 14px;
+        }
+
+        .unblock-btn {
+            background-color: #dc3545;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            border-radius: var(--medium-radius);
+            font-size: 12px;
+            cursor: pointer;
+        }
+
+        .unblock-btn:hover {
+            background-color: #c82333;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="title">Settings & Privacy</span>
+    </div>
+
+    <div class="container">
+        <!-- Language Change -->
+        <div class="settings-section">
+            <h2>Language</h2>
+            <label for="language-select">App Language</label>
+            <select id="language-select">
+                <option value="en">English</option>
+                <option value="es">Español</option>
+                <option value="fr">Français</option>
+            </select>
+        </div>
+
+        <!-- Audience Visibility -->
+        <div class="settings-section">
+            <h2>Audience & Visibility</h2>
+            
+            <div class="settings-option">
+                <span>Profile Locking</span>
+                <div class="toggle-switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="profile-locking-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <p>Posts & Reels Visibility</p>
+            <p>
+                <!-- This is a placeholder for a more complex UI for customizing post visibility -->
+                <a href="#" style="color: var(--primary-blue); text-decoration: none;">Customize who can see your posts and reels.</a>
+            </p>
+
+            <p>Blocking</p>
+            <div id="blocked-users-list" class="blocked-users-list">
+                <!-- Blocked users will be dynamically listed here -->
+            </div>
+        </div>
+
+        <!-- Notifications -->
+        <div class="settings-section">
+            <h2>Notifications</h2>
+            <div class="settings-option">
+                <span>Receive push notifications</span>
+                <div class="toggle-switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="push-notifications-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+            <!-- More notification options would be added here dynamically -->
+        </div>
+
+        <!-- Theme -->
+        <div class="settings-section">
+            <h2>Theme</h2>
+            <div class="settings-option">
+                <span>Dark Mode</span>
+                <div class="toggle-switch-container">
+                    <label class="switch">
+                        <input type="checkbox" id="theme-toggle">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Change Password -->
+        <div class="settings-section">
+            <h2>Change Password</h2>
+            <label for="current-password">Current Password</label>
+            <input type="password" id="current-password">
+            <label for="new-password">New Password</label>
+            <input type="password" id="new-password">
+            <label for="confirm-password">Confirm New Password</label>
+            <input type="password" id="confirm-password">
+            <div class="button-group">
+                <button class="save-btn" id="save-password-btn">Save</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const blockedUsersList = document.getElementById('blocked-users-list');
+            const themeToggle = document.getElementById('theme-toggle');
+
+            // Theme Toggle Logic
+            themeToggle.addEventListener('change', () => {
+                document.body.classList.toggle('dark-mode', themeToggle.checked);
+            });
+
+            function renderBlockedUsers(users) {
+                blockedUsersList.innerHTML = '';
+                if (users.length === 0) {
+                    blockedUsersList.innerHTML = '<p style="text-align: center; color: #888;">No blocked users.</p>';
+                } else {
+                    users.forEach(user => {
+                        const userItem = document.createElement('div');
+                        userItem.className = 'blocked-user-item';
+                        userItem.innerHTML = `
+                            <span>${user.realName}</span>
+                            <button class="unblock-btn" data-user-id="${user.id}">Unblock</button>
+                        `;
+                        blockedUsersList.appendChild(userItem);
+                    });
+                }
+            }
+            
+            // This function would be called to fetch data from your backend
+            function fetchSettingsData() {
+                // Example: Fetch blocked users
+                // fetch('/api/settings/blocked_users')
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         renderBlockedUsers(data);
+                //     });
+
+                // Since no mock data is allowed, we'll start with an empty list
+                renderBlockedUsers([]);
+            }
+
+            // Event listener for unblock button (delegated)
+            blockedUsersList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('unblock-btn')) {
+                    const userId = event.target.dataset.userId;
+                    // Your backend API call to unblock user goes here
+                    // fetch(`/api/unblock_user/${userId}`, { method: 'POST' })
+                    //     .then(response => {
+                    //         if (response.ok) {
+                    //             fetchSettingsData(); // Refresh the list
+                    //         }
+                    //     });
+                }
+            });
+
+            // Event listener for password change
+            document.getElementById('save-password-btn').addEventListener('click', () => {
+                const currentPassword = document.getElementById('current-password').value;
+                const newPassword = document.getElementById('new-password').value;
+                const confirmPassword = document.getElementById('confirm-password').value;
+                
+                if (newPassword !== confirmPassword) {
+                    console.error("New passwords do not match.");
+                    return;
+                }
+                
+                // Your backend API call to change password goes here
+                // fetch('/api/change_password', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ currentPassword, newPassword })
+                // });
+            });
+            
+            fetchSettingsData();
+        });
+    </script>
+</body>
+</html>
