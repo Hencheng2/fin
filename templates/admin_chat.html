@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Support Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: var(--dark-grey);
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 10px;
+            border: 2px solid var(--primary-blue);
+        }
+
+        .profile-info {
+            flex-grow: 1;
+        }
+
+        .profile-info .name {
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .chat-container {
+            flex-grow: 1;
+            padding: 70px 15px 70px 15px; /* Adjust padding for fixed header and footer */
+            overflow-y: auto;
+        }
+
+        .message-area {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+        }
+
+        .message-input {
+            flex-grow: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: var(--medium-radius);
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .input-button {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--primary-blue);
+            cursor: pointer;
+            padding: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <button class="back-btn" onclick="history.back()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <img src="support.png" alt="Support" class="profile-pic">
+        <div class="profile-info">
+            <div class="name">Support</div>
+        </div>
+    </div>
+
+    <div class="chat-container" id="chat-container">
+        <!-- Messages will be dynamically loaded here -->
+    </div>
+
+    <div class="message-area">
+        <input type="text" id="message-input" class="message-input" placeholder="Type a message...">
+        <button id="attach-btn" class="input-button">
+            <i class="fas fa-paperclip"></i>
+        </button>
+        <button id="send-btn" class="input-button">
+            <i class="fas fa-paper-plane"></i>
+        </button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatContainer = document.getElementById('chat-container');
+            const messageInput = document.getElementById('message-input');
+            const sendBtn = document.getElementById('send-btn');
+            const attachBtn = document.getElementById('attach-btn');
+
+            // Function to handle sending a message
+            sendBtn.addEventListener('click', () => {
+                const message = messageInput.value.trim();
+                if (message) {
+                    // Your backend API call to send a message to support goes here
+                    // Example:
+                    // fetch('/api/support/message', {
+                    //     method: 'POST',
+                    //     headers: { 'Content-Type': 'application/json' },
+                    //     body: JSON.stringify({ text: message })
+                    // });
+                    messageInput.value = ''; // Clear input field
+                }
+            });
+
+            // Function to handle attachment
+            attachBtn.addEventListener('click', () => {
+                // Your logic to open a file picker for attachments goes here
+                // Note: File input must be created and styled
+                // This is a placeholder for that functionality
+                console.log('Attach button clicked');
+            });
+            
+            // Function to fetch and render chat messages
+            function fetchMessages() {
+                // Your backend API call to fetch chat history goes here
+                // Example:
+                // fetch('/api/support/chat_history')
+                //     .then(response => response.json())
+                //     .then(messages => {
+                //         // Render messages in chatContainer
+                //     });
+            }
+
+            fetchMessages();
+        });
+    </script>
+</body>
+</html>
