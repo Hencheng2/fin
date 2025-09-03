@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Register</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --background-color: #f0f2f5;
+            --card-color: #fff;
+            --text-color: #333;
+            --border-color: #ccc;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--medium-radius);
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--medium-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Register</h1>
+            <p>Create your Sociafam account</p>
+        </div>
+        <form id="registration-form">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+                <span id="password-error" class="error-message">Password must be 6+ characters with at least one number, one alphabet, and one special character.</span>
+            </div>
+            <button type="submit" class="submit-btn">Register</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('registration-form');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const passwordError = document.getElementById('password-error');
+
+            function validatePassword(password) {
+                const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
+                return regex.test(password);
+            }
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                passwordError.style.display = 'none';
+
+                if (!validatePassword(password)) {
+                    passwordError.style.display = 'block';
+                    return;
+                }
+                
+                // Your backend API call to register the user goes here
+                // Note: You must handle the "Henry" and "Dec@2003" credential check on your backend
+                // to prevent user registration with those details.
+
+                // Example fetch:
+                // try {
+                //     const response = await fetch('/api/register', {
+                //         method: 'POST',
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({ username, password })
+                //     });
+                //     const data = await response.json();
+                //
+                //     if (response.ok) {
+                //         // On successful registration, you would receive the unique key from the backend
+                //         const uniqueKey = data.unique_key; 
+                //         console.log('Registration successful! Your unique key is:', uniqueKey);
+                //         // Redirect to a success page or log in the user
+                //     } else {
+                //         console.error('Registration failed:', data.message);
+                //     }
+                // } catch (error) {
+                //     console.error('An error occurred during registration:', error);
+                // }
+            });
+        });
+    </script>
+</body>
+</html>
