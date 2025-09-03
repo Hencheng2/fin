@@ -93,6 +93,21 @@
         .submit-btn:hover {
             background-color: #0056b3;
         }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +127,9 @@
             </div>
             <button type="submit" class="submit-btn">Continue</button>
         </form>
+        <div class="links">
+            <a href="{% url 'login' %}">Remember password?</a>
+        </div>
     </div>
 
     <script>
