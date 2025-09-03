@@ -40,6 +40,7 @@
 
         .navbar-top {
             top: 0;
+            flex-wrap: wrap; /* Allows items to wrap on smaller screens */
         }
 
         .navbar-bottom {
@@ -56,6 +57,7 @@
             font-weight: 500;
             transition: color 0.3s ease;
             text-align: center;
+            padding: 5px; /* Added padding for touch targets */
         }
 
         .nav-item:hover, .nav-item.active {
@@ -79,8 +81,22 @@
         .main-content {
             padding: 20px;
             min-height: calc(100vh - 120px); /* Adjust height to fill space between navbars */
+            box-sizing: border-box; /* Include padding in height calculation */
+            max-width: 1200px;
+            margin: 0 auto;
         }
 
+        /* --- Responsive Styles for smaller screens (e.g., mobile) --- */
+        @media (max-width: 600px) {
+            .nav-item {
+                font-size: 10px; /* Smaller font for labels */
+                flex: 1; /* Distributes items evenly */
+            }
+
+            .nav-item .icon {
+                font-size: 20px; /* Slightly smaller icons */
+            }
+        }
     </style>
 </head>
 <body>
