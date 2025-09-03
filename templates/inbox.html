@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Inbox</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding-top: 70px; /* Space for the fixed top navbar */
+        }
+        
+        /* --- Navbar --- */
+        .inbox-navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+            padding: 10px 15px;
+            box-sizing: border-box;
+        }
+        
+        .navbar-sections {
+            display: flex;
+            flex-grow: 1;
+        }
+
+        .navbar-sections button {
+            flex-grow: 1;
+            background-color: transparent;
+            border: none;
+            padding: 10px 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            color: var(--dark-grey);
+            position: relative;
+        }
+
+        .navbar-sections button.active {
+            color: var(--primary-blue);
+        }
+        .navbar-sections button.active::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-blue);
+        }
+        
+        .navbar-sections .count {
+            background-color: #f44336;
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            padding: 2px 6px;
+            border-radius: 10px;
+            position: absolute;
+            top: 5px;
+            right: 15px;
+        }
+        
+        .add-chat-button {
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* --- Chat/Group List --- */
+        .list-container {
+            display: none;
+            padding: 10px;
+        }
+        .list-container.active {
+            display: block;
+        }
+
+        .chat-list-item, .group-list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+            cursor: pointer;
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-grow: 1;
+        }
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+        .text-info {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .text-info h3 {
+            margin: 0;
+            font-size: 16px;
+        }
+        .text-info p {
+            margin: 0;
+            font-size: 14px;
+            color: var(--dark-grey);
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+        }
+
+        .meta-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 5px;
+        }
+
+        .meta-info .time {
+            font-size: 12px;
+            color: #aaa;
+        }
+
+        .meta-info .msg-count {
+            background-color: var(--primary-blue);
+            color: #fff;
+            font-size: 10px;
+            font-weight: bold;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="inbox-navbar">
+        <div class="navbar-sections">
+            <button id="chats-tab" class="active">
+                Chats
+                <span class="count" id="chats-count">0</span>
+            </button>
+            <button id="groups-tab">
+                Groups
+                <span class="count" id="groups-count">0</span>
+            </button>
+        </div>
+        <a href="start_chat.html" class="add-chat-button">
+            <i class="fas fa-plus"></i>
+        </a>
+    </div>
+
+    <div class="list-container active" id="chats-container"></div>
+    <div class="list-container" id="groups-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const chatsTab = document.getElementById('chats-tab');
+            const groupsTab = document.getElementById('groups-tab');
+            const chatsContainer = document.getElementById('chats-container');
+            const groupsContainer = document.getElementById('groups-container');
+            const chatsCount = document.getElementById('chats-count');
+            const groupsCount = document.getElementById('groups-count');
+
+            // These arrays will be populated by your backend API
+            let allChats = [];
+            let allGroups = [];
+            let unreadChatCount = 0;
+            let unreadGroupCount = 0;
+
+            // --- UI Rendering Functions ---
+            function renderChatList(chats) {
+                chatsContainer.innerHTML = '';
+                chats.forEach(chat => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'chat-list-item';
+                    listItem.innerHTML = `
+                        <div class="user-info">
+                            <img src="${chat.profilePic}" alt="${chat.realName}" class="profile-pic">
+                            <div class="text-info">
+                                <h3>${chat.realName}</h3>
+                                <p>${chat.lastMessage}</p>
+                            </div>
+                        </div>
+                        <div class="meta-info">
+                            <span class="time">${chat.lastMessageTime}</span>
+                            ${chat.unreadCount > 0 ? `<span class="msg-count">${chat.unreadCount}</span>` : ''}
+                        </div>
+                    `;
+                    // Add click handler to navigate to the chat page
+                    listItem.onclick = () => window.location.href = `chat.html?user=${chat.username}`;
+                    chatsContainer.appendChild(listItem);
+                });
+            }
+
+            function renderGroupList(groups) {
+                groupsContainer.innerHTML = '';
+                groups.forEach(group => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'group-list-item';
+                    listItem.innerHTML = `
+                        <div class="user-info">
+                            <img src="${group.profilePic}" alt="${group.name}" class="profile-pic">
+                            <div class="text-info">
+                                <h3>${group.name}</h3>
+                                <p>${group.lastMessage}</p>
+                            </div>
+                        </div>
+                        <div class="meta-info">
+                            <span class="time">${group.lastMessageTime}</span>
+                            ${group.unreadCount > 0 ? `<span class="msg-count">${group.unreadCount}</span>` : ''}
+                        </div>
+                    `;
+                    // Add click handler to navigate to the group chat page
+                    listItem.onclick = () => window.location.href = `group_chat.html?group=${group.name}`;
+                    groupsContainer.appendChild(listItem);
+                });
+            }
+
+            // --- Tab Switching Logic ---
+            function switchTab(tab) {
+                if (tab === 'chats') {
+                    chatsTab.classList.add('active');
+                    groupsTab.classList.remove('active');
+                    chatsContainer.classList.add('active');
+                    groupsContainer.classList.remove('active');
+                    renderChatList(allChats);
+                } else {
+                    groupsTab.classList.add('active');
+                    chatsTab.classList.remove('active');
+                    groupsContainer.classList.add('active');
+                    chatsContainer.classList.remove('active');
+                    renderGroupList(allGroups);
+                }
+            }
+
+            chatsTab.addEventListener('click', () => switchTab('chats'));
+            groupsTab.addEventListener('click', () => switchTab('groups'));
+
+            // --- Backend Integration Placeholder ---
+            // This is where you will fetch your data from the backend APIs.
+            // When your APIs return data, update the arrays and re-render.
+            // Example:
+            /*
+            async function fetchAllChats() {
+                const response = await fetch('your-api-url/chats');
+                allChats = await response.json();
+                unreadChatCount = allChats.reduce((total, chat) => total + chat.unreadCount, 0);
+                chatsCount.textContent = unreadChatCount;
+                if (chatsTab.classList.contains('active')) {
+                    renderChatList(allChats);
+                }
+            }
+            async function fetchAllGroups() {
+                const response = await fetch('your-api-url/groups');
+                allGroups = await response.json();
+                unreadGroupCount = allGroups.reduce((total, group) => total + group.unreadCount, 0);
+                groupsCount.textContent = unreadGroupCount;
+                if (groupsTab.classList.contains('active')) {
+                    renderGroupList(allGroups);
+                }
+            }
+            
+            fetchAllChats();
+            fetchAllGroups();
+            */
+
+            // Initial load to set the correct tab view
+            switchTab('chats');
+        });
+    </script>
+</body>
+</html>
