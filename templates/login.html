@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Log In</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --background-color: #f0f2f5;
+            --card-color: #fff;
+            --text-color: #333;
+            --border-color: #ccc;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--background-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 400px;
+            background-color: var(--card-color);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--text-color);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: var(--medium-radius);
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary-blue);
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            border-radius: var(--medium-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Log In</h1>
+            <p>Welcome back to Sociafam</p>
+        </div>
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username_email">Username or Email</label>
+                <input type="text" id="username_email" name="username_email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="submit-btn">Log In</button>
+        </form>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('login-form');
+            const usernameEmailInput = document.getElementById('username_email');
+            const passwordInput = document.getElementById('password');
+
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+
+                const usernameOrEmail = usernameEmailInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                // Your backend API call to authenticate the user goes here
+                // Example fetch:
+                // try {
+                //     const response = await fetch('/api/login', {
+                //         method: 'POST',
+                //         headers: { 'Content-Type': 'application/json' },
+                //         body: JSON.stringify({ identifier: usernameOrEmail, password })
+                //     });
+                //     const data = await response.json();
+                //
+                //     if (response.ok) {
+                //         console.log('Login successful!', data);
+                //         // Redirect the user to their home page
+                //     } else {
+                //         console.error('Login failed:', data.message);
+                //     }
+                // } catch (error) {
+                //     console.error('An error occurred during login:', error);
+                // }
+            });
+        });
+    </script>
+</body>
+</html>
