@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - New Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .header .back-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-grey);
+            cursor: pointer;
+            margin-right: 15px;
+        }
+
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .search-bar-container {
+            padding: 10px 15px;
+            background-color: #fff;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .create-group-btn-container {
+            padding: 10px 15px;
+            background-color: #fff;
+        }
+
+        .create-group-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            background-color: var(--primary-blue);
+            color: #fff;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .create-group-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .list-section-container {
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .list-section {
+            padding: 15px;
+        }
+
+        .list-section-title {
+            font-weight: bold;
+            font-size: 18px;
+            color: var(--dark-grey);
+            margin-bottom: 10px;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .list-item:hover {
+            background-color: #f9f9f9;
+        }
+
+        .list-item .profile-pic {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+        }
+
+        .list-item .name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <a href="inbox.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <span class="title">New Chat</span>
+    </div>
+
+    <div class="search-bar-container">
+        <input type="text" class="search-bar" placeholder="Search friends and groups..." id="search-input">
+    </div>
+
+    <div class="create-group-btn-container">
+        <button class="create-group-btn" id="create-group-btn">Create Group</button>
+    </div>
+
+    <div class="list-section-container">
+        <div class="list-section">
+            <div class="list-section-title">Friends</div>
+            <div id="friends-list">
+                <!-- Friends will be dynamically populated here -->
+            </div>
+        </div>
+
+        <div class="list-section">
+            <div class="list-section-title">Groups</div>
+            <div id="groups-list">
+                <!-- Groups will be dynamically populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const searchInput = document.getElementById('search-input');
+            const friendsListContainer = document.getElementById('friends-list');
+            const groupsListContainer = document.getElementById('groups-list');
+
+            // --- Function to render list items ---
+            function renderList(container, data, isGroup) {
+                container.innerHTML = '';
+                if (!data) return;
+
+                data.forEach(item => {
+                    const listItem = document.createElement('div');
+                    listItem.className = 'list-item';
+                    
+                    const profilePic = document.createElement('img');
+                    profilePic.className = 'profile-pic';
+                    profilePic.src = '';
+                    
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'name';
+                    
+                    listItem.appendChild(profilePic);
+                    listItem.appendChild(nameSpan);
+                    
+                    container.appendChild(listItem);
+                    
+                    listItem.addEventListener('click', () => {
+                        window.location.href = isGroup ? 'group_chat.html' : 'chat.html';
+                    });
+                });
+            }
+
+            // --- Search functionality ---
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+            });
+
+            // --- Button functionality ---
+            document.getElementById('create-group-btn').addEventListener('click', () => {
+                window.location.href = 'create_group.html';
+            });
+
+            renderList(friendsListContainer, [], false);
+            renderList(groupsListContainer, [], true);
+        });
+    </script>
+</body>
+</html>
