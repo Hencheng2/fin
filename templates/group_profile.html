@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Group Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .profile-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .group-header {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .group-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary-blue);
+            margin-bottom: 10px;
+        }
+
+        .group-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin: 0;
+        }
+
+        .members-count {
+            font-size: 14px;
+            color: var(--dark-grey);
+            margin-top: 5px;
+        }
+
+        .buttons-section {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .action-btn {
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: var(--medium-radius);
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .action-btn.secondary {
+            background-color: var(--light-grey);
+            color: var(--dark-grey);
+        }
+
+        .action-btn.secondary:hover {
+            background-color: #ddd;
+        }
+
+        .info-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 5px;
+        }
+
+        .info-item {
+            font-size: 14px;
+            margin-bottom: 8px;
+        }
+
+        .info-item b {
+            color: var(--dark-grey);
+        }
+
+        .group-link-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .group-link {
+            flex-grow: 1;
+            background-color: var(--light-grey);
+            padding: 8px 12px;
+            border-radius: var(--medium-radius);
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .copy-btn {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .gallery-navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 10px;
+        }
+
+        .gallery-nav-btn {
+            background: none;
+            border: none;
+            padding: 10px;
+            font-size: 18px;
+            color: var(--dark-grey);
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .gallery-nav-btn:hover, .gallery-nav-btn.active {
+            color: var(--primary-blue);
+        }
+
+        .gallery-view {
+            display: none;
+        }
+
+        .gallery-view.active {
+            display: block;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5px;
+        }
+        
+        .gallery-item {
+            aspect-ratio: 1 / 1;
+            overflow: hidden;
+            border-radius: var(--medium-radius);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .list-item {
+            background-color: var(--light-grey);
+            padding: 10px;
+            border-radius: var(--medium-radius);
+            margin-bottom: 10px;
+            font-size: 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .member-list-item {
+            background-color: #fff;
+            border-left: 3px solid var(--primary-blue);
+            padding: 10px;
+            border-radius: var(--medium-radius);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .member-list-item .user-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .member-list-item .user-info {
+            flex-grow: 1;
+        }
+
+        .member-list-item .user-name {
+            font-weight: bold;
+        }
+        
+        .member-remove-btn {
+            background: none;
+            border: none;
+            color: red;
+            cursor: pointer;
+        }
+
+        .exit-section {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .exit-btn {
+            background-color: #ff4d4d;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: var(--medium-radius);
+            font-weight: bold;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+
+        .report-btn {
+            background-color: #ff9933;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            border-radius: var(--medium-radius);
+            font-weight: bold;
+            cursor: pointer;
+            flex-grow: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-container">
+        <div class="group-header">
+            <img src="" alt="Group Profile Photo" class="group-pic" id="group-photo">
+            <h1 class="group-name" id="group-name"></h1>
+            <div class="members-count" id="members-count"></div>
+            <div class="buttons-section">
+                <button class="action-btn" id="message-btn"><i class="fas fa-comment"></i> Message</button>
+                <button class="action-btn" id="add-members-btn"><i class="fas fa-user-plus"></i> Add</button>
+                <button class="action-btn secondary" id="edit-group-btn"><i class="fas fa-edit"></i> Edit Group</button>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <div class="section-title">Group Link</div>
+            <div class="group-link-container">
+                <div class="group-link" id="group-link"></div>
+                <button class="copy-btn" id="copy-link-btn"><i class="fas fa-copy"></i></button>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div class="section-title">Description</div>
+            <p id="group-description"></p>
+            <div class="info-item"><b>Created by:</b> <span id="creator-name"></span> on <span id="creation-date"></span></div>
+        </div>
+
+        <div class="gallery-navbar">
+            <button class="gallery-nav-btn active" data-tab="media"><i class="fas fa-image"></i> Media</button>
+            <button class="gallery-nav-btn" data-tab="links"><i class="fas fa-link"></i> Links</button>
+            <button class="gallery-nav-btn" data-tab="documents"><i class="fas fa-file"></i> Documents</button>
+        </div>
+
+        <div class="gallery-views">
+            <div class="gallery-view active" id="media-gallery">
+                <div class="gallery-grid" id="media-grid"></div>
+            </div>
+            <div class="gallery-view" id="links-gallery">
+                <ul id="links-list"></ul>
+            </div>
+            <div class="gallery-view" id="documents-gallery">
+                <ul id="documents-list"></ul>
+            </div>
+        </div>
+        
+        <!-- Admin-only section -->
+        <div class="info-section" id="admin-permissions-section" style="display: none;">
+            <div class="section-title">Group Permissions</div>
+            <div class="input-group">
+                <label>Allow send messages</label>
+                <div>
+                    <input type="radio" id="send-messages-allow" name="send-messages" value="allow">
+                    <label for="send-messages-allow">Allow</label>
+                    <input type="radio" id="send-messages-deny" name="send-messages" value="deny">
+                    <label for="send-messages-deny">Deny</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Add members</label>
+                <div>
+                    <input type="radio" id="add-members-allow" name="add-members" value="allow">
+                    <label for="add-members-allow">Allow</label>
+                    <input type="radio" id="add-members-deny" name="add-members" value="deny">
+                    <label for="add-members-deny">Deny</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Approve new members</label>
+                <div>
+                    <input type="radio" id="approve-members-allow" name="approve-members" value="allow">
+                    <label for="approve-members-allow">Allow</label>
+                    <input type="radio" id="approve-members-deny" name="approve-members" value="deny">
+                    <label for="approve-members-deny">Deny</label>
+                </div>
+            </div>
+            <div class="input-group">
+                <label>Edit group admins</label>
+                <div id="admin-list-container"></div>
+            </div>
+        </div>
+        
+        <div class="info-section">
+            <div class="section-title">Group Members (<span id="members-list-count"></span>)</div>
+            <div id="members-list-container"></div>
+            <button class="action-btn" id="show-more-members-btn" style="display: none;">Show More</button>
+        </div>
+
+        <div class="exit-section">
+            <button class="exit-btn" id="exit-group-btn">Exit Group</button>
+            <button class="report-btn" id="report-exit-btn">Report and Exit</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.gallery-nav-btn');
+            const galleryViews = document.querySelectorAll('.gallery-view');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const targetTab = tab.dataset.tab;
+                    galleryViews.forEach(view => {
+                        view.classList.remove('active');
+                        if (view.id === `${targetTab}-gallery`) {
+                            view.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Functions for backend integration
+            function loadGroupProfile() {}
+            function loadMedia() {}
+            function loadLinks() {}
+            function loadDocuments() {}
+            function loadMembers() {}
+            function setupAdminUI() {}
+
+            // Button click listeners
+            document.getElementById('message-btn').addEventListener('click', () => {
+                window.location.href = 'group_chat.html';
+            });
+            document.getElementById('add-members-btn').addEventListener('click', () => {});
+            document.getElementById('edit-group-btn').addEventListener('click', () => {
+                window.location.href = 'edit_group.html';
+            });
+            document.getElementById('copy-link-btn').addEventListener('click', () => {});
+            document.getElementById('exit-group-btn').addEventListener('click', () => {});
+            document.getElementById('report-exit-btn').addEventListener('click', () => {});
+            document.getElementById('show-more-members-btn').addEventListener('click', () => {});
+        });
+    </script>
+</body>
+</html>
