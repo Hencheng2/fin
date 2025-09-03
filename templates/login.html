@@ -93,6 +93,22 @@
         .submit-btn:hover {
             background-color: #0056b3;
         }
+
+        .links {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+        }
+        
+        .links a {
+            color: var(--primary-blue);
+            text-decoration: none;
+            margin: 0 10px;
+        }
+
+        .links a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
@@ -112,6 +128,10 @@
             </div>
             <button type="submit" class="submit-btn">Log In</button>
         </form>
+        <div class="links">
+            <a href="{% url 'register' %}">Register</a>
+            <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+        </div>
     </div>
 
     <script>
