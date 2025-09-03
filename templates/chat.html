@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Chat</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- Top Navbar --- */
+        .chat-navbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .chat-navbar .left-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .chat-navbar .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-navbar .user-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .chat-navbar .real-name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .chat-navbar .username {
+            font-size: 12px;
+            color: #777;
+        }
+
+        /* --- Dropdown Menu --- */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-grey);
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background-color: #fff;
+            min-width: 200px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--light-grey);
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        /* --- Main Message Area --- */
+        .chat-body {
+            flex-grow: 1;
+            padding: 20px 10px;
+            padding-top: 70px; /* Space for the fixed top navbar */
+            padding-bottom: 70px; /* Space for the fixed bottom message area */
+            overflow-y: auto;
+        }
+
+        /* --- Message Input Area --- */
+        .message-input-area {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #fff;
+            padding: 10px 15px;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            box-sizing: border-box;
+            z-index: 1000;
+        }
+
+        .message-input-area .icon-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-grey);
+            cursor: pointer;
+            padding: 8px;
+        }
+        
+        .message-input-area .text-input {
+            flex-grow: 1;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            font-size: 16px;
+            resize: none;
+            box-sizing: border-box;
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .message-input-area .send-btn {
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-navbar">
+        <div class="left-section">
+            <a href="inbox.html" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+            </a>
+            <img src="" alt="User profile" class="profile-pic" id="chat-user-pic">
+            <div class="user-info">
+                <span class="real-name" id="chat-user-realname"></span>
+                <span class="username" id="chat-user-username"></span>
+            </div>
+        </div>
+        <div class="right-section">
+            <div class="dropdown">
+                <button class="dropdown-btn" id="dropdown-toggle">
+                    <i class="fas fa-ellipsis-v"></i>
+                </button>
+                <div class="dropdown-content" id="dropdown-menu">
+                    <a href="#" id="customize-name-btn">Customize name</a>
+                    <a href="#" id="change-wallpaper-btn">Change chat wallpaper</a>
+                    <a href="#" id="search-messages-btn">Search in chat</a>
+                    <a href="#" id="view-user-btn">View user</a>
+                    <a href="#" id="disappearing-messages-btn">Disappearing messages</a>
+                    <a href="#" id="block-user-btn">Block user</a>
+                    <a href="#" id="report-user-btn">Report user</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="chat-body" id="chat-body">
+        <!-- Messages will be dynamically loaded here -->
+    </div>
+    
+    <div class="message-input-area">
+        <button class="icon-btn"><i class="fas fa-laugh"></i></button>
+        <button class="icon-btn"><i class="fas fa-paperclip"></i></button>
+        <button class="icon-btn"><i class="fas fa-camera"></i></button>
+        <textarea class="text-input" placeholder="Type a message..." rows="1" id="message-text"></textarea>
+        <button class="icon-btn"><i class="fas fa-microphone"></i></button>
+        <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const dropdownToggle = document.getElementById('dropdown-toggle');
+            const dropdownMenu = document.getElementById('dropdown-menu');
+            const messageInput = document.getElementById('message-text');
+            const sendButton = document.getElementById('send-btn');
+            const chatBody = document.getElementById('chat-body');
+
+            // --- UI/UX Logic ---
+            dropdownToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                dropdownMenu.classList.toggle('show');
+            });
+            
+            document.addEventListener('click', (e) => {
+                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+                    dropdownMenu.classList.remove('show');
+                }
+            });
+
+            // Dynamically adjust textarea height based on content
+            messageInput.addEventListener('input', () => {
+                messageInput.style.height = 'auto';
+                messageInput.style.height = messageInput.scrollHeight + 'px';
+            });
+
+            // --- Backend Integration Placeholders ---
+            
+            // Function to set user info from backend data
+            function setChatUser(userData) {
+                document.getElementById('chat-user-pic').src = userData.profilePic;
+                document.getElementById('chat-user-realname').textContent = userData.realName;
+                document.getElementById('chat-user-username').textContent = `@${userData.username}`;
+            }
+
+            // Function to load messages from the backend
+            async function loadMessages() {
+                // Fetch messages from your API
+                // const response = await fetch('/api/messages?user_id=...');
+                // const messages = await response.json();
+                
+                // Clear the chat body and render new messages
+                chatBody.innerHTML = '';
+                // messages.forEach(msg => {
+                //     const messageElement = document.createElement('div');
+                //     messageElement.textContent = msg.content;
+                //     chatBody.appendChild(messageElement);
+                // });
+            }
+
+            // Function to send a message
+            async function sendMessage() {
+                const message = messageInput.value.trim();
+                if (!message) return;
+
+                // Send message to the backend
+                // await fetch('/api/send-message', {
+                //     method: 'POST',
+                //     headers: { 'Content-Type': 'application/json' },
+                //     body: JSON.stringify({ message: message })
+                // });
+                
+                messageInput.value = '';
+                messageInput.style.height = 'auto';
+            }
+            
+            sendButton.addEventListener('click', sendMessage);
+            messageInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // Dropdown menu button logic
+            document.getElementById('customize-name-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('change-wallpaper-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('search-messages-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('view-user-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('disappearing-messages-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('block-user-btn').addEventListener('click', () => { /* Add logic */ });
+            document.getElementById('report-user-btn').addEventListener('click', () => { /* Add logic */ });
+            
+            // Initial function calls
+            // For example, to get user info based on URL parameter:
+            // const urlParams = new URLSearchParams(window.location.search);
+            // const userId = urlParams.get('user');
+            // if (userId) {
+            //     fetch(`/api/user/${userId}`).then(res => res.json()).then(setChatUser);
+            //     loadMessages();
+            // }
+        });
+    </script>
+</body>
+</html>
