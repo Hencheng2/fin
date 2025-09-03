@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Reels</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --dark-overlay: rgba(0, 0, 0, 0.4);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #000;
+            color: #fff;
+            overflow: hidden; /* Prevents body scroll */
+        }
+
+        .reels-container {
+            width: 100vw;
+            height: 100vh;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none; /* Firefox */
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .reels-container::-webkit-scrollbar {
+            display: none; /* Chrome, Safari */
+        }
+
+        .reel-item {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            scroll-snap-align: start;
+        }
+
+        .reel-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .reel-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, var(--dark-overlay), transparent);
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            z-index: 10;
+        }
+
+        .reel-info {
+            display: flex;
+            flex-direction: column;
+            padding: 0 15px 70px 15px; /* Padding for bottom nav bar and icons */
+        }
+
+        .reel-info .profile-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        .reel-info .profile-pic {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #fff;
+        }
+        
+        .follow-icon {
+            position: relative;
+            background-color: var(--primary-blue);
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid #fff;
+            font-size: 10px;
+            color: #fff;
+            left: -12px;
+            top: 12px;
+            z-index: 20;
+        }
+
+        .reel-info .username {
+            font-size: 14px;
+            font-weight: normal;
+        }
+
+        .reel-info .description {
+            margin-top: 5px;
+            font-size: 14px;
+            word-wrap: break-word;
+        }
+
+        .reel-actions {
+            position: absolute;
+            bottom: 70px; /* Space for the bottom nav bar */
+            right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            z-index: 15;
+        }
+
+        .action-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .action-button i {
+            font-size: 24px;
+            margin-bottom: 5px;
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="reels-container" id="reels-container"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reelsContainer = document.getElementById('reels-container');
+            let reelsData = []; // This array will hold your video data from the backend
+
+            // IntersectionObserver to manage video playback
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target.querySelector('video');
+                    if (entry.isIntersecting) {
+                        video.play();
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, {
+                threshold: 0.8
+            });
+
+            /**
+             * Renders a list of reel videos into the DOM.
+             * @param {Array} reels The array of reel data.
+             */
+            function renderReels(reels) {
+                reels.forEach(reel => {
+                    const reelItem = document.createElement('div');
+                    reelItem.className = 'reel-item';
+                    
+                    reelItem.innerHTML = `
+                        <video loop muted playsinline src="${reel.videoUrl}"></video>
+                        <div class="reel-overlay">
+                            <div class="reel-info">
+                                <a href="#" class="profile-link">
+                                    <img src="${reel.profilePic}" alt="${reel.username}'s profile picture" class="profile-pic">
+                                    <div class="follow-icon"><i class="fas fa-plus"></i></div>
+                                    <span>${reel.realName} <br> <span class="username">@${reel.username}</span></span>
+                                </a>
+                                ${reel.description ? `<p class="description">${reel.description}</p>` : ''}
+                            </div>
+                            <div class="reel-actions">
+                                <button class="action-button"><i class="fas fa-heart"></i> Like</button>
+                                <button class="action-button"><i class="fas fa-comment"></i> Comment</button>
+                                <button class="action-button"><i class="fas fa-share"></i> Share</button>
+                                ${!reel.isOwner ? `<button class="action-button"><i class="fas fa-user-plus"></i> Follow</button>` : ''}
+                                <button class="action-button"><i class="fas fa-retweet"></i> Repost</button>
+                                <button class="action-button"><i class="fas fa-bookmark"></i> Save</button>
+                                <a href="${reel.videoUrl}" download class="action-button" onclick="addWatermark('${reel.videoUrl}')"><i class="fas fa-download"></i> Download</a>
+                            </div>
+                        </div>
+                    `;
+                    
+                    const videoElement = reelItem.querySelector('video');
+                    const overlay = reelItem.querySelector('.reel-overlay');
+                    overlay.addEventListener('click', () => {
+                        if (videoElement.paused) {
+                            videoElement.play();
+                        } else {
+                            videoElement.pause();
+                        }
+                    });
+
+                    reelsContainer.appendChild(reelItem);
+                    observer.observe(reelItem);
+                });
+            }
+
+            function addWatermark(videoUrl) {
+                // This function is a placeholder. A watermark would typically be added by the backend
+                // before the file is served for download.
+            }
+
+            // --- Backend Integration Placeholder ---
+            // This is where you will fetch data from your backend API to populate the reels feed.
+            // Example of how you would call the render function with your data:
+            // fetch('your-api-url/reels').then(response => response.json()).then(data => renderReels(data));
+        });
+    </script>
+</body>
+</html>
