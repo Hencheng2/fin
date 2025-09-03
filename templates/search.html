@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Search</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 20px 0;
+        }
+        
+        .search-container {
+            max-width: 800px;
+            margin: auto;
+            padding: 0 20px;
+        }
+
+        .search-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            background-color: transparent;
+        }
+
+        .search-header .search-icon {
+            color: var(--dark-grey);
+        }
+
+        .tabs-navbar {
+            display: flex;
+            justify-content: space-around;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 10px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tabs-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--dark-grey);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tabs-btn:hover, .tabs-btn.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+        }
+        
+        .results-section {
+            display: none;
+            padding: 10px 0;
+        }
+
+        .results-section.active {
+            display: block;
+        }
+
+        .results-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .results-list li {
+            background-color: #fff;
+            padding: 15px;
+            border-radius: var(--medium-radius);
+            margin-bottom: 10px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .profile-pic {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .list-info {
+            flex-grow: 1;
+        }
+
+        .name {
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        .username {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .post-preview, .group-preview {
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="search-container">
+        <div class="search-header">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Search Sociafam">
+        </div>
+
+        <div class="tabs-navbar">
+            <button class="tabs-btn active" data-tab="all">All</button>
+            <button class="tabs-btn" data-tab="users">Users</button>
+            <button class="tabs-btn" data-tab="groups">Groups</button>
+            <button class="tabs-btn" data-tab="posts">Posts</button>
+            <button class="tabs-btn" data-tab="reels">Reels</button>
+        </div>
+
+        <div class="results-container">
+            <div class="results-section active" id="all-results">
+                <ul class="results-list" id="all-list"></ul>
+            </div>
+            <div class="results-section" id="users-results">
+                <ul class="results-list" id="users-list"></ul>
+            </div>
+            <div class="results-section" id="groups-results">
+                <ul class="results-list" id="groups-list"></ul>
+            </div>
+            <div class="results-section" id="posts-results">
+                <ul class="results-list" id="posts-list"></ul>
+            </div>
+            <div class="results-section" id="reels-results">
+                <ul class="results-list" id="reels-list"></ul>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tabs-btn');
+            const sections = document.querySelectorAll('.results-section');
+            const searchInput = document.getElementById('search-input');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const targetTab = tab.dataset.tab;
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === `${targetTab}-results`) {
+                            section.classList.add('active');
+                        }
+                    });
+                    
+                    performSearch(searchInput.value);
+                });
+            });
+
+            searchInput.addEventListener('input', (e) => {
+                performSearch(e.target.value);
+            });
+
+            function performSearch(query) {
+                // This function will be called whenever the user types or changes tabs.
+                // It should send the `query` to your backend API for search results.
+                // The results should then be used to populate the lists in the active tab.
+
+                // Example structure for API call:
+                // fetch(`/api/search?q=${query}&tab=${activeTab}`)
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         renderResults(data);
+                //     });
+
+                // Clear all lists for fresh rendering
+                document.getElementById('all-list').innerHTML = '';
+                document.getElementById('users-list').innerHTML = '';
+                document.getElementById('groups-list').innerHTML = '';
+                document.getElementById('posts-list').innerHTML = '';
+                document.getElementById('reels-list').innerHTML = '';
+                
+                // Example rendering logic (to be replaced with your API logic)
+                const activeTab = document.querySelector('.tabs-btn.active').dataset.tab;
+                
+                if (query.trim() === '') {
+                    // Do nothing or display a default state when the search bar is empty
+                    return;
+                }
+
+                if (activeTab === 'all' || activeTab === 'users') {
+                    // Logic to fetch and render user results
+                }
+                
+                if (activeTab === 'all' || activeTab === 'groups') {
+                    // Logic to fetch and render group results
+                }
+
+                // ... and so on for posts and reels
+            }
+        });
+    </script>
+</body>
+</html>
