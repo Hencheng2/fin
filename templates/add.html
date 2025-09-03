@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Add To</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .tabs-navbar {
+            display: flex;
+            justify-content: center;
+            background-color: #fff;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            padding: 10px;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .tabs-btn {
+            background: none;
+            border: none;
+            padding: 10px;
+            font-size: 14px;
+            font-weight: bold;
+            color: var(--dark-grey);
+            cursor: pointer;
+            transition: color 0.3s ease;
+            white-space: nowrap;
+            flex-grow: 1;
+        }
+
+        .tabs-btn:hover, .tabs-btn.active {
+            color: var(--primary-blue);
+            border-bottom: 2px solid var(--primary-blue);
+        }
+
+        .content-sections {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .content-section {
+            display: none;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        .upload-area {
+            text-align: center;
+            padding: 40px 20px;
+            border: 2px dashed #ddd;
+            border-radius: var(--medium-radius);
+            margin-bottom: 20px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-area:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .upload-area .fa-icon {
+            font-size: 40px;
+            color: #ccc;
+        }
+
+        .upload-area p {
+            margin: 10px 0 0;
+            color: #888;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--medium-radius);
+            box-sizing: border-box;
+            font-size: 16px;
+            resize: vertical;
+        }
+
+        .submit-btn {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: var(--medium-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .submit-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .visibility-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="title">Add To</span>
+    </div>
+
+    <div class="tabs-navbar">
+        <button class="tabs-btn active" data-tab="post">Post</button>
+        <button class="tabs-btn" data-tab="reel">Reel</button>
+        <button class="tabs-btn" data-tab="story">Story</button>
+    </div>
+
+    <div class="content-sections">
+        <!-- Post Section -->
+        <div class="content-section active" id="post-section">
+            <div class="upload-area" id="post-upload-area">
+                <i class="fas fa-camera fa-icon"></i>
+                <p>Tap to upload photos or videos</p>
+                <input type="file" id="post-media-upload" accept="image/*,video/*" multiple style="display: none;">
+            </div>
+            <div class="input-group">
+                <label for="post-description">Description</label>
+                <textarea id="post-description" placeholder="Write a description..."></textarea>
+            </div>
+            <button class="submit-btn" id="post-submit-btn">Post</button>
+        </div>
+
+        <!-- Reel Section -->
+        <div class="content-section" id="reel-section">
+            <div class="upload-area" id="reel-upload-area">
+                <i class="fas fa-video fa-icon"></i>
+                <p>Tap to upload a video</p>
+                <input type="file" id="reel-media-upload" accept="video/*" style="display: none;">
+            </div>
+            <div class="input-group">
+                <label for="reel-description">Description</label>
+                <textarea id="reel-description" placeholder="Write a description..."></textarea>
+            </div>
+            <button class="submit-btn" id="reel-submit-btn">Share Reel</button>
+        </div>
+
+        <!-- Story Section -->
+        <div class="content-section" id="story-section">
+            <div class="upload-area" id="story-upload-area">
+                <i class="fas fa-image fa-icon"></i>
+                <p>Tap to upload a photo or video (max 30s)</p>
+                <input type="file" id="story-media-upload" accept="image/*,video/*" style="display: none;">
+            </div>
+            <div class="visibility-options">
+                <label for="story-visibility">Visible to:</label>
+                <select id="story-visibility">
+                    <option value="friends">Friends only</option>
+                    <option value="everyone">Everyone</option>
+                </select>
+            </div>
+            <button class="submit-btn" id="story-submit-btn">Add Story</button>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelectorAll('.tabs-btn');
+            const sections = document.querySelectorAll('.content-section');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    
+                    const targetTab = tab.dataset.tab;
+                    sections.forEach(section => {
+                        section.classList.remove('active');
+                        if (section.id === `${targetTab}-section`) {
+                            section.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Post upload and submit logic
+            document.getElementById('post-upload-area').addEventListener('click', () => {
+                document.getElementById('post-media-upload').click();
+            });
+            document.getElementById('post-submit-btn').addEventListener('click', () => {
+                const description = document.getElementById('post-description').value;
+                const mediaFiles = document.getElementById('post-media-upload').files;
+                // Your backend API call to create a post goes here
+            });
+            
+            // Reel upload and submit logic
+            document.getElementById('reel-upload-area').addEventListener('click', () => {
+                document.getElementById('reel-media-upload').click();
+            });
+            document.getElementById('reel-submit-btn').addEventListener('click', () => {
+                const description = document.getElementById('reel-description').value;
+                const mediaFile = document.getElementById('reel-media-upload').files[0];
+                // Your backend API call to create a reel goes here
+            });
+            
+            // Story upload and submit logic
+            document.getElementById('story-upload-area').addEventListener('click', () => {
+                document.getElementById('story-media-upload').click();
+            });
+            document.getElementById('story-submit-btn').addEventListener('click', () => {
+                const mediaFile = document.getElementById('story-media-upload').files[0];
+                const visibility = document.getElementById('story-visibility').value;
+                // Your backend API call to create a story goes here
+            });
+        });
+    </script>
+</body>
+</html>
