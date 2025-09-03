@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --dark-bg: #1e1e1e;
+            --dark-card: #2c2c2c;
+            --dark-text: #e0e0e0;
+            --primary-blue: #007bff;
+            --red-delete: #dc3545;
+            --yellow-warn: #ffc107;
+            --border-color: #444;
+            --border-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--dark-text);
+            margin: 0;
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--dark-card);
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: var(--primary-blue);
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            color: var(--dark-text);
+            text-align: left;
+            padding: 12px 15px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            transition: background-color 0.3s, color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 20px;
+            margin-left: 250px;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-header h1 {
+            font-size: 24px;
+            margin: 0;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            font-size: 18px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .card p {
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--dark-card);
+            border-radius: var(--border-radius);
+            overflow: hidden;
+        }
+
+        .data-table th, .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .data-table th {
+            background-color: #333;
+            font-size: 14px;
+            text-transform: uppercase;
+        }
+
+        .data-table tbody tr:hover {
+            background-color: #383838;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            color: var(--primary-blue);
+            cursor: pointer;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+
+        .action-btn.warn { color: var(--yellow-warn); }
+        .action-btn.ban { color: var(--red-delete); }
+        .action-btn.delete { color: var(--red-delete); }
+
+        .form-section label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .form-section textarea, .form-section input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: var(--border-radius);
+            border: 1px solid var(--border-color);
+            background-color: #333;
+            color: var(--dark-text);
+            margin-bottom: 15px;
+            box-sizing: border-box;
+        }
+
+        .form-section .submit-btn {
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="logo">SociaFam Admin</div>
+        <button class="nav-item active" data-target="dashboard">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </button>
+        <button class="nav-item" data-target="users">
+            <i class="fas fa-users"></i> Users
+        </button>
+        <button class="nav-item" data-target="groups">
+            <i class="fas fa-user-friends"></i> Groups
+        </button>
+        <button class="nav-item" data-target="inbox">
+            <i class="fas fa-inbox"></i> Inbox
+        </button>
+        <button class="nav-item" data-target="reports">
+            <i class="fas fa-exclamation-triangle"></i> Reports
+        </button>
+        <button class="nav-item" data-target="story">
+            <i class="fas fa-fire"></i> Post Story
+        </button>
+        <button class="nav-item" data-target="broadcast">
+            <i class="fas fa-bullhorn"></i> Broadcast
+        </button>
+    </div>
+
+    <div class="content-area">
+        <div id="dashboard" class="content-section">
+            <div class="section-header">
+                <h1>Dashboard Overview</h1>
+            </div>
+            <div class="dashboard-grid">
+                <div class="card">
+                    <h3>Total Users</h3>
+                    <p id="total-users-count">-</p>
+                </div>
+                <div class="card">
+                    <h3>Active Users</h3>
+                    <p id="active-users-count">-</p>
+                </div>
+                <div class="card">
+                    <h3>Reports This Week</h3>
+                    <p id="weekly-reports-count">-</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="users" class="content-section hidden">
+            <div class="section-header">
+                <h1>User Management</h1>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>User ID</th>
+                        <th>Username</th>
+                        <th>Real Name</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="users-table-body">
+                    <!-- User data will be dynamically loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="groups" class="content-section hidden">
+            <div class="section-header">
+                <h1>Group Management</h1>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Group ID</th>
+                        <th>Group Name</th>
+                        <th>Members</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="groups-table-body">
+                    <!-- Group data will be dynamically loaded here -->
+                </tbody>
+            </table>
+        </div>
+
+        <div id="inbox" class="content-section hidden">
+            <div class="section-header">
+                <h1>Support Inbox</h1>
+            </div>
+            <div class="card">
+                <h3>Chats from Users</h3>
+                <div id="inbox-list">
+                    <!-- Support chats will be loaded here -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="reports" class="content-section hidden">
+            <div class="section-header">
+                <h1>Reports</h1>
+            </div>
+            <div class="card">
+                <h3>Reported Content & Users</h3>
+                <div id="reports-list">
+                    <!-- Reports will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <div id="story" class="content-section hidden">
+            <div class="section-header">
+                <h1>Post SociaFam Story</h1>
+            </div>
+            <div class="card form-section">
+                <label for="story-content">Story Content</label>
+                <textarea id="story-content" rows="4"></textarea>
+                <button class="submit-btn" id="post-story-btn">Post to All Users</button>
+            </div>
+        </div>
+
+        <div id="broadcast" class="content-section hidden">
+            <div class="section-header">
+                <h1>Broadcast System Message</h1>
+            </div>
+            <div class="card form-section">
+                <label for="broadcast-message">Message to All Users</label>
+                <textarea id="broadcast-message" rows="4"></textarea>
+                <button class="submit-btn" id="send-broadcast-btn">Send Broadcast</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navItems = document.querySelectorAll('.nav-item');
+            const contentSections = document.querySelectorAll('.content-section');
+            const usersTableBody = document.getElementById('users-table-body');
+            const groupsTableBody = document.getElementById('groups-table-body');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+
+                    contentSections.forEach(section => {
+                        section.classList.add('hidden');
+                    });
+                    document.getElementById(item.dataset.target).classList.remove('hidden');
+
+                    // Call a fetch function for the active tab
+                    if (item.dataset.target === 'users') {
+                        fetchUsers();
+                    } else if (item.dataset.target === 'groups') {
+                        fetchGroups();
+                    }
+                });
+            });
+
+            // Note: The following logic for the admin login credentials would be handled on your backend.
+            // On the user registration page, your backend API would check if the requested username
+            // and password match "Henry" and "Dec@2003" respectively. If they do, the registration
+            // request would be denied to reserve those credentials for the admin.
+
+            // Admin Functions (Backend API integration points)
+            function fetchUsers() {
+                // Your backend API call to get all user data
+                // fetch('/api/admin/users')
+                //     .then(response => response.json())
+                //     .then(users => {
+                //         renderUsers(users);
+                //     });
+                // Since no mock data is allowed, we'll clear the table
+                usersTableBody.innerHTML = '';
+            }
+
+            function fetchGroups() {
+                // Your backend API call to get all group data
+                // fetch('/api/admin/groups')
+                //     .then(response => response.json())
+                //     .then(groups => {
+                //         renderGroups(groups);
+                //     });
+                // Since no mock data is allowed, we'll clear the table
+                groupsTableBody.innerHTML = '';
+            }
+
+            // Function to render user data (placeholder)
+            function renderUsers(users) {
+                usersTableBody.innerHTML = '';
+                // users.forEach(user => {
+                //     const row = document.createElement('tr');
+                //     row.innerHTML = `
+                //         <td>${user.id}</td>
+                //         <td>${user.username}</td>
+                //         <td>${user.realName}</td>
+                //         <td>${user.status}</td>
+                //         <td>
+                //             <button class="action-btn warn" onclick="warnUser('${user.id}')"><i class="fas fa-exclamation-triangle"></i> Warn</button>
+                //             <button class="action-btn ban" onclick="banUser('${user.id}')"><i class="fas fa-ban"></i> Ban</button>
+                //             <button class="action-btn delete" onclick="deleteUser('${user.id}')"><i class="fas fa-trash"></i> Delete</button>
+                //         </td>
+                //     `;
+                //     usersTableBody.appendChild(row);
+                // });
+            }
+
+            // Functions for admin actions (placeholders for backend calls)
+            window.warnUser = (userId) => {
+                // fetch(`/api/admin/warn/${userId}`, { method: 'POST' });
+                console.log(`Warning user: ${userId}`);
+            };
+
+            window.banUser = (userId) => {
+                // fetch(`/api/admin/ban/${userId}`, { method: 'POST' });
+                console.log(`Banning user: ${userId}`);
+            };
+
+            window.deleteUser = (userId) => {
+                // fetch(`/api/admin/delete/${userId}`, { method: 'POST' });
+                console.log(`Deleting user: ${userId}`);
+            };
+            
+            // Other admin action functions (similarly structured)
+            document.getElementById('post-story-btn').addEventListener('click', () => {
+                const content = document.getElementById('story-content').value;
+                // fetch('/api/admin/post_story', { method: 'POST', body: JSON.stringify({ content }) });
+                console.log('Posting SociaFam story');
+            });
+            
+            document.getElementById('send-broadcast-btn').addEventListener('click', () => {
+                const message = document.getElementById('broadcast-message').value;
+                // fetch('/api/admin/broadcast', { method: 'POST', body: JSON.stringify({ message }) });
+                console.log('Sending broadcast message');
+            });
+
+            // Initial fetch to populate the dashboard
+            fetchUsers();
+            fetchGroups();
+        });
+    </script>
+</body>
+</html>
