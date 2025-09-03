@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Account</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+            --medium-radius: 8px;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .header {
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+        }
+
+        .header .title {
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+            font-size: 18px;
+            color: #333;
+            border-bottom: 2px solid var(--light-grey);
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+        }
+
+        .section p {
+            font-size: 14px;
+            color: var(--dark-grey);
+            line-height: 1.6;
+        }
+
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .status-item:last-child {
+            border-bottom: none;
+        }
+
+        .status-item span {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .status-item .value {
+            color: var(--primary-blue);
+        }
+
+        .support-btn {
+            width: 100%;
+            background-color: var(--primary-blue);
+            color: #fff;
+            border: none;
+            padding: 15px;
+            border-radius: var(--medium-radius);
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            text-align: center;
+        }
+
+        .support-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <span class="title">Account</span>
+    </div>
+
+    <div class="container">
+        <div class="section" id="terms-policies-section">
+            <h2>Terms and Policies</h2>
+            <p>
+                <!-- Terms and policies content will be populated by your backend API -->
+                Welcome to Sociafam. By using our services, you agree to our terms and policies. These policies are in place to ensure a safe and respectful community for everyone. Violations of these policies may result in warnings, temporary bans, or permanent account termination.
+            </p>
+        </div>
+
+        <div class="section" id="account-status-section">
+            <h2>Account Status</h2>
+            <div id="status-list">
+                <div class="status-item">
+                    <span>Account Status</span>
+                    <span class="value" id="status-value">Good Standing</span>
+                </div>
+                <div class="status-item">
+                    <span>Warnings</span>
+                    <span class="value" id="warnings-value">0</span>
+                </div>
+                <div class="status-item">
+                    <span>Bans</span>
+                    <span class="value" id="bans-value">0</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <a href="admin_chat.html" class="support-btn">
+                Support Inbox
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            function fetchAccountStatus() {
+                // Your backend API call to fetch account status goes here
+                // Example:
+                // fetch('/api/account/status')
+                //     .then(response => response.json())
+                //     .then(data => {
+                //         document.getElementById('status-value').textContent = data.status;
+                //         document.getElementById('warnings-value').textContent = data.warnings;
+                //         document.getElementById('bans-value').textContent = data.bans;
+                //     });
+            }
+
+            fetchAccountStatus();
+        });
+    </script>
+</body>
+</html>
