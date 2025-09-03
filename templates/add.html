@@ -1,239 +1,155 @@
 {% extends 'base.html' %}
 {% block title %}Add To{% endblock %}
-
 {% block content %}
 <style>
     .add-container {
         padding: 20px;
-        max-width: 800px;
-        margin: 0 auto;
     }
-    .tabs-navbar {
+    .add-navbar {
         display: flex;
-        justify-content: center;
-        background-color: var(--tertiary-color);
-        border-radius: var(--border-radius-lg);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        justify-content: space-around;
+        background-color: #fff;
+        border-radius: 8px;
         margin-bottom: 20px;
-        padding: 10px;
-        width: 100%;
-        box-sizing: border-box;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .tabs-btn {
+    .add-nav-btn {
         background: none;
         border: none;
-        padding: 10px 15px;
-        font-size: 14px;
+        color: #888;
         font-weight: bold;
-        color: var(--text-muted);
         cursor: pointer;
-        transition: color 0.3s ease, transform 0.2s ease;
-        white-space: nowrap;
+        padding: 15px 0;
         flex-grow: 1;
-        border-radius: var(--border-radius-md);
+        text-align: center;
+        transition: color 0.2s ease;
     }
-    .tabs-btn:hover, .tabs-btn.active {
-        color: var(--primary-color);
-        background-color: var(--secondary-color);
-        transform: translateY(-2px);
+    .add-nav-btn.active {
+        color: #007bff;
+        border-bottom: 2px solid #007bff;
     }
-    .content-sections {
-        width: 100%;
-        box-sizing: border-box;
-    }
-    .content-section {
+    .content-form {
         display: none;
-        background-color: var(--tertiary-color);
+        background-color: #fff;
         padding: 20px;
-        border-radius: var(--border-radius-lg);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
-    .content-section.active {
+    .content-form.active {
         display: block;
     }
-    .upload-area {
-        text-align: center;
-        padding: 40px 20px;
-        border: 2px dashed var(--border-color);
-        border-radius: var(--border-radius-md);
-        margin-bottom: 20px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-    .upload-area:hover {
-        background-color: #333;
-    }
-    .upload-area .fa-icon {
-        font-size: 40px;
-        color: var(--text-muted);
-    }
-    .upload-area p {
-        margin: 10px 0 0;
-        color: var(--text-muted);
-    }
-    .input-group {
+    .form-group {
         margin-bottom: 15px;
     }
-    .input-group label {
+    .form-group label {
         display: block;
-        font-size: 14px;
         margin-bottom: 5px;
-        color: var(--text-color);
-    }
-    textarea {
-        width: 100%;
-        height: 100px;
-        padding: 10px;
-        border: 1px solid var(--border-color);
-        background-color: var(--secondary-color);
-        color: var(--text-color);
-        border-radius: var(--border-radius-md);
-        box-sizing: border-box;
-        font-size: 16px;
-        resize: vertical;
-        transition: border-color 0.3s;
-    }
-    textarea:focus {
-        outline: none;
-        border-color: var(--primary-color);
-    }
-    .submit-btn {
-        width: 100%;
-        background-color: var(--primary-color);
-        color: #fff;
-        border: none;
-        padding: 15px;
-        border-radius: var(--border-radius-md);
-        font-size: 16px;
         font-weight: bold;
+        color: #555;
+    }
+    .form-group input[type="file"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+    .post-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 8px;
         cursor: pointer;
-        transition: background-color 0.3s ease, transform 0.2s ease;
-        text-align: center;
+        transition: background-color 0.2s ease;
     }
-    .submit-btn:hover {
-        background-color: var(--primary-light);
-        transform: translateY(-2px);
-    }
-    .visibility-options {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        margin-bottom: 20px;
-        color: var(--text-color);
-    }
-    .visibility-options select {
-        padding: 8px;
-        border-radius: var(--border-radius-sm);
-        border: 1px solid var(--border-color);
-        background-color: var(--secondary-color);
-        color: var(--text-color);
+    .post-btn:hover {
+        background-color: #0056b3;
     }
 </style>
 
 <div class="add-container">
-    <div class="tabs-navbar">
-        <button class="tabs-btn active" data-tab="post">Post</button>
-        <button class="tabs-btn" data-tab="reel">Reel</button>
-        <button class="tabs-btn" data-tab="story">Story</button>
+    <div class="add-navbar">
+        <button class="add-nav-btn active" id="post-tab-btn">Post</button>
+        <button class="add-nav-btn" id="reel-tab-btn">Reel</button>
+        <button class="add-nav-btn" id="story-tab-btn">Story</button>
     </div>
 
-    <div class="content-sections">
-        <!-- Post Section -->
-        <div class="content-section active" id="post-section">
-            <div class="upload-area" id="post-upload-area">
-                <i class="fas fa-camera fa-icon"></i>
-                <p>Tap to upload photos or videos</p>
-                <input type="file" id="post-media-upload" accept="image/*,video/*" multiple style="display: none;">
-            </div>
-            <div class="input-group">
-                <label for="post-description">Description</label>
-                <textarea id="post-description" placeholder="Write a description..."></textarea>
-            </div>
-            <button class="submit-btn" id="post-submit-btn">Post</button>
+    <div id="post-form" class="content-form active">
+        <div class="form-group">
+            <label for="post-media">Add Photo/Video</label>
+            <input type="file" id="post-media" accept="image/*,video/*">
         </div>
-
-        <!-- Reel Section -->
-        <div class="content-section" id="reel-section">
-            <div class="upload-area" id="reel-upload-area">
-                <i class="fas fa-video fa-icon"></i>
-                <p>Tap to upload a video</p>
-                <input type="file" id="reel-media-upload" accept="video/*" style="display: none;">
-            </div>
-            <div class="input-group">
-                <label for="reel-description">Description</label>
-                <textarea id="reel-description" placeholder="Write a description..."></textarea>
-            </div>
-            <button class="submit-btn" id="reel-submit-btn">Share Reel</button>
+        <div class="form-group">
+            <label for="post-text">Description</label>
+            <textarea id="post-text" rows="4"></textarea>
         </div>
-
-        <!-- Story Section -->
-        <div class="content-section" id="story-section">
-            <div class="upload-area" id="story-upload-area">
-                <i class="fas fa-image fa-icon"></i>
-                <p>Tap to upload a photo or video (max 30s)</p>
-                <input type="file" id="story-media-upload" accept="image/*,video/*" style="display: none;">
-            </div>
-            <div class="visibility-options">
-                <label for="story-visibility">Visible to:</label>
-                <select id="story-visibility">
-                    <option value="friends">Friends only</option>
-                    <option value="everyone">Everyone</option>
-                </select>
-            </div>
-            <button class="submit-btn" id="story-submit-btn">Add Story</button>
-        </div>
+        <button class="post-btn">Share Post</button>
     </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const tabs = document.querySelectorAll('.tabs-btn');
-            const sections = document.querySelectorAll('.content-section');
 
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    
-                    const targetTab = tab.dataset.tab;
-                    sections.forEach(section => {
-                        section.classList.remove('active');
-                        if (section.id === `${targetTab}-section`) {
-                            section.classList.add('active');
-                        }
-                    });
-                });
-            });
+    <div id="reel-form" class="content-form">
+        <div class="form-group">
+            <label for="reel-media">Add Video/Photo with Audio</label>
+            <input type="file" id="reel-media" accept="video/*,image/*">
+        </div>
+        <div class="form-group">
+            <label for="reel-text">Description</label>
+            <textarea id="reel-text" rows="4"></textarea>
+        </div>
+        <button class="post-btn">Share Reel</button>
+    </div>
 
-            // Post upload and submit logic
-            document.getElementById('post-upload-area').addEventListener('click', () => {
-                document.getElementById('post-media-upload').click();
-            });
-            document.getElementById('post-submit-btn').addEventListener('click', () => {
-                const description = document.getElementById('post-description').value;
-                const mediaFiles = document.getElementById('post-media-upload').files;
-                // Your backend API call to create a post goes here
-            });
-            
-            // Reel upload and submit logic
-            document.getElementById('reel-upload-area').addEventListener('click', () => {
-                document.getElementById('reel-media-upload').click();
-            });
-            document.getElementById('reel-submit-btn').addEventListener('click', () => {
-                const description = document.getElementById('reel-description').value;
-                const mediaFile = document.getElementById('reel-media-upload').files[0];
-                // Your backend API call to create a reel goes here
-            });
-            
-            // Story upload and submit logic
-            document.getElementById('story-upload-area').addEventListener('click', () => {
-                document.getElementById('story-media-upload').click();
-            });
-            document.getElementById('story-submit-btn').addEventListener('click', () => {
-                const mediaFile = document.getElementById('story-media-upload').files[0];
-                const visibility = document.getElementById('story-visibility').value;
-                // Your backend API call to create a story goes here
-            });
-        });
-    </script>
+    <div id="story-form" class="content-form">
+        <div class="form-group">
+            <label for="story-media">Add Story</label>
+            <input type="file" id="story-media" accept="image/*,video/*,audio/*">
+        </div>
+        <div class="form-group">
+            <label for="story-text">Description</label>
+            <textarea id="story-text" rows="2"></textarea>
+        </div>
+        <button class="post-btn">Share Story</button>
+    </div>
 </div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const postBtn = document.getElementById('post-tab-btn');
+        const reelBtn = document.getElementById('reel-tab-btn');
+        const storyBtn = document.getElementById('story-tab-btn');
+
+        const postForm = document.getElementById('post-form');
+        const reelForm = document.getElementById('reel-form');
+        const storyForm = document.getElementById('story-form');
+
+        const showForm = (form) => {
+            document.querySelectorAll('.add-nav-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.content-form').forEach(f => f.classList.remove('active'));
+            form.classList.add('active');
+        };
+
+        postBtn.addEventListener('click', () => {
+            showForm(postForm);
+            postBtn.classList.add('active');
+        });
+        reelBtn.addEventListener('click', () => {
+            showForm(reelForm);
+            reelBtn.classList.add('active');
+        });
+        storyBtn.addEventListener('click', () => {
+            showForm(storyForm);
+            storyBtn.classList.add('active');
+        });
+
+        // Backend integration logic
+        document.querySelector('#post-form .post-btn').addEventListener('click', () => {
+            // Logic to handle post creation and API call
+        });
+    });
+</script>
 {% endblock %}
