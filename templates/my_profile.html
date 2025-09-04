@@ -318,6 +318,10 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Bearer ${token}` };
+
+    // Tab switching
     const tabs = document.querySelectorAll('.gallery-nav-btn');
     const galleryViews = document.querySelectorAll('.gallery-view');
     
@@ -336,23 +340,214 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Backend hooks
-    function updateProfileInfo() {}
-    function updateCounts() {}
-    function loadPosts() {}
-    function loadLockedPosts() {}
-    function loadSavedContent() {}
-    function loadReposts() {}
-    function loadLikedContent() {}
-    function loadReels() {}
+    // Fetch profile info
+    function updateProfileInfo() {
+        fetch('/api/my_profile', { headers })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('my-profile-pic').src = data.profile_pic || 'default.jpg';
+                document.getElementById('real-name').textContent = data.real_name || data.username;
+                document.getElementById('unique-key').textContent = `Recovery Key: ${data.unique_key}`;
+                document.getElementById('friends-count').textContent = data.friends_count;
+                document.getElementById('followers-count').textContent = data.followers_count;
+                document.getElementById('following-count').textContent = data.following_count;
+                document.getElementById('likes-count').textContent = data.likes_count;
+                document.getElementById('posts-count').textContent = data.posts_count;
+                document.getElementById('biography').textContent = data.biography || 'No biography available';
+                
+                const infoList = document.getElementById('info-list');
+                const userInfo = data.user_info;
+                const infoFields = [
+                    { label: 'Username', value: data.username },
+                    { label: 'Date of Birth', value: userInfo.date_of_birth },
+                    { label: 'Gender', value: userInfo.gender },
+                    { label: 'Pronouns', value: userInfo.pronouns },
+                    { label: 'Work', value: userInfo.work_info },
+                    { label: 'University', value: userInfo.university },
+                    { label: 'Secondary School', value: userInfo.secondary_school },
+                    { label: 'Other Education', value: userInfo.other_education },
+                    { label: 'Location', value: userInfo.location },
+                    { label: 'Phone', value: userInfo.phone_number },
+                    { label: 'Email', value: userInfo.email },
+                    { label: 'Social Link', value: userInfo.social_link },
+                    { label: 'Website', value: userInfo.website_link },
+                    { label: 'Other Contact', value: userInfo.other_contact },
+                    { label: 'Relationship', value: userInfo.relationship_status },
+                    { label: 'Partner', value: userInfo.partner_username }
+                ];
+                infoList.innerHTML = '';
+                let visibleCount = 0;
+                infoFields.forEach((field, index) => {
+                    if (field.value) {
+                        const item = document.createElement('div');
+                        item.className = 'info-list-item';
+                        item.innerHTML = `<span class="info-label">${field.label}</span><span>${field.value}</span>`;
+                        if (index >= 3) item.style.display = 'none';
+                        infoList.appendChild(item);
+                        visibleCount++;
+                    }
+                });
+                document.getElementById('show-more-btn').style.display = visibleCount > 3 ? 'block' : 'none';
+            });
+    }
 
-    // Buttons
+    // Fetch posts
+    function loadPosts() {
+        fetch('/api/my_profile/posts', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('posts-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post"><button class="delete-btn">X</button>`;
+                    item.querySelector('.delete-btn').addEventListener('click', () => deletePost(post.id));
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function loadLockedPosts() {
+        fetch('/api/my_profile/locked_posts', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('locked-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post"><button class="delete-btn">X</button>`;
+                    item.querySelector('.delete-btn').addEventListener('click', () => deletePost(post.id));
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function loadSavedContent() {
+        fetch('/api/my_profile/saved', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('saved-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post">`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function loadReposts() {
+        fetch('/api/my_profile/reposts', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('reposts-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post">`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function loadLikedContent() {
+        fetch('/api/my_profile/liked', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('liked-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post">`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function loadReels() {
+        fetch('/api/my_profile/reels', { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('reels-grid');
+                grid.innerHTML = '';
+                data.reels.forEach(reel => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<video src="${reel.post_image}" controls></video>`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    function deletePost(postId) {
+        fetch(`/api/posts/${postId}/delete`, {
+            method: 'POST',
+            headers
+        }).then(response => response.json())
+          .then(data => {
+              if (data.message) {
+                  loadPosts();
+                  loadLockedPosts();
+              }
+          });
+    }
+
+    // Button handlers
     document.getElementById('edit-profile-btn').addEventListener('click', () => {
-        window.location.href = 'edit_profile.html';
+        window.location.href = '/edit_profile';
     });
-    document.getElementById('share-profile-btn').addEventListener('click', () => {});
-    document.getElementById('change-profile-pic-btn').addEventListener('click', () => {});
-    document.getElementById('show-more-btn').addEventListener('click', () => {});
+
+    document.getElementById('share-profile-btn').addEventListener('click', () => {
+        fetch('/api/my_profile/share', { method: 'POST', headers })
+            .then(response => response.json())
+            .then(data => {
+                // Show profile link and friends list for sharing
+                alert(`Profile link: ${data.profile_link}\nFriends: ${data.friends.map(f => f.username).join(', ')}`);
+            });
+    });
+
+    document.getElementById('change-profile-pic-btn').addEventListener('click', () => {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*';
+        input.onchange = (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const formData = new FormData();
+                formData.append('file', file);
+                fetch('/api/my_profile/update_profile_pic', {
+                    method: 'POST',
+                    headers: { 'Authorization': `Bearer ${token}` },
+                    body: formData
+                }).then(response => response.json())
+                  .then(data => {
+                      if (data.message) {
+                          updateProfileInfo();
+                      }
+                  });
+            }
+        };
+        input.click();
+    });
+
+    document.getElementById('show-more-btn').addEventListener('click', () => {
+        document.querySelectorAll('.info-list-item').forEach(item => item.style.display = 'flex');
+        document.getElementById('show-more-btn').style.display = 'none';
+    });
+
+    // Initial load
+    updateProfileInfo();
+    loadPosts();
+    loadLockedPosts();
+    loadSavedContent();
+    loadReposts();
+    loadLikedContent();
+    loadReels();
 });
 </script>
 {% endblock %}
