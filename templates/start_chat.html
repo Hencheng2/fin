@@ -86,10 +86,11 @@
         .list-section-container {
             overflow-y: auto;
             flex-grow: 1;
+            padding: 10px 15px;
         }
 
         .list-section {
-            padding: 15px;
+            margin-bottom: 20px;
         }
 
         .list-section-title {
@@ -126,6 +127,21 @@
             font-weight: bold;
             font-size: 16px;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .header .title { font-size: 18px; }
+            .search-bar { font-size: 14px; padding: 8px; }
+            .create-group-btn { font-size: 14px; padding: 10px; }
+            .list-item .name { font-size: 14px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 10px; }
+            .search-bar-container, .create-group-btn-container, .list-section-container { padding: 8px 10px; }
+            .list-item { padding: 8px; }
+            .list-item .profile-pic { width: 40px; height: 40px; margin-right: 10px; }
+        }
     </style>
 </head>
 <body>
@@ -147,16 +163,12 @@
     <div class="list-section-container">
         <div class="list-section">
             <div class="list-section-title">Friends</div>
-            <div id="friends-list">
-                <!-- Friends will be dynamically populated here -->
-            </div>
+            <div id="friends-list"></div>
         </div>
 
         <div class="list-section">
             <div class="list-section-title">Groups</div>
-            <div id="groups-list">
-                <!-- Groups will be dynamically populated here -->
-            </div>
+            <div id="groups-list"></div>
         </div>
     </div>
 
@@ -166,10 +178,42 @@
             const friendsListContainer = document.getElementById('friends-list');
             const groupsListContainer = document.getElementById('groups-list');
 
-            // --- Function to render list items ---
+            // Fetch friends from backend API
+            async function fetchFriends() {
+                try {
+                    const response = await fetch('/api/friends'); // Replace with your backend endpoint
+                    const data = await response.json();
+                    return data.friends || [];
+                } catch (error) {
+                    console.error('Error fetching friends:', error);
+                    return [];
+                }
+            }
+
+            // Fetch groups from backend API
+            async function fetchGroups() {
+                try {
+                    const response = await fetch('/api/groups'); // Replace with your backend endpoint
+                    const data = await response.json();
+                    return data.groups || [];
+                } catch (error) {
+                    console.error('Error fetching groups:', error);
+                    return [];
+                }
+            }
+
             function renderList(container, data, isGroup) {
                 container.innerHTML = '';
-                if (!data) return;
+
+                if (!data.length) {
+                    const noResult = document.createElement('div');
+                    noResult.textContent = 'No results found';
+                    noResult.style.color = '#888';
+                    noResult.style.textAlign = 'center';
+                    noResult.style.padding = '10px';
+                    container.appendChild(noResult);
+                    return;
+                }
 
                 data.forEach(item => {
                     const listItem = document.createElement('div');
@@ -177,14 +221,14 @@
                     
                     const profilePic = document.createElement('img');
                     profilePic.className = 'profile-pic';
-                    profilePic.src = '';
+                    profilePic.src = item.avatar || 'https://via.placeholder.com/45';
                     
                     const nameSpan = document.createElement('span');
                     nameSpan.className = 'name';
+                    nameSpan.textContent = item.name || 'Unknown';
                     
                     listItem.appendChild(profilePic);
                     listItem.appendChild(nameSpan);
-                    
                     container.appendChild(listItem);
                     
                     listItem.addEventListener('click', () => {
@@ -193,18 +237,26 @@
                 });
             }
 
-            // --- Search functionality ---
-            searchInput.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-            });
+            async function initialize() {
+                const [friendsData, groupsData] = await Promise.all([fetchFriends(), fetchGroups()]);
+                renderList(friendsListContainer, friendsData, false);
+                renderList(groupsListContainer, groupsData, true);
 
-            // --- Button functionality ---
+                // Live search
+                searchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase();
+                    const filteredFriends = friendsData.filter(f => f.name.toLowerCase().includes(query));
+                    const filteredGroups = groupsData.filter(g => g.name.toLowerCase().includes(query));
+                    renderList(friendsListContainer, filteredFriends, false);
+                    renderList(groupsListContainer, filteredGroups, true);
+                });
+            }
+
             document.getElementById('create-group-btn').addEventListener('click', () => {
                 window.location.href = 'create_group.html';
             });
 
-            renderList(friendsListContainer, [], false);
-            renderList(groupsListContainer, [], true);
+            initialize();
         });
     </script>
 </body>
