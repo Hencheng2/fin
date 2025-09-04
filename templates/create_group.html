@@ -1,337 +1,391 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sociafam - Create Group</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<style>
-    :root {
-        --primary-blue: #007bff;
-        --light-grey: #f0f2f5;
-        --dark-grey: #555;
-        --border-radius: 12px;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sociafam - Create Group</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-blue: #007bff;
+            --light-grey: #f0f2f5;
+            --dark-grey: #555;
+            --border-radius: 12px;
+        }
 
-    body {
-        font-family: Arial, sans-serif;
-        background-color: var(--light-grey);
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        min-height: 100vh;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: var(--light-grey);
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+        }
 
-    /* --- Header --- */
-    .header {
-        display: flex;
-        align-items: center;
-        padding: 15px;
-        background-color: #fff;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-    }
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
 
-    .header .back-btn {
-        background: none;
-        border: none;
-        font-size: 20px;
-        color: var(--dark-grey);
-        cursor: pointer;
-        margin-right: 15px;
-    }
+        .header .back-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-grey);
+            cursor: pointer;
+            margin-right: 15px;
+        }
 
-    .header .title {
-        font-size: 20px;
-        font-weight: bold;
-        flex-grow: 1;
-        text-align: center;
-        margin-right: 35px; /* compensate for back button */
-    }
-
-    /* --- Content --- */
-    .content {
-        flex-grow: 1;
-        padding: 20px;
-        overflow-y: auto;
-        display: flex;
-        flex-direction: column;
-        gap: 20px;
-    }
-
-    /* --- Profile Pic --- */
-    .profile-pic-container {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        gap: 10px;
-    }
-
-    .profile-pic {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        object-fit: cover;
-        border: 2px solid #ddd;
-        cursor: pointer;
-    }
-
-    .profile-pic-label {
-        font-size: 14px;
-        color: var(--primary-blue);
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 5px;
-    }
-
-    input[type="file"] {
-        display: none;
-    }
-
-    /* --- Form Sections --- */
-    .form-section {
-        background-color: #fff;
-        padding: 20px;
-        border-radius: var(--border-radius);
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .form-section-title {
-        font-weight: bold;
-        font-size: 16px;
-        color: var(--dark-grey);
-    }
-
-    .input-group {
-        display: flex;
-        flex-direction: column;
-        gap: 5px;
-    }
-
-    .input-group input[type="text"] {
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: var(--border-radius);
-        font-size: 16px;
-        width: 100%;
-        box-sizing: border-box;
-    }
-
-    /* --- Permissions --- */
-    .permissions-section fieldset {
-        border: none;
-        padding: 0;
-        margin: 0;
-        display: flex;
-        flex-direction: column;
-        gap: 15px;
-    }
-
-    .permission-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .permission-row legend {
-        font-size: 16px;
-        color: #333;
-    }
-
-    .radio-buttons {
-        display: flex;
-        gap: 10px;
-    }
-
-    .radio-buttons input[type="radio"] {
-        display: none;
-    }
-
-    .radio-buttons label {
-        background-color: var(--light-grey);
-        padding: 5px 12px;
-        border-radius: 20px;
-        font-size: 14px;
-        cursor: pointer;
-        transition: background-color 0.2s ease, color 0.2s ease;
-    }
-
-    .radio-buttons input[type="radio"]:checked + label {
-        background-color: var(--primary-blue);
-        color: #fff;
-    }
-
-    /* --- Button Group --- */
-    .button-group {
-        display: flex;
-        justify-content: flex-end;
-        gap: 10px;
-        padding: 15px 20px;
-        background-color: #fff;
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-        flex-shrink: 0;
-    }
-
-    .button-group button {
-        padding: 12px 20px;
-        border-radius: var(--border-radius);
-        border: none;
-        font-size: 16px;
-        font-weight: bold;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .cancel-btn {
-        background-color: #ddd;
-        color: var(--dark-grey);
-    }
-
-    .create-btn {
-        background-color: var(--primary-blue);
-        color: #fff;
-    }
-
-    /* --- Responsive --- */
-    @media (max-width: 500px) {
         .header .title {
-            font-size: 18px;
+            font-size: 20px;
+            font-weight: bold;
+            flex-grow: 1;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .profile-pic-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
         }
 
         .profile-pic {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            cursor: pointer;
+        }
+
+        .profile-pic-label {
+            margin-top: 10px;
+            font-size: 14px;
+            color: var(--primary-blue);
+            cursor: pointer;
+        }
+
+        .form-section {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .form-section-title {
+            font-weight: bold;
+            font-size: 16px;
+            margin-bottom: 15px;
+            color: var(--dark-grey);
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: var(--dark-grey);
+        }
+
+        .input-group input[type="text"] {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+        }
+
+        .permissions-section fieldset {
+            border: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .permission-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .permission-row label {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .radio-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .radio-buttons input[type="radio"] {
+            display: none;
+        }
+
+        .radio-buttons label {
+            background-color: var(--light-grey);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .radio-buttons input[type="radio"]:checked + label {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .members-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .friend-item {
+            padding: 10px;
+            background-color: var(--light-grey);
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .friend-item.selected {
+            background-color: var(--primary-blue);
+            color: #fff;
         }
 
         .button-group {
-            flex-direction: column;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
         }
 
         .button-group button {
-            width: 100%;
+            padding: 12px 20px;
+            border-radius: var(--border-radius);
+            border: none;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-    }
-</style>
+
+        .cancel-btn {
+            background-color: #ddd;
+            color: var(--dark-grey);
+        }
+
+        .create-btn {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .profile-pic {
+                width: 80px;
+                height: 80px;
+            }
+
+            .input-group input[type="text"] {
+                font-size: 14px;
+            }
+
+            .radio-buttons label {
+                font-size: 12px;
+            }
+
+            .button-group button {
+                font-size: 14px;
+                padding: 10px 16px;
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="header">
-    <button class="back-btn" onclick="window.location.href='start_chat.html'">
-        <i class="fas fa-arrow-left"></i>
-    </button>
-    <span class="title">New Group</span>
-</div>
-
-<div class="content">
-    <div class="profile-pic-container">
-        <img src="" alt="Group profile" class="profile-pic" id="group-profile-pic">
-        <label for="profile-pic-upload" class="profile-pic-label">
-            <i class="fas fa-camera"></i> Set profile picture
-        </label>
-        <input type="file" id="profile-pic-upload" accept="image/*">
+    <div class="header">
+        <a href="start_chat.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <span class="title">New Group</span>
     </div>
 
-    <div class="form-section">
-        <div class="form-section-title">Group Details</div>
-        <div class="input-group">
-            <label for="group-name">Group Name</label>
-            <input type="text" id="group-name" placeholder="Enter group name">
+    <div class="content">
+        <!-- Group Profile Picture -->
+        <div class="profile-pic-container">
+            <img src="" alt="Group profile" class="profile-pic" id="group-profile-pic">
+            <label for="profile-pic-upload" class="profile-pic-label">
+                <i class="fas fa-camera"></i> Set profile picture
+            </label>
+            <input type="file" id="profile-pic-upload" accept="image/*" style="display: none;">
+        </div>
+
+        <!-- Group Name -->
+        <div class="form-section">
+            <div class="form-section-title">Group Details</div>
+            <div class="input-group">
+                <label for="group-name">Group Name</label>
+                <input type="text" id="group-name" placeholder="Enter group name">
+            </div>
+        </div>
+
+        <!-- Group Permissions -->
+        <div class="form-section permissions-section">
+            <div class="form-section-title">Group Permissions</div>
+            <fieldset>
+                <div class="permission-row">
+                    <legend>Edit group settings</legend>
+                    <div class="radio-buttons">
+                        <input type="radio" id="edit-allow" name="edit-permissions" value="allow" checked>
+                        <label for="edit-allow">Allow</label>
+                        <input type="radio" id="edit-deny" name="edit-permissions" value="deny">
+                        <label for="edit-deny">Deny</label>
+                    </div>
+                </div>
+
+                <div class="permission-row">
+                    <legend>Send messages</legend>
+                    <div class="radio-buttons">
+                        <input type="radio" id="messages-allow" name="message-permissions" value="allow" checked>
+                        <label for="messages-allow">Allow</label>
+                        <input type="radio" id="messages-deny" name="message-permissions" value="deny">
+                        <label for="messages-deny">Deny</label>
+                    </div>
+                </div>
+
+                <div class="permission-row">
+                    <legend>Add other members</legend>
+                    <div class="radio-buttons">
+                        <input type="radio" id="add-members-allow" name="add-member-permissions" value="allow" checked>
+                        <label for="add-members-allow">Allow</label>
+                        <input type="radio" id="add-members-deny" name="add-member-permissions" value="deny">
+                        <label for="add-members-deny">Deny</label>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <!-- Add Members Section -->
+        <div class="form-section">
+            <div class="form-section-title">Add Members (select at least one)</div>
+            <div class="members-list" id="members-list">
+                <!-- TODO: Populate this list dynamically from backend API fetching user's friends -->
+            </div>
         </div>
     </div>
 
-    <div class="form-section permissions-section">
-        <div class="form-section-title">Group Permissions</div>
-        <fieldset>
-            <div class="permission-row">
-                <legend>Edit group settings</legend>
-                <div class="radio-buttons">
-                    <input type="radio" id="edit-allow" name="edit-permissions" value="allow" checked>
-                    <label for="edit-allow">Allow</label>
-                    <input type="radio" id="edit-deny" name="edit-permissions" value="deny">
-                    <label for="edit-deny">Deny</label>
-                </div>
-            </div>
-
-            <div class="permission-row">
-                <legend>Send messages</legend>
-                <div class="radio-buttons">
-                    <input type="radio" id="messages-allow" name="message-permissions" value="allow" checked>
-                    <label for="messages-allow">Allow</label>
-                    <input type="radio" id="messages-deny" name="message-permissions" value="deny">
-                    <label for="messages-deny">Deny</label>
-                </div>
-            </div>
-
-            <div class="permission-row">
-                <legend>Add other members</legend>
-                <div class="radio-buttons">
-                    <input type="radio" id="add-members-allow" name="add-member-permissions" value="allow" checked>
-                    <label for="add-members-allow">Allow</label>
-                    <input type="radio" id="add-members-deny" name="add-member-permissions" value="deny">
-                    <label for="add-members-deny">Deny</label>
-                </div>
-            </div>
-        </fieldset>
+    <div class="button-group">
+        <button class="cancel-btn" id="cancel-btn">Cancel</button>
+        <button class="create-btn" id="create-btn">Create</button>
     </div>
-</div>
 
-<div class="button-group">
-    <button class="cancel-btn" id="cancel-btn">Cancel</button>
-    <button class="create-btn" id="create-btn">Create</button>
-</div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const groupNameInput = document.getElementById('group-name');
+            const profilePicInput = document.getElementById('profile-pic-upload');
+            const groupProfilePic = document.getElementById('group-profile-pic');
+            const cancelButton = document.getElementById('cancel-btn');
+            const createButton = document.getElementById('create-btn');
+            const membersList = document.getElementById('members-list');
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const groupNameInput = document.getElementById('group-name');
-    const profilePicInput = document.getElementById('profile-pic-upload');
-    const groupProfilePic = document.getElementById('group-profile-pic');
-    const cancelButton = document.getElementById('cancel-btn');
-    const createButton = document.getElementById('create-btn');
+            // Handle profile picture upload
+            profilePicInput.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        groupProfilePic.src = event.target.result;
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
 
-    // Handle profile pic preview
-    profilePicInput.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (event) => {
-                groupProfilePic.src = event.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    });
+            // Cancel button
+            cancelButton.addEventListener('click', () => {
+                window.location.href = 'start_chat.html';
+            });
 
-    // Cancel button logic
-    cancelButton.addEventListener('click', () => {
-        window.location.href = 'start_chat.html';
-    });
+            // Create button
+            createButton.addEventListener('click', () => {
+                const groupName = groupNameInput.value.trim();
+                const editPermissions = document.querySelector('input[name="edit-permissions"]:checked').value;
+                const messagePermissions = document.querySelector('input[name="message-permissions"]:checked').value;
+                const addMemberPermissions = document.querySelector('input[name="add-member-permissions"]:checked').value;
 
-    // Create button logic
-    createButton.addEventListener('click', () => {
-        const groupName = groupNameInput.value.trim();
-        const editPermissions = document.querySelector('input[name="edit-permissions"]:checked').value;
-        const messagePermissions = document.querySelector('input[name="message-permissions"]:checked').value;
-        const addMemberPermissions = document.querySelector('input[name="add-member-permissions"]:checked').value;
+                // Ensure group name is entered
+                if (groupName === '') {
+                    alert('Please enter a group name.');
+                    return;
+                }
 
-        if (groupName === '') {
-            alert('Please enter a group name.');
-            return;
-        }
+                // Ensure at least one member selected
+                const selectedMembers = Array.from(membersList.querySelectorAll('.friend-item.selected')).map(div => div.dataset.id);
+                if (selectedMembers.length === 0) {
+                    alert('Please select at least one member to add.');
+                    return;
+                }
 
-        // --- BACKEND INTEGRATION ---
-        // Here you would send `groupName`, `editPermissions`, `messagePermissions`,
-        // `addMemberPermissions`, and the selected profile picture to your backend API.
-        // Example (pseudo-code):
-        // fetch('/api/create_group', { method: 'POST', body: JSON.stringify({...}) })
-        // .then(response => ...)
-    });
-});
-</script>
+                // TODO: Send data to backend API to create group
+                // Example payload:
+                // {
+                //   name: groupName,
+                //   profilePic: groupProfilePic.src,
+                //   editPermissions,
+                //   messagePermissions,
+                //   addMemberPermissions,
+                //   members: selectedMembers
+                // }
+
+                console.log({
+                    groupName,
+                    editPermissions,
+                    messagePermissions,
+                    addMemberPermissions,
+                    selectedMembers
+                });
+
+                // Redirect or show success message after backend response
+            });
+
+            // TODO: Fetch friends list from backend API and populate members-list
+            // Example:
+            // fetch('/api/get_friends')
+            //   .then(res => res.json())
+            //   .then(friends => {
+            //       friends.forEach(friend => {
+            //           const div = document.createElement('div');
+            //           div.className = 'friend-item';
+            //           div.dataset.id = friend.id;
+            //           div.textContent = friend.name;
+            //           div.addEventListener('click', () => {
+            //               div.classList.toggle('selected');
+            //           });
+            //           membersList.appendChild(div);
+            //       });
+            //   });
+        });
+    </script>
 </body>
 </html>
