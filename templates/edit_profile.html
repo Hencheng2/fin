@@ -1,403 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Edit Profile</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociafam - Edit Profile</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+:root {
+    --primary-blue: #007bff;
+    --light-grey: #f0f2f5;
+    --dark-grey: #555;
+    --border-radius: 12px;
+    --medium-radius: 8px;
+}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            padding: 20px;
-        }
+* { box-sizing: border-box; }
 
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--light-grey);
+    margin: 0;
+    padding: 0;
+}
 
-        .header .back-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--dark-grey);
-            cursor: pointer;
-        }
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
 
-        .header .title {
-            font-size: 20px;
-            font-weight: bold;
-        }
+.header .back-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    color: var(--dark-grey);
+    cursor: pointer;
+}
 
-        .header .save-btn {
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--medium-radius);
-            font-weight: bold;
-            cursor: pointer;
-        }
+.header .title {
+    font-size: 20px;
+    font-weight: bold;
+}
 
-        .content {
-            padding: 20px 0;
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-        }
+.header .save-btn {
+    background-color: var(--primary-blue);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--medium-radius);
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .form-section {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-        }
+.content {
+    padding: 20px;
+    max-width: 800px;
+    margin: auto;
+}
 
-        .section-title {
-            font-weight: bold;
-            font-size: 18px;
-            color: var(--dark-grey);
-            margin-bottom: 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.form-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
 
-        .section-title i {
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
+.section-title {
+    font-weight: bold;
+    font-size: 18px;
+    color: var(--dark-grey);
+    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+}
 
-        .section-title i.expanded {
-            transform: rotate(180deg);
-        }
+.section-title i {
+    transition: transform 0.3s ease;
+}
 
-        .section-content {
-            display: none;
-            padding-top: 10px;
-        }
+.section-title i.expanded {
+    transform: rotate(180deg);
+}
 
-        .section-content.expanded {
-            display: block;
-        }
+.section-content {
+    display: none;
+    padding-top: 10px;
+}
 
-        .input-group {
-            margin-bottom: 15px;
-        }
+.section-content.expanded {
+    display: block;
+}
 
-        .input-group label {
-            display: block;
-            font-size: 14px;
-            margin-bottom: 5px;
-            color: #333;
-        }
+.input-group {
+    margin-bottom: 15px;
+}
 
-        .input-group input[type="text"],
-        .input-group textarea,
-        .input-group select {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: var(--medium-radius);
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+.input-group label {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 5px;
+    color: #333;
+}
 
-        textarea {
-            resize: vertical;
-        }
+.input-group input[type="text"],
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: var(--medium-radius);
+    font-size: 16px;
+}
 
-        .profile-pic-group {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
+textarea { resize: vertical; }
 
-        .profile-pic {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid var(--primary-blue);
-        }
+.profile-pic-group {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
 
-        .profile-pic-btn {
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: var(--medium-radius);
-            font-weight: bold;
-            cursor: pointer;
-        }
+.profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--primary-blue);
+}
 
-        .date-of-birth-group {
-            display: flex;
-            gap: 10px;
-        }
+.profile-pic-btn {
+    background-color: var(--primary-blue);
+    color: #fff;
+    border: none;
+    padding: 8px 15px;
+    border-radius: var(--medium-radius);
+    font-weight: bold;
+    cursor: pointer;
+}
 
-        .date-of-birth-group select,
-        .date-of-birth-group input {
-            flex: 1;
-        }
-    </style>
+.date-of-birth-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.date-of-birth-group select,
+.date-of-birth-group input {
+    flex: 1;
+    min-width: 80px;
+}
+
+@media (max-width: 600px) {
+    .profile-pic-group { flex-direction: column; align-items: flex-start; }
+    .date-of-birth-group { flex-direction: column; }
+}
+</style>
 </head>
 <body>
-    <div class="header">
-        <a href="my_profile.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
-        <span class="title">Edit Profile</span>
-        <button class="save-btn" id="save-btn">Save</button>
+<div class="header">
+    <a href="my_profile.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+    <span class="title">Edit Profile</span>
+    <button class="save-btn" id="save-btn">Save</button>
+</div>
+
+<div class="content">
+    <div class="form-section">
+        <div class="profile-pic-group">
+            <img src="" alt="Profile Photo" class="profile-pic" id="profile-photo">
+            <button class="profile-pic-btn" id="change-photo-btn">Change Photo</button>
+            <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+        </div>
+        <div class="input-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" placeholder="Unique username">
+        </div>
+        <div class="input-group">
+            <label for="biography">Biography</label>
+            <textarea id="biography" rows="4" placeholder="Tell us about yourself..."></textarea>
+        </div>
     </div>
 
-    <div class="content">
-        <div class="form-section">
-            <div class="profile-pic-group">
-                <img src="" alt="Profile Photo" class="profile-pic" id="profile-photo">
-                <button class="profile-pic-btn" id="change-photo-btn">Change Photo</button>
-                <input type="file" id="photo-upload" accept="image/*" style="display: none;">
+    <!-- Basic Info Section -->
+    <div class="form-section" id="basic-info-section">
+        <div class="section-title"><span>Basic Info</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label>Date of Birth</label>
+                <div class="date-of-birth-group">
+                    <select id="dob-day"></select>
+                    <select id="dob-month"></select>
+                    <input type="text" id="dob-year" placeholder="Year">
+                </div>
             </div>
             <div class="input-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Unique username">
+                <label for="gender">Gender</label>
+                <select id="gender">
+                    <option value="">Select Gender</option>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                    <option value="non-binary">Non-binary</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
             <div class="input-group">
-                <label for="biography">Biography</label>
-                <textarea id="biography" rows="4" placeholder="Tell us about yourself..."></textarea>
-            </div>
-        </div>
-
-        <div class="form-section" id="basic-info-section">
-            <div class="section-title">
-                <span>Basic Info</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label>Date of Birth</label>
-                    <div class="date-of-birth-group">
-                        <select id="dob-day"></select>
-                        <select id="dob-month"></select>
-                        <input type="text" id="dob-year" placeholder="Year">
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label for="gender">Gender</label>
-                    <select id="gender">
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="non-binary">Non-binary</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-                <div class="input-group">
-                    <label for="pronouns">Pronouns</label>
-                    <select id="pronouns">
-                        <option value="">Select Pronouns</option>
-                        <option value="he/him">He/Him</option>
-                        <option value="she/her">She/Her</option>
-                        <option value="they/them">They/Them</option>
-                        <option value="other">Other</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section" id="work-section">
-            <div class="section-title">
-                <span>Work</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label for="work-info">Add Work Info</label>
-                    <input type="text" id="work-info" placeholder="Job title, Company">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section" id="education-section">
-            <div class="section-title">
-                <span>Education</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label for="university">Add University</label>
-                    <input type="text" id="university" placeholder="University name">
-                </div>
-                <div class="input-group">
-                    <label for="secondary">Add Secondary School</label>
-                    <input type="text" id="secondary" placeholder="Secondary school name">
-                </div>
-                <div class="input-group">
-                    <label for="other-education">Add Other Education</label>
-                    <input type="text" id="other-education" placeholder="Other education">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section" id="places-lived-section">
-            <div class="section-title">
-                <span>Places Lived</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label for="location">Add Location</label>
-                    <input type="text" id="location" placeholder="City, Country">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section" id="contact-info-section">
-            <div class="section-title">
-                <span>Contact Information</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label for="phone-number">Add Phone Number</label>
-                    <input type="text" id="phone-number" placeholder="+1234567890">
-                </div>
-                <div class="input-group">
-                    <label for="email">Add Email</label>
-                    <input type="text" id="email" placeholder="email@example.com">
-                </div>
-                <div class="input-group">
-                    <label for="social-link">Add Social Link</label>
-                    <input type="text" id="social-link" placeholder="e.g., twitter.com/username">
-                </div>
-                <div class="input-group">
-                    <label for="website-link">Add Website Link</label>
-                    <input type="text" id="website-link" placeholder="e.g., www.example.com">
-                </div>
-                 <div class="input-group">
-                    <label for="other-contact">Add Other Contact Info</label>
-                    <input type="text" id="other-contact" placeholder="Specify other contact info">
-                </div>
-            </div>
-        </div>
-
-        <div class="form-section" id="relationship-section">
-            <div class="section-title">
-                <span>Relationship</span>
-                <i class="fas fa-chevron-down"></i>
-            </div>
-            <div class="section-content">
-                <div class="input-group">
-                    <label for="relationship">Add Relationship</label>
-                    <select id="relationship">
-                        <option value="">Select Status</option>
-                        <option value="single">Single</option>
-                        <option value="in a relationship">In a relationship</option>
-                        <option value="engaged">Engaged</option>
-                        <option value="married">Married</option>
-                        <option value="complicated">It's complicated</option>
-                        <option value="widowed">Widowed</option>
-                        <option value="separated">Separated</option>
-                        <option value="divorced">Divorced</option>
-                    </select>
-                </div>
-                <div class="input-group" id="partner-input-group" style="display:none;">
-                    <label for="partner-name">Add Partner</label>
-                    <input type="text" id="partner-name" placeholder="Tag your partner's username">
-                </div>
+                <label for="pronouns">Pronouns</label>
+                <select id="pronouns">
+                    <option value="">Select Pronouns</option>
+                    <option value="he/him">He/Him</option>
+                    <option value="she/her">She/Her</option>
+                    <option value="they/them">They/Them</option>
+                    <option value="other">Other</option>
+                </select>
             </div>
         </div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Dropdown month/day/year logic
-            const dobDay = document.getElementById('dob-day');
-            const dobMonth = document.getElementById('dob-month');
-            
-            const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-            months.forEach((month, index) => {
-                const option = document.createElement('option');
-                option.value = index + 1;
-                option.textContent = month;
-                dobMonth.appendChild(option);
-            });
+    <!-- Work Section -->
+    <div class="form-section" id="work-section">
+        <div class="section-title"><span>Work</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="work-info">Add Work Info</label>
+                <input type="text" id="work-info" placeholder="Job title, Company">
+            </div>
+        </div>
+    </div>
 
-            for (let i = 1; i <= 31; i++) {
-                const option = document.createElement('option');
-                option.value = i;
-                option.textContent = i;
-                dobDay.appendChild(option);
-            }
+    <!-- Education Section -->
+    <div class="form-section" id="education-section">
+        <div class="section-title"><span>Education</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="university">Add University</label>
+                <input type="text" id="university" placeholder="University name">
+            </div>
+            <div class="input-group">
+                <label for="secondary">Add Secondary School</label>
+                <input type="text" id="secondary" placeholder="Secondary school name">
+            </div>
+            <div class="input-group">
+                <label for="other-education">Add Other Education</label>
+                <input type="text" id="other-education" placeholder="Other education">
+            </div>
+        </div>
+    </div>
 
-            // Collapsible sections
-            document.querySelectorAll('.form-section .section-title').forEach(title => {
-                title.addEventListener('click', () => {
-                    const content = title.nextElementSibling;
-                    const icon = title.querySelector('i');
-                    content.classList.toggle('expanded');
-                    icon.classList.toggle('expanded');
-                });
-            });
+    <!-- Places Lived Section -->
+    <div class="form-section" id="places-lived-section">
+        <div class="section-title"><span>Places Lived</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="location">Add Location</label>
+                <input type="text" id="location" placeholder="City, Country">
+            </div>
+        </div>
+    </div>
 
-            // Show/hide partner input based on relationship status
-            const relationshipSelect = document.getElementById('relationship');
-            const partnerInputGroup = document.getElementById('partner-input-group');
-            relationshipSelect.addEventListener('change', () => {
-                if (relationshipSelect.value === 'married' || relationshipSelect.value === 'engaged') {
-                    partnerInputGroup.style.display = 'block';
-                } else {
-                    partnerInputGroup.style.display = 'none';
-                }
-            });
+    <!-- Contact Info Section -->
+    <div class="form-section" id="contact-info-section">
+        <div class="section-title"><span>Contact Information</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="phone-number">Add Phone Number</label>
+                <input type="text" id="phone-number" placeholder="+1234567890">
+            </div>
+            <div class="input-group">
+                <label for="email">Add Email</label>
+                <input type="text" id="email" placeholder="email@example.com">
+            </div>
+            <div class="input-group">
+                <label for="social-link">Add Social Link</label>
+                <input type="text" id="social-link" placeholder="e.g., twitter.com/username">
+            </div>
+            <div class="input-group">
+                <label for="website-link">Add Website Link</label>
+                <input type="text" id="website-link" placeholder="e.g., www.example.com">
+            </div>
+            <div class="input-group">
+                <label for="other-contact">Add Other Contact Info</label>
+                <input type="text" id="other-contact" placeholder="Specify other contact info">
+            </div>
+        </div>
+    </div>
 
-            // Change profile photo functionality
-            const changePhotoBtn = document.getElementById('change-photo-btn');
-            const photoUpload = document.getElementById('photo-upload');
-            const profilePhoto = document.getElementById('profile-photo');
+    <!-- Relationship Section -->
+    <div class="form-section" id="relationship-section">
+        <div class="section-title"><span>Relationship</span><i class="fas fa-chevron-down"></i></div>
+        <div class="section-content">
+            <div class="input-group">
+                <label for="relationship">Add Relationship</label>
+                <select id="relationship">
+                    <option value="">Select Status</option>
+                    <option value="single">Single</option>
+                    <option value="in a relationship">In a relationship</option>
+                    <option value="engaged">Engaged</option>
+                    <option value="married">Married</option>
+                    <option value="complicated">It's complicated</option>
+                    <option value="widowed">Widowed</option>
+                    <option value="separated">Separated</option>
+                    <option value="divorced">Divorced</option>
+                </select>
+            </div>
+            <div class="input-group" id="partner-input-group" style="display:none;">
+                <label for="partner-name">Add Partner</label>
+                <input type="text" id="partner-name" placeholder="Tag your partner's username">
+            </div>
+        </div>
+    </div>
+</div>
 
-            changePhotoBtn.addEventListener('click', () => {
-                photoUpload.click();
-            });
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Populate day and month dropdowns
+    const dobDay = document.getElementById('dob-day');
+    const dobMonth = document.getElementById('dob-month');
+    const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+    months.forEach((month,i)=>{
+        const option=document.createElement('option');option.value=i+1;option.textContent=month;dobMonth.appendChild(option);
+    });
+    for(let i=1;i<=31;i++){ const option=document.createElement('option'); option.value=i; option.textContent=i; dobDay.appendChild(option); }
 
-            photoUpload.addEventListener('change', (e) => {
-                const file = e.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        profilePhoto.src = event.target.result;
-                    };
-                    reader.readAsDataURL(file);
-                }
-            });
-
-            // Save button logic
-            document.getElementById('save-btn').addEventListener('click', () => {
-                // Here is where you would collect all the form data and send it to your backend API
-                // For example:
-                const username = document.getElementById('username').value;
-                const biography = document.getElementById('biography').value;
-                const dobDayValue = dobDay.value;
-                // etc.
-                // Your backend logic goes here
-            });
+    // Collapsible sections
+    document.querySelectorAll('.form-section .section-title').forEach(title=>{
+        title.addEventListener('click',()=>{
+            const content=title.nextElementSibling;
+            const icon=title.querySelector('i');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
         });
-    </script>
+    });
+
+    // Show/hide partner input
+    const relationshipSelect=document.getElementById('relationship');
+    const partnerInputGroup=document.getElementById('partner-input-group');
+    relationshipSelect.addEventListener('change',()=>{
+        if(relationshipSelect.value==='married'||relationshipSelect.value==='engaged'){
+            partnerInputGroup.style.display='block';
+        } else { partnerInputGroup.style.display='none'; }
+    });
+
+    // Profile photo upload
+    const changePhotoBtn=document.getElementById('change-photo-btn');
+    const photoUpload=document.getElementById('photo-upload');
+    const profilePhoto=document.getElementById('profile-photo');
+    changePhotoBtn.addEventListener('click',()=>{photoUpload.click();});
+    photoUpload.addEventListener('change',e=>{
+        const file=e.target.files[0];
+        if(file){
+            const reader=new FileReader();
+            reader.onload=event=>{profilePhoto.src=event.target.result;};
+            reader.readAsDataURL(file);
+        }
+    });
+
+    // Save button
+    document.getElementById('save-btn').addEventListener('click',()=>{
+        // TODO: Collect all form data and send to backend API
+        const data={
+            username: document.getElementById('username').value,
+            biography: document.getElementById('biography').value,
+            dob_day: dobDay.value,
+            dob_month: dobMonth.value,
+            dob_year: document.getElementById('dob-year').value,
+            gender: document.getElementById('gender').value,
+            pronouns: document.getElementById('pronouns').value,
+            work: document.getElementById('work-info').value,
+            education_university: document.getElementById('university').value,
+            education_secondary: document.getElementById('secondary').value,
+            education_other: document.getElementById('other-education').value,
+            location: document.getElementById('location').value,
+            phone: document.getElementById('phone-number').value,
+            email: document.getElementById('email').value,
+            social: document.getElementById('social-link').value,
+            website: document.getElementById('website-link').value,
+            other_contact: document.getElementById('other-contact').value,
+            relationship: document.getElementById('relationship').value,
+            partner: document.getElementById('partner-name').value
+        };
+        console.log("Form data to submit:", data);
+        // TODO: Send 'data' to your backend API here
+    });
+});
+</script>
 </body>
 </html>
