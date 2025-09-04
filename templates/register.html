@@ -1,178 +1,269 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Register</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --background-color: #f0f2f5;
-            --card-color: #fff;
-            --text-color: #333;
-            --border-color: #ccc;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociafam - Register</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+:root {
+    --primary-blue: #007bff;
+    --background-color: #f0f2f5;
+    --card-color: #fff;
+    --text-color: #333;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --medium-radius: 8px;
+}
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background-color: var(--card-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.container {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+    position: relative;
+}
 
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-            color: var(--text-color);
-        }
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .header p {
-            font-size: 14px;
-            color: #888;
-        }
+.header h1 {
+    font-size: 26px;
+    margin: 0;
+    color: var(--text-color);
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.header p {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--medium-radius);
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-color);
+}
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--medium-radius);
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
 
-        .error-message {
-            color: #dc3545;
-            font-size: 12px;
-            margin-top: 5px;
-            display: none;
-        }
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            border-radius: var(--medium-radius);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+.error-message {
+    color: #dc3545;
+    font-size: 12px;
+    margin-top: 5px;
+    display: none;
+}
 
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--medium-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: relative;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+.loader {
+    border: 3px solid #f3f3f3;
+    border-top: 3px solid var(--primary-blue);
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg);}
+    100% { transform: rotate(360deg);}
+}
+
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: var(--medium-radius);
+    display: none;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.links a {
+    color: var(--primary-blue);
+    text-decoration: none;
+    margin: 0 10px;
+    transition: color 0.2s;
+}
+
+.links a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+    .container { padding: 20px; }
+    .header h1 { font-size: 22px; }
+    .submit-btn { font-size: 15px; padding: 10px; }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+    .container { padding: 25px; }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Register</h1>
-            <p>Create your Sociafam account</p>
-        </div>
-        <form id="registration-form">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-                <span id="password-error" class="error-message">Password must be 6+ characters with at least one number, one alphabet, and one special character.</span>
-            </div>
-            <button type="submit" class="submit-btn">Register</button>
-        </form>
+<div class="container">
+    <div class="header">
+        <h1>Register</h1>
+        <p>Create your Sociafam account</p>
     </div>
+    <form id="registration-form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+            <span id="password-error" class="error-message">
+                Password must be 6+ characters with at least one number, one letter, and one special character.
+            </span>
+        </div>
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password</label>
+            <input type="password" id="confirm-password" name="confirm-password" required>
+            <span id="confirm-error" class="error-message">Passwords do not match.</span>
+        </div>
+        <button type="submit" class="submit-btn">
+            Register
+            <span class="loader" id="register-loader"></span>
+        </button>
+        <div class="message" id="register-message"></div>
+    </form>
+    <div class="links">
+        <a href="{% url 'login' %}">Already have an account? Log in</a>
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('registration-form');
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
-            const passwordError = document.getElementById('password-error');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('registration-form');
+    const usernameInput = document.getElementById('username');
+    const passwordInput = document.getElementById('password');
+    const confirmInput = document.getElementById('confirm-password');
+    const passwordError = document.getElementById('password-error');
+    const confirmError = document.getElementById('confirm-error');
+    const loader = document.getElementById('register-loader');
+    const messageDiv = document.getElementById('register-message');
 
-            function validatePassword(password) {
-                const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
-                return regex.test(password);
-            }
+    function validatePassword(password) {
+        const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
+        return regex.test(password);
+    }
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const username = usernameInput.value.trim();
+        const password = passwordInput.value.trim();
+        const confirm = confirmInput.value.trim();
 
-                const username = usernameInput.value.trim();
-                const password = passwordInput.value.trim();
+        passwordError.style.display = 'none';
+        confirmError.style.display = 'none';
+        messageDiv.style.display = 'none';
+        loader.style.display = 'inline-block';
 
-                passwordError.style.display = 'none';
+        if(!validatePassword(password)){
+            passwordError.style.display = 'block';
+            loader.style.display = 'none';
+            return;
+        }
 
-                if (!validatePassword(password)) {
-                    passwordError.style.display = 'block';
-                    return;
-                }
-                
-                // Your backend API call to register the user goes here
-                // Note: You must handle the "Henry" and "Dec@2003" credential check on your backend
-                // to prevent user registration with those details.
+        if(password !== confirm){
+            confirmError.style.display = 'block';
+            loader.style.display = 'none';
+            return;
+        }
 
-                // Example fetch:
-                // try {
-                //     const response = await fetch('/api/register', {
-                //         method: 'POST',
-                //         headers: { 'Content-Type': 'application/json' },
-                //         body: JSON.stringify({ username, password })
-                //     });
-                //     const data = await response.json();
-                //
-                //     if (response.ok) {
-                //         // On successful registration, you would receive the unique key from the backend
-                //         const uniqueKey = data.unique_key; 
-                //         console.log('Registration successful! Your unique key is:', uniqueKey);
-                //         // Redirect to a success page or log in the user
-                //     } else {
-                //         console.error('Registration failed:', data.message);
-                //     }
-                // } catch (error) {
-                //     console.error('An error occurred during registration:', error);
-                // }
-            });
-        });
-    </script>
+        try{
+            // Simulated network delay for demo
+            await new Promise(res => setTimeout(res, 1000));
+
+            // Demo success
+            messageDiv.textContent = "Registration successful!";
+            messageDiv.className = "message success";
+            messageDiv.style.display = "block";
+            setTimeout(()=>{ window.location.href='/login'; }, 1000);
+
+        } catch(error){
+            messageDiv.textContent = "An error occurred. Please try again.";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+        } finally {
+            loader.style.display = 'none';
+        }
+    });
+});
+</script>
 </body>
 </html>
