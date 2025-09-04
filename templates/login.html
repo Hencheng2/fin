@@ -118,7 +118,6 @@
         color: #0056b3;
     }
 
-    /* Loader */
     .loader {
         border: 3px solid #f3f3f3;
         border-top: 3px solid var(--primary-blue);
@@ -137,7 +136,6 @@
         100% { transform: rotate(360deg);}
     }
 
-    /* Error/Success messages */
     .message {
         margin-top: 10px;
         font-size: 14px;
@@ -198,8 +196,8 @@
         <div class="message" id="login-message"></div>
     </form>
     <div class="links">
-        <a href="{% url 'register' %}">Register</a>
-        <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+        <a href="/register">Register</a>
+        <a href="/forgot_password">Forgot Password?</a>
     </div>
 </div>
 
@@ -217,41 +215,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const usernameOrEmail = usernameEmailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        // Reset message and show loader
         messageDiv.style.display = 'none';
         loader.style.display = 'inline-block';
 
-        // Placeholder for backend API integration
         try {
-            // Simulate network delay for demo
-            await new Promise(res => setTimeout(res, 1000));
+            const response = await fetch('/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ identifier: usernameOrEmail, password })
+            });
+            const data = await response.json();
 
-            // Replace below with real fetch POST request to backend
-            // Example:
-            // const response = await fetch('/api/login', {
-            //     method: 'POST',
-            //     headers: { 'Content-Type': 'application/json' },
-            //     body: JSON.stringify({ identifier: usernameOrEmail, password })
-            // });
-            // const data = await response.json();
-
-            // Demo response
-            const demoSuccess = usernameOrEmail === "demo" && password === "demo";
-
-            if (demoSuccess) {
+            if (response.ok) {
+                localStorage.setItem('token', data.token);
                 messageDiv.textContent = "Login successful!";
                 messageDiv.className = "message success";
                 messageDiv.style.display = "block";
-                // Redirect after short delay
                 setTimeout(() => {
-                    window.location.href = '/home'; 
+                    window.location.href = '/home';
                 }, 1000);
             } else {
-                messageDiv.textContent = "Invalid username/email or password.";
+                messageDiv.textContent = data.error || "Invalid username/email or password.";
                 messageDiv.className = "message error";
                 messageDiv.style.display = "block";
             }
-
         } catch (error) {
             messageDiv.textContent = "An error occurred. Please try again.";
             messageDiv.className = "message error";
