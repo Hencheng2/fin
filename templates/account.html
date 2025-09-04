@@ -18,17 +18,16 @@
             font-family: Arial, sans-serif;
             background-color: var(--light-grey);
             margin: 0;
-            padding: 20px 0;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
 
+        /* Header */
         .header {
             width: 100%;
             max-width: 800px;
             display: flex;
-            justify-content: center;
             align-items: center;
             padding: 15px;
             background-color: #fff;
@@ -37,18 +36,30 @@
             top: 0;
             z-index: 100;
             border-radius: var(--border-radius);
-            margin-bottom: 20px;
+        }
+
+        .header .back-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--dark-grey);
+            margin-right: 15px;
+            cursor: pointer;
+            text-decoration: none;
         }
 
         .header .title {
             font-size: 20px;
             font-weight: bold;
+            flex-grow: 1;
         }
 
+        /* Container */
         .container {
             width: 100%;
             max-width: 800px;
-            padding: 0 20px;
+            padding: 0 15px 20px 15px;
+            box-sizing: border-box;
         }
 
         .section {
@@ -106,27 +117,55 @@
             cursor: pointer;
             transition: background-color 0.3s ease;
             text-align: center;
+            display: block;
+            text-decoration: none;
         }
 
         .support-btn:hover {
             background-color: #0056b3;
         }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .header .title {
+                font-size: 18px;
+            }
+
+            .section h2 {
+                font-size: 16px;
+            }
+
+            .section p, .status-item span, .status-item .value {
+                font-size: 13px;
+            }
+
+            .support-btn {
+                font-size: 15px;
+                padding: 12px;
+            }
+        }
     </style>
 </head>
 <body>
+    <!-- Header with back arrow -->
     <div class="header">
+        <a href="menu.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i>
+        </a>
         <span class="title">Account</span>
     </div>
 
+    <!-- Main container -->
     <div class="container">
+        <!-- Terms and Policies Section -->
         <div class="section" id="terms-policies-section">
             <h2>Terms and Policies</h2>
             <p>
-                <!-- Terms and policies content will be populated by your backend API -->
                 Welcome to Sociafam. By using our services, you agree to our terms and policies. These policies are in place to ensure a safe and respectful community for everyone. Violations of these policies may result in warnings, temporary bans, or permanent account termination.
             </p>
         </div>
 
+        <!-- Account Status Section -->
         <div class="section" id="account-status-section">
             <h2>Account Status</h2>
             <div id="status-list">
@@ -145,6 +184,7 @@
             </div>
         </div>
 
+        <!-- Support Section -->
         <div class="section">
             <a href="admin_chat.html" class="support-btn">
                 Support Inbox
@@ -155,15 +195,15 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             function fetchAccountStatus() {
-                // Your backend API call to fetch account status goes here
+                // Fetch account status from backend API
                 // Example:
                 // fetch('/api/account/status')
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         document.getElementById('status-value').textContent = data.status;
-                //         document.getElementById('warnings-value').textContent = data.warnings;
-                //         document.getElementById('bans-value').textContent = data.bans;
-                //     });
+                //   .then(res => res.json())
+                //   .then(data => {
+                //     document.getElementById('status-value').textContent = data.status;
+                //     document.getElementById('warnings-value').textContent = data.warnings;
+                //     document.getElementById('bans-value').textContent = data.bans;
+                //   });
             }
 
             fetchAccountStatus();
