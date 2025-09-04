@@ -1,171 +1,172 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Forgot Password</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --background-color: #f0f2f5;
-            --card-color: #fff;
-            --text-color: #333;
-            --border-color: #ccc;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociafam - Forgot Password</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+:root {
+    --primary-blue: #007bff;
+    --background-color: #f0f2f5;
+    --card-color: #fff;
+    --text-color: #333;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --medium-radius: 8px;
+}
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background-color: var(--card-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.container {
+    width: 90%;
+    max-width: 400px;
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
 
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-            color: var(--text-color);
-        }
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .header p {
-            font-size: 14px;
-            color: #888;
-        }
+.header h1 {
+    font-size: 24px;
+    margin: 0;
+    color: var(--text-color);
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.header p {
+    font-size: 14px;
+    color: #888;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--medium-radius);
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-color);
+}
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--medium-radius);
+    box-sizing: border-box;
+    font-size: 16px;
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            border-radius: var(--medium-radius);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
 
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--medium-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
 
-        .links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-        
-        .links a {
-            color: var(--primary-blue);
-            text-decoration: none;
-        }
+.submit-btn:hover {
+    background-color: #0056b3;
+}
 
-        .links a:hover {
-            text-decoration: underline;
-        }
-    </style>
+.links {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 14px;
+}
+
+.links a {
+    color: var(--primary-blue);
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Forgot Password</h1>
-            <p>Enter your username and unique key to reset your password</p>
-        </div>
-        <form id="forgot-password-form">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="unique_key">Unique Key</label>
-                <input type="text" id="unique_key" name="unique_key" required>
-            </div>
-            <button type="submit" class="submit-btn">Continue</button>
-        </form>
-        <div class="links">
-            <a href="{% url 'login' %}">Remember password?</a>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>Forgot Password</h1>
+        <p>Enter your username and unique key to reset your password</p>
     </div>
+    <form id="forgot-password-form">
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required>
+        </div>
+        <div class="form-group">
+            <label for="unique_key">Unique Key</label>
+            <input type="text" id="unique_key" name="unique_key" required>
+        </div>
+        <button type="submit" class="submit-btn">Continue</button>
+    </form>
+    <div class="links">
+        <a href="{% url 'login' %}">Remember password?</a>
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('forgot-password-form');
-            const usernameInput = document.getElementById('username');
-            const uniqueKeyInput = document.getElementById('unique_key');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('forgot-password-form');
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-                const username = usernameInput.value.trim();
-                const uniqueKey = uniqueKeyInput.value.trim();
+        const username = document.getElementById('username').value.trim();
+        const uniqueKey = document.getElementById('unique_key').value.trim();
 
-                // Your backend API call to verify credentials goes here
-                // Example fetch:
-                // try {
-                //     const response = await fetch('/api/verify_key', {
-                //         method: 'POST',
-                //         headers: { 'Content-Type': 'application/json' },
-                //         body: JSON.stringify({ username, uniqueKey })
-                //     });
-                //     const data = await response.json();
-                //
-                //     if (response.ok) {
-                //         console.log('Verification successful!');
-                //         // Redirect to the set_new.html page
-                //         window.location.href = '{% url "set_new_password" %}';
-                //     } else {
-                //         console.error('Verification failed:', data.message);
-                //     }
-                // } catch (error) {
-                //     console.error('An error occurred during verification:', error);
-                // }
+        // --- BACKEND INTEGRATION PLACEHOLDER ---
+        // TODO: Replace with your actual backend API call to verify the username and unique key
+        // Example:
+        /*
+        try {
+            const response = await fetch('/api/forgot-password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, uniqueKey })
             });
-        });
-    </script>
+            const data = await response.json();
+
+            if (response.ok) {
+                // Verification successful, redirect to set new password page
+                window.location.href = '{% url "set_new_password" %}';
+            } else {
+                // Display error message
+                alert(data.message || "Verification failed. Please check your input.");
+            }
+        } catch (error) {
+            console.error('Error during verification:', error);
+        }
+        */
+    });
+});
+</script>
 </body>
 </html>
