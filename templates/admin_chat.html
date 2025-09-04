@@ -1,172 +1,262 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Support Chat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sociafam - Support Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: #007bff;
+      --light-grey: #f0f2f5;
+      --dark-grey: #555;
+      --border-radius: 12px;
+      --medium-radius: 8px;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--light-grey);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
 
-        .navbar {
-            display: flex;
-            align-items: center;
-            background-color: #fff;
-            padding: 10px 15px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            width: 100%;
-            z-index: 100;
-        }
+    .navbar {
+      display: flex;
+      align-items: center;
+      background-color: #fff;
+      padding: 10px 15px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 100;
+    }
 
-        .back-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--dark-grey);
-            cursor: pointer;
-            margin-right: 15px;
-        }
+    .back-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--dark-grey);
+      cursor: pointer;
+      margin-right: 15px;
+    }
 
-        .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 10px;
-            border: 2px solid var(--primary-blue);
-        }
+    .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-right: 10px;
+      border: 2px solid var(--primary-blue);
+    }
 
-        .profile-info {
-            flex-grow: 1;
-        }
+    .profile-info {
+      flex-grow: 1;
+    }
 
-        .profile-info .name {
-            font-size: 16px;
-            font-weight: bold;
-        }
+    .profile-info .name {
+      font-size: 16px;
+      font-weight: bold;
+    }
 
-        .chat-container {
-            flex-grow: 1;
-            padding: 70px 15px 70px 15px; /* Adjust padding for fixed header and footer */
-            overflow-y: auto;
-        }
+    .chat-container {
+      flex-grow: 1;
+      padding: 70px 15px 70px 15px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
 
-        .message-area {
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #fff;
-            padding: 10px 15px;
-            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: center;
-        }
+    .typing-indicator {
+      font-size: 13px;
+      font-style: italic;
+      color: var(--dark-grey);
+      margin: 5px 0;
+    }
 
-        .message-input {
-            flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: var(--medium-radius);
-            margin-right: 10px;
-            font-size: 14px;
-        }
+    .message {
+      max-width: 80%;
+      padding: 10px 14px;
+      border-radius: var(--medium-radius);
+      font-size: 14px;
+      line-height: 1.4;
+      word-wrap: break-word;
+      overflow-wrap: anywhere;
+    }
 
-        .input-button {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--primary-blue);
-            cursor: pointer;
-            padding: 5px;
-        }
-    </style>
+    .message.user {
+      align-self: flex-end;
+      background-color: var(--primary-blue);
+      color: #fff;
+      border-bottom-right-radius: 0;
+    }
+
+    .message.support {
+      align-self: flex-start;
+      background-color: #e9ecef;
+      color: #000;
+      border-bottom-left-radius: 0;
+    }
+
+    .message-area {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #fff;
+      padding: 10px 15px;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+      display: flex;
+      align-items: center;
+    }
+
+    .message-input {
+      flex-grow: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: var(--medium-radius);
+      margin-right: 10px;
+      font-size: 14px;
+    }
+
+    .input-button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--primary-blue);
+      cursor: pointer;
+      padding: 5px;
+    }
+
+    @media (max-width: 600px) {
+      .message {
+        max-width: 90%;
+        font-size: 13px;
+      }
+      .message-input {
+        font-size: 13px;
+        padding: 8px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="navbar">
-        <button class="back-btn" onclick="history.back()">
-            <i class="fas fa-arrow-left"></i>
-        </button>
-        <img src="support.png" alt="Support" class="profile-pic">
-        <div class="profile-info">
-            <div class="name">Support</div>
-        </div>
+  <div class="navbar">
+    <button class="back-btn" onclick="history.back()">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <img src="support.png" alt="Support" class="profile-pic">
+    <div class="profile-info">
+      <div class="name">Support</div>
     </div>
+  </div>
 
-    <div class="chat-container" id="chat-container">
-        <!-- Messages will be dynamically loaded here -->
+  <div class="chat-container" id="chat-container">
+    <!-- Messages will be dynamically loaded -->
+    <div id="typing-indicator" class="typing-indicator" style="display:none;">
+      Support is typing...
     </div>
+  </div>
 
-    <div class="message-area">
-        <input type="text" id="message-input" class="message-input" placeholder="Type a message...">
-        <button id="attach-btn" class="input-button">
-            <i class="fas fa-paperclip"></i>
-        </button>
-        <button id="send-btn" class="input-button">
-            <i class="fas fa-paper-plane"></i>
-        </button>
-    </div>
+  <div class="message-area">
+    <input type="text" id="message-input" class="message-input" placeholder="Type a message...">
+    <button id="attach-btn" class="input-button">
+      <i class="fas fa-paperclip"></i>
+    </button>
+    <button id="send-btn" class="input-button">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const chatContainer = document.getElementById('chat-container');
-            const messageInput = document.getElementById('message-input');
-            const sendBtn = document.getElementById('send-btn');
-            const attachBtn = document.getElementById('attach-btn');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const chatContainer = document.getElementById('chat-container');
+      const typingIndicator = document.getElementById('typing-indicator');
+      const messageInput = document.getElementById('message-input');
+      const sendBtn = document.getElementById('send-btn');
+      const attachBtn = document.getElementById('attach-btn');
+      let typingTimeout;
 
-            // Function to handle sending a message
-            sendBtn.addEventListener('click', () => {
-                const message = messageInput.value.trim();
-                if (message) {
-                    // Your backend API call to send a message to support goes here
-                    // Example:
-                    // fetch('/api/support/message', {
-                    //     method: 'POST',
-                    //     headers: { 'Content-Type': 'application/json' },
-                    //     body: JSON.stringify({ text: message })
-                    // });
-                    messageInput.value = ''; // Clear input field
-                }
-            });
-
-            // Function to handle attachment
-            attachBtn.addEventListener('click', () => {
-                // Your logic to open a file picker for attachments goes here
-                // Note: File input must be created and styled
-                // This is a placeholder for that functionality
-                console.log('Attach button clicked');
-            });
-            
-            // Function to fetch and render chat messages
-            function fetchMessages() {
-                // Your backend API call to fetch chat history goes here
-                // Example:
-                // fetch('/api/support/chat_history')
-                //     .then(response => response.json())
-                //     .then(messages => {
-                //         // Render messages in chatContainer
-                //     });
-            }
-
-            fetchMessages();
+      function renderMessages(messages) {
+        // Clear but keep typing indicator
+        const keepTyping = typingIndicator;
+        chatContainer.innerHTML = '';
+        messages.forEach(msg => {
+          const bubble = document.createElement('div');
+          bubble.className = `message ${msg.sender}`;
+          bubble.textContent = msg.text;
+          chatContainer.appendChild(bubble);
         });
-    </script>
+        chatContainer.appendChild(keepTyping);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      async function fetchMessages() {
+        try {
+          // Replace with backend fetch
+          // const res = await fetch('/api/support/chat_history');
+          // const data = await res.json();
+          // renderMessages(data);
+
+          renderMessages([]); // empty until backend
+        } catch (err) {
+          console.error('Error fetching messages:', err);
+        }
+      }
+
+      // User typing detection
+      messageInput.addEventListener('input', () => {
+        // Notify backend that user is typing (optional)
+        // fetch('/api/support/typing', { method: 'POST' })
+
+        clearTimeout(typingTimeout);
+        typingTimeout = setTimeout(() => {
+          // Notify backend user stopped typing
+        }, 2000);
+      });
+
+      // Simulate backend telling us support is typing
+      function showSupportTyping(isTyping) {
+        typingIndicator.style.display = isTyping ? 'block' : 'none';
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }
+
+      // Sending messages
+      sendBtn.addEventListener('click', async () => {
+        const message = messageInput.value.trim();
+        if (message) {
+          const newMsg = { sender: 'user', text: message };
+          const existing = Array.from(chatContainer.querySelectorAll('.message')).map(m => ({
+            sender: m.classList.contains('user') ? 'user' : 'support',
+            text: m.textContent
+          }));
+          renderMessages([...existing, newMsg]);
+          messageInput.value = '';
+
+          try {
+            // Replace with backend call
+            // await fetch('/api/support/message', { ... });
+          } catch (err) {
+            console.error('Error sending message:', err);
+          }
+        }
+      });
+
+      attachBtn.addEventListener('click', () => {
+        console.log('Attach button clicked');
+      });
+
+      fetchMessages();
+      setInterval(fetchMessages, 5000);
+
+      // Example: simulate support typing (for demo only)
+      // setTimeout(() => showSupportTyping(true), 3000);
+      // setTimeout(() => showSupportTyping(false), 6000);
+    });
+  </script>
 </body>
 </html>
