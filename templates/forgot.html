@@ -108,6 +108,24 @@ body {
 .links a:hover {
     text-decoration: underline;
 }
+
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: var(--medium-radius);
+    display: none;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
 </style>
 </head>
 <body>
@@ -126,15 +144,17 @@ body {
             <input type="text" id="unique_key" name="unique_key" required>
         </div>
         <button type="submit" class="submit-btn">Continue</button>
+        <div class="message" id="forgot-message"></div>
     </form>
     <div class="links">
-        <a href="{% url 'login' %}">Remember password?</a>
+        <a href="/login">Remember password?</a>
     </div>
 </div>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('forgot-password-form');
+    const messageDiv = document.getElementById('forgot-message');
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -142,29 +162,31 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = document.getElementById('username').value.trim();
         const uniqueKey = document.getElementById('unique_key').value.trim();
 
-        // --- BACKEND INTEGRATION PLACEHOLDER ---
-        // TODO: Replace with your actual backend API call to verify the username and unique key
-        // Example:
-        /*
+        messageDiv.style.display = 'none';
+
         try {
-            const response = await fetch('/api/forgot-password', {
+            const response = await fetch('/forgot_password', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ username, uniqueKey })
+                body: JSON.stringify({ username, unique_key: uniqueKey })
             });
             const data = await response.json();
 
             if (response.ok) {
-                // Verification successful, redirect to set new password page
-                window.location.href = '{% url "set_new_password" %}';
+                messageDiv.textContent = "Verification successful! Redirecting...";
+                messageDiv.className = "message success";
+                messageDiv.style.display = "block";
+                setTimeout(() => { window.location.href = '/set_new_password'; }, 1000);
             } else {
-                // Display error message
-                alert(data.message || "Verification failed. Please check your input.");
+                messageDiv.textContent = data.error || "Verification failed. Please check your input.";
+                messageDiv.className = "message error";
+                messageDiv.style.display = "block";
             }
         } catch (error) {
-            console.error('Error during verification:', error);
+            messageDiv.textContent = "An error occurred. Please try again.";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
         }
-        */
     });
 });
 </script>
