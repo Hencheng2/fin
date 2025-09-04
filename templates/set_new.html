@@ -1,161 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Set New Password</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --background-color: #f0f2f5;
-            --card-color: #fff;
-            --text-color: #333;
-            --border-color: #ccc;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociafam - Set New Password</title>
+<style>
+:root {
+    --primary-blue: #007bff;
+    --background-color: #f0f2f5;
+    --card-color: #fff;
+    --text-color: #333;
+    --border-color: #ccc;
+    --border-radius: 12px;
+    --medium-radius: 8px;
+}
 
-        .container {
-            width: 90%;
-            max-width: 400px;
-            background-color: var(--card-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--background-color);
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+}
 
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+.container {
+    width: 100%;
+    max-width: 400px;
+    background-color: var(--card-color);
+    padding: 30px;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
 
-        .header h1 {
-            font-size: 24px;
-            margin: 0;
-            color: var(--text-color);
-        }
+.header {
+    text-align: center;
+    margin-bottom: 25px;
+}
 
-        .header p {
-            font-size: 14px;
-            color: #888;
-        }
+.header h1 {
+    font-size: 26px;
+    margin: 0;
+    color: var(--text-color);
+}
 
-        .form-group {
-            margin-bottom: 15px;
-        }
+.header p {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
+.form-group {
+    margin-bottom: 15px;
+}
 
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--medium-radius);
-            box-sizing: border-box;
-            font-size: 16px;
-        }
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--text-color);
+}
 
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--medium-radius);
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.3s;
+}
 
-        .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            border-radius: var(--medium-radius);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+.form-group input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+}
 
-        .submit-btn:hover {
-            background-color: #0056b3;
-        }
-    </style>
+.submit-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--primary-blue);
+    color: #fff;
+    border: none;
+    border-radius: var(--medium-radius);
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #0056b3;
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 20px;
+    }
+    .header h1 {
+        font-size: 22px;
+    }
+    .submit-btn {
+        font-size: 15px;
+        padding: 10px;
+    }
+}
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Set New Password</h1>
-            <p>Please enter your new password below</p>
-        </div>
-        <form id="set-new-password-form">
-            <div class="form-group">
-                <label for="new_password">New Password</label>
-                <input type="password" id="new_password" name="new_password" required>
-            </div>
-            <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" id="confirm_password" name="confirm_password" required>
-            </div>
-            <button type="submit" class="submit-btn">Set Password</button>
-        </form>
+<div class="container">
+    <div class="header">
+        <h1>Set New Password</h1>
+        <p>Please enter your new password below</p>
     </div>
+    <form id="set-new-password-form">
+        <div class="form-group">
+            <label for="new_password">New Password</label>
+            <input type="password" id="new_password" name="new_password" required>
+        </div>
+        <div class="form-group">
+            <label for="confirm_password">Confirm Password</label>
+            <input type="password" id="confirm_password" name="confirm_password" required>
+        </div>
+        <button type="submit" class="submit-btn">Set Password</button>
+    </form>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('set-new-password-form');
-            const newPasswordInput = document.getElementById('new_password');
-            const confirmPasswordInput = document.getElementById('confirm_password');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('set-new-password-form');
+    const newPasswordInput = document.getElementById('new_password');
+    const confirmPasswordInput = document.getElementById('confirm_password');
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-                const newPassword = newPasswordInput.value.trim();
-                const confirmPassword = confirmPasswordInput.value.trim();
+        const newPassword = newPasswordInput.value.trim();
+        const confirmPassword = confirmPasswordInput.value.trim();
 
-                if (newPassword !== confirmPassword) {
-                    // You can show a custom modal or message here instead of an alert
-                    console.error("Passwords do not match!");
-                    return;
-                }
-
-                // Your backend API call to update the password goes here
-                // Example fetch:
-                // try {
-                //     const response = await fetch('/api/reset_password', {
-                //         method: 'POST',
-                //         headers: { 'Content-Type': 'application/json' },
-                //         body: JSON.stringify({ newPassword })
-                //     });
-                //     const data = await response.json();
-                //
-                //     if (response.ok) {
-                //         console.log('Password updated successfully!');
-                //         // Redirect to the login page after a short delay
-                //         setTimeout(() => {
-                //             window.location.href = '{% url "login" %}';
-                //         }, 1000);
-                //     } else {
-                //         console.error('Password update failed:', data.message);
-                //     }
-                // } catch (error) {
-                //     console.error('An error occurred during password update:', error);
-                // }
-            });
-        });
-    </script>
+        // Backend API call to update the password goes here
+        // Example:
+        // try {
+        //     const response = await fetch('/api/reset_password', {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify({ newPassword })
+        //     });
+        //     const data = await response.json();
+        //     if (response.ok) {
+        //         console.log('Password updated successfully!');
+        //         setTimeout(() => { window.location.href = '{% url "login" %}'; }, 1000);
+        //     } else {
+        //         console.error('Password update failed:', data.message);
+        //     }
+        // } catch (error) {
+        //     console.error('Error updating password:', error);
+        // }
+    });
+});
+</script>
 </body>
 </html>
