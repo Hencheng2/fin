@@ -1,436 +1,397 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Home</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-        }
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            padding: 20px 0;
-        }
+{% block extra_styles %}
+<style>
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+        background-color: #fff;
+        padding: 0;
+    }
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 0;
-        }
+    /* --- Stories Section --- */
+    .stories-container {
+        display: flex;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 10px;
+        background-color: #fff;
+        border-bottom: 1px solid #ddd;
+        white-space: nowrap;
+        scrollbar-width: none; /* Firefox */
+    }
+    .stories-container::-webkit-scrollbar {
+        display: none; /* Chrome, Safari */
+    }
+    .story-item {
+        display: inline-block;
+        text-align: center;
+        margin-right: 15px;
+        cursor: pointer;
+        flex-shrink: 0;
+    }
+    .story-circle {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        border: 3px solid var(--primary-color);
+        padding: 2px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .story-circle img {
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .story-username {
+        font-size: 12px;
+        color: var(--text-color);
+        margin-top: 5px;
+        max-width: 70px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 
-        /* --- Stories Section --- */
-        .stories-container {
-            display: flex;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            padding: 10px;
-            background-color: #fff;
-            border-bottom: 1px solid #ddd;
-            white-space: nowrap;
-            scrollbar-width: none; /* Firefox */
-        }
-        .stories-container::-webkit-scrollbar {
-            display: none; /* Chrome, Safari */
-        }
-        .story-item {
-            display: inline-block;
-            text-align: center;
-            margin-right: 15px;
-            cursor: pointer;
-            flex-shrink: 0;
-        }
-        .story-circle {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            border: 3px solid var(--primary-blue);
-            padding: 2px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .story-circle img {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .story-username {
-            font-size: 12px;
-            color: var(--dark-grey);
-            margin-top: 5px;
-            max-width: 70px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
+    /* --- Story Modal --- */
+    .story-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #000;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+    }
+    .modal-content {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-content img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    .story-progress-bar-container {
+        position: absolute;
+        top: 5px;
+        left: 0;
+        width: 100%;
+        height: 3px;
+        background-color: rgba(255, 255, 255, 0.3);
+        display: flex;
+        justify-content: space-between;
+        padding: 0 5px;
+    }
+    .story-progress-bar {
+        flex-grow: 1;
+        height: 100%;
+        background-color: #fff;
+        transform: scaleX(0);
+        transform-origin: left;
+        transition: transform linear;
+        margin: 0 1px;
+    }
 
-        /* --- Story Modal --- */
-        .story-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #000;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        .modal-content {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-content img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-        .story-progress-bar-container {
-            position: absolute;
-            top: 5px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: rgba(255, 255, 255, 0.3);
-            display: flex;
-            justify-content: space-between;
-            padding: 0 5px;
-        }
-        .story-progress-bar {
-            flex-grow: 1;
-            height: 100%;
-            background-color: #fff;
-            transform: scaleX(0);
-            transform-origin: left;
-            transition: transform linear;
-            margin: 0 1px;
-        }
+    /* --- Posts Section --- */
+    .posts-container {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px 0;
+    }
+    .post-card {
+        background-color: #fff;
+        border-radius: var(--border-radius);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .post-header {
+        display: flex;
+        align-items: center;
+        padding: 15px;
+        gap: 10px;
+    }
+    .post-profile-pic {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .post-info {
+        flex-grow: 1;
+    }
+    .post-info .real-name {
+        font-weight: bold;
+        display: block;
+    }
+    .post-info .username {
+        font-size: 14px;
+        color: var(--text-color);
+    }
+    .post-info .post-date {
+        font-size: 12px;
+        color: #aaa;
+        margin-left: 5px;
+    }
+    .post-description {
+        padding: 0 15px;
+        font-size: 14px;
+        line-height: 1.4;
+        color: #333;
+    }
+    .post-image {
+        width: 100%;
+        height: auto;
+        margin-top: 10px;
+    }
+    .post-actions {
+        display: flex;
+        justify-content: space-around;
+        padding: 15px;
+        align-items: center;
+    }
+    .post-action-button {
+        background: none;
+        border: none;
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        transition: color 0.2s ease;
+    }
+    .post-action-button:hover {
+        color: var(--primary-color);
+    }
+    .post-analytics {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12px;
+        color: #777;
+        padding: 0 15px 15px;
+    }
+</style>
+{% endblock %}
 
-        /* --- Posts Section --- */
-        .posts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            padding: 20px 0;
-        }
-        .post-card {
-            background-color: #fff;
-            border-radius: var(--border-radius);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            overflow: hidden;
-        }
-        .post-header {
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            gap: 10px;
-        }
-        .post-profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .post-info {
-            flex-grow: 1;
-        }
-        .post-info .real-name {
-            font-weight: bold;
-            display: block;
-        }
-        .post-info .username {
-            font-size: 14px;
-            color: var(--dark-grey);
-        }
-        .post-info .post-date {
-            font-size: 12px;
-            color: #aaa;
-            margin-left: 5px;
-        }
-        .post-description {
-            padding: 0 15px;
-            font-size: 14px;
-            line-height: 1.4;
-            color: #333;
-        }
-        .post-image {
-            width: 100%;
-            height: auto;
-            margin-top: 10px;
-        }
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            padding: 15px;
-            align-items: center;
-        }
-        .post-action-button {
-            background: none;
-            border: none;
-            color: var(--dark-grey);
-            cursor: pointer;
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            transition: color 0.2s ease;
-        }
-        .post-action-button:hover {
-            color: var(--primary-blue);
-        }
-        .post-analytics {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #777;
-            padding: 0 15px 15px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- --- Stories Section --- -->
-        <div class="stories-container" id="stories-container"></div>
-        
-        <!-- --- Story Modal --- -->
-        <div class="story-modal" id="story-modal">
-            <div class="story-progress-bar-container" id="story-progress-bar-container"></div>
-            <div class="modal-content">
-                <img id="modal-story-image" src="" alt="Story">
-            </div>
+{% block content %}
+<div class="container">
+    <!-- --- Stories Section --- -->
+    <div class="stories-container" id="stories-container"></div>
+    
+    <!-- --- Story Modal --- -->
+    <div class="story-modal" id="story-modal">
+        <div class="story-progress-bar-container" id="story-progress-bar-container"></div>
+        <div class="modal-content">
+            <img id="modal-story-image" src="" alt="Story">
         </div>
-
-        <!-- --- Posts Section --- -->
-        <div class="posts-container" id="posts-container"></div>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // These arrays will be populated with data from your backend.
-            let storiesData = [];
-            let postsData = [];
+    <!-- --- Posts Section --- -->
+    <div class="posts-container" id="posts-container"></div>
+</div>
+{% endblock %}
 
-            const storiesContainer = document.getElementById('stories-container');
-            const postsContainer = document.getElementById('posts-container');
-            const storyModal = document.getElementById('story-modal');
-            const modalStoryImage = document.getElementById('modal-story-image');
-            const storyProgressBarContainer = document.getElementById('story-progress-bar-container');
-            
-            let currentStoryIndex = 0;
-            let currentStoryUserIndex = 0;
-            let currentStoryTimer;
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // These arrays will be populated with data from your backend.
+        let storiesData = [];
+        let postsData = [];
 
-            /**
-             * Renders the stories based on the data fetched from the backend.
-             * @param {Array} stories The array of story data.
-             */
-            function renderStories(stories) {
-                storiesContainer.innerHTML = '';
-                stories.forEach((user, userIndex) => {
-                    const storyItem = document.createElement('div');
-                    storyItem.className = 'story-item';
-                    storyItem.innerHTML = `
-                        <div class="story-circle">
-                            <img src="${user.profilePic}" alt="${user.username}'s profile picture">
-                        </div>
-                        <span class="story-username">${user.username}</span>
-                    `;
-                    storyItem.addEventListener('click', () => openStoryModal(userIndex, 0));
-                    storiesContainer.appendChild(storyItem);
-                });
+        const storiesContainer = document.getElementById('stories-container');
+        const postsContainer = document.getElementById('posts-container');
+        const storyModal = document.getElementById('story-modal');
+        const modalStoryImage = document.getElementById('modal-story-image');
+        const storyProgressBarContainer = document.getElementById('story-progress-bar-container');
+        
+        let currentStoryIndex = 0;
+        let currentStoryUserIndex = 0;
+        let currentStoryTimer;
+
+        // Render stories
+        function renderStories(stories) {
+            storiesContainer.innerHTML = '';
+            stories.forEach((user, userIndex) => {
+                const storyItem = document.createElement('div');
+                storyItem.className = 'story-item';
+                storyItem.innerHTML = `
+                    <div class="story-circle">
+                        <img src="${user.profilePic}" alt="${user.username}'s profile picture">
+                    </div>
+                    <span class="story-username">${user.username}</span>
+                `;
+                storyItem.addEventListener('click', () => openStoryModal(userIndex, 0));
+                storiesContainer.appendChild(storyItem);
+            });
+        }
+
+        // Open/close story modal
+        function openStoryModal(userIndex, storyIndex) {
+            currentStoryUserIndex = userIndex;
+            currentStoryIndex = storyIndex;
+            storyModal.style.display = 'flex';
+            updateStory();
+        }
+        function closeStoryModal() {
+            storyModal.style.display = 'none';
+            clearTimeout(currentStoryTimer);
+        }
+
+        // Update story display
+        function updateStory() {
+            const user = storiesData[currentStoryUserIndex];
+            if (!user || currentStoryIndex >= user.stories.length || currentStoryIndex < 0) {
+                closeStoryModal();
+                return;
             }
+            modalStoryImage.src = user.stories[currentStoryIndex].imageUrl;
+            
+            storyProgressBarContainer.innerHTML = '';
+            user.stories.forEach(() => {
+                const bar = document.createElement('div');
+                bar.className = 'story-progress-bar';
+                storyProgressBarContainer.appendChild(bar);
+            });
 
-            /**
-             * Opens the story modal and displays the selected story.
-             * @param {number} userIndex The index of the user's stories.
-             * @param {number} storyIndex The index of the specific story.
-             */
-            function openStoryModal(userIndex, storyIndex) {
-                currentStoryUserIndex = userIndex;
-                currentStoryIndex = storyIndex;
-                storyModal.style.display = 'flex';
+            const currentProgressBar = storyProgressBarContainer.children[currentStoryIndex];
+            const duration = 5000;
+            currentProgressBar.style.transition = `transform ${duration}ms linear`;
+            currentProgressBar.style.transform = 'scaleX(1)';
+
+            clearTimeout(currentStoryTimer);
+            currentStoryTimer = setTimeout(() => {
+                goToNextStory();
+            }, duration);
+        }
+        
+        // Story navigation
+        function goToNextStory() {
+            const user = storiesData[currentStoryUserIndex];
+            if (currentStoryIndex < user.stories.length - 1) {
+                currentStoryIndex++;
+                updateStory();
+            } else {
+                goToNextUserStory();
+            }
+        }
+        function goToPreviousStory() {
+            if (currentStoryIndex > 0) {
+                currentStoryIndex--;
+                updateStory();
+            } else {
+                goToPreviousUserStory();
+            }
+        }
+        function goToNextUserStory() {
+            if (currentStoryUserIndex < storiesData.length - 1) {
+                openStoryModal(currentStoryUserIndex + 1, 0);
+            } else {
+                closeStoryModal();
+            }
+        }
+        function goToPreviousUserStory() {
+            if (currentStoryUserIndex > 0) {
+                const prevUser = storiesData[currentStoryUserIndex - 1];
+                openStoryModal(currentStoryUserIndex - 1, prevUser.stories.length - 1);
+            }
+        }
+
+        // Swipe & tap functionality
+        let touchStartY = 0;
+        let touchStartX = 0;
+        storyModal.addEventListener('touchstart', (e) => {
+            touchStartY = e.touches[0].clientY;
+            touchStartX = e.touches[0].clientX;
+            clearTimeout(currentStoryTimer);
+        });
+        storyModal.addEventListener('touchmove', (e) => {
+            const deltaY = e.touches[0].clientY - touchStartY;
+            if (deltaY > 50) {
+                closeStoryModal();
+            }
+        });
+        storyModal.addEventListener('touchend', (e) => {
+            const deltaX = e.changedTouches[0].clientX - touchStartX;
+            const deltaY = e.changedTouches[0].clientY - touchStartY;
+            
+            if (Math.abs(deltaY) < 50 && Math.abs(deltaX) > 50) {
+                if (deltaX < 0) {
+                    goToNextStory();
+                } else {
+                    goToPreviousStory();
+                }
+            } else if (Math.abs(deltaY) < 50 && Math.abs(deltaX) < 50) {
                 updateStory();
             }
-
-            function closeStoryModal() {
-                storyModal.style.display = 'none';
-                clearTimeout(currentStoryTimer);
-            }
-
-            function updateStory() {
-                const user = storiesData[currentStoryUserIndex];
-                if (!user || currentStoryIndex >= user.stories.length || currentStoryIndex < 0) {
-                    closeStoryModal();
-                    return;
-                }
-                modalStoryImage.src = user.stories[currentStoryIndex].imageUrl;
-                
-                // Update progress bars
-                storyProgressBarContainer.innerHTML = '';
-                user.stories.forEach((_, index) => {
-                    const bar = document.createElement('div');
-                    bar.className = 'story-progress-bar';
-                    storyProgressBarContainer.appendChild(bar);
-                });
-
-                const currentProgressBar = storyProgressBarContainer.children[currentStoryIndex];
-                const duration = 5000; // 5 seconds per story
-                currentProgressBar.style.transition = `transform ${duration}ms linear`;
-                currentProgressBar.style.transform = 'scaleX(1)';
-
-                clearTimeout(currentStoryTimer);
-                currentStoryTimer = setTimeout(() => {
-                    goToNextStory();
-                }, duration);
-            }
-            
-            function goToNextStory() {
-                const user = storiesData[currentStoryUserIndex];
-                if (currentStoryIndex < user.stories.length - 1) {
-                    currentStoryIndex++;
-                    updateStory();
-                } else {
-                    goToNextUserStory();
-                }
-            }
-
-            function goToPreviousStory() {
-                if (currentStoryIndex > 0) {
-                    currentStoryIndex--;
-                    updateStory();
-                } else {
-                    goToPreviousUserStory();
-                }
-            }
-
-            function goToNextUserStory() {
-                if (currentStoryUserIndex < storiesData.length - 1) {
-                    openStoryModal(currentStoryUserIndex + 1, 0);
-                } else {
-                    closeStoryModal();
-                }
-            }
-
-            function goToPreviousUserStory() {
-                if (currentStoryUserIndex > 0) {
-                    const prevUser = storiesData[currentStoryUserIndex - 1];
-                    openStoryModal(currentStoryUserIndex - 1, prevUser.stories.length - 1);
-                }
-            }
-
-            // Swipe and hold functionality for the story modal
-            let touchStartY = 0;
-            let touchStartX = 0;
-
-            storyModal.addEventListener('touchstart', (e) => {
-                touchStartY = e.touches[0].clientY;
-                touchStartX = e.touches[0].clientX;
-                clearTimeout(currentStoryTimer);
-                const currentProgressBar = storyProgressBarContainer.children[currentStoryIndex];
-                currentProgressBar.style.animationPlayState = 'paused';
-            });
-
-            storyModal.addEventListener('touchmove', (e) => {
-                const deltaY = e.touches[0].clientY - touchStartY;
-                if (deltaY > 50) { // Swipe down to exit
-                    closeStoryModal();
-                }
-            });
-
-            storyModal.addEventListener('touchend', (e) => {
-                const deltaX = e.changedTouches[0].clientX - touchStartX;
-                const deltaY = e.changedTouches[0].clientY - touchStartY;
-                
-                if (Math.abs(deltaY) < 50 && Math.abs(deltaX) > 50) { // Horizontal swipe
-                    if (deltaX < 0) {
-                        goToNextStory();
-                    } else {
-                        goToPreviousStory();
-                    }
-                } else if (Math.abs(deltaY) < 50 && Math.abs(deltaX) < 50) { // Tap to pause
-                    // Resume timer
-                    updateStory();
-                }
-            });
-
-            /**
-             * Renders a list of posts into the DOM.
-             * @param {Array} posts The array of post data.
-             */
-            function renderPosts(posts) {
-                posts.forEach(post => {
-                    const postCard = document.createElement('div');
-                    postCard.className = 'post-card';
-                    postCard.innerHTML = `
-                        <div class="post-header">
-                            <img src="${post.profilePic}" alt="${post.username}'s profile picture" class="post-profile-pic">
-                            <div class="post-info">
-                                <span class="real-name">${post.realName}</span>
-                                <span class="username">@${post.username}</span>
-                                <span class="post-date">• ${post.postedDate}</span>
-                            </div>
-                            <i class="fas fa-ellipsis-h"></i>
-                        </div>
-                        ${post.description ? `<div class="post-description"><p>${post.description}</p></div>` : ''}
-                        <img src="${post.postImage}" alt="Post image" class="post-image">
-                        <div class="post-actions">
-                            <button class="post-action-button"><i class="fas fa-heart"></i> Like</button>
-                            <button class="post-action-button"><i class="fas fa-comment"></i> Comment</button>
-                            <button class="post-action-button"><i class="fas fa-share-alt"></i> Share</button>
-                            ${!post.isOwner ? `<button class="post-action-button follow-btn"><i class="fas fa-user-plus"></i> Follow</button>` : ''}
-                        </div>
-                        <div class="post-actions">
-                            ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-retweet"></i> Repost</button>` : ''}
-                            <button class="post-action-button"><i class="fas fa-bookmark"></i> Save Post</button>
-                        </div>
-                        <div class="post-actions">
-                            ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-bell"></i> Notifications</button>` : ''}
-                            ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-user-slash"></i> Block</button>` : ''}
-                            <button class="post-action-button"><i class="fas fa-eye-slash"></i> Hide Post</button>
-                        </div>
-                        <div class="post-actions">
-                            ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-flag"></i> Report</button>` : ''}
-                        </div>
-                        <div class="post-analytics">
-                            <span>${post.views} views</span>
-                            <span>Analytics</span>
-                        </div>
-                    `;
-                    postsContainer.appendChild(postCard);
-                });
-            }
-
-            // --- Backend Integration Placeholder ---
-            // This is where you will fetch data from your backend.
-            
-            // Example of how you would call the render functions with data
-            // You will need to replace this with your actual API calls.
-            // renderStories(storiesData);
-            // renderPosts(postsData);
-
-            // Endless scroll functionality - will trigger a backend call
-            window.addEventListener('scroll', () => {
-                if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-                    // This is the ideal place to call your backend API to load more posts.
-                    // For example: fetch('your-api-url/posts?page=2').then(response => response.json()).then(data => renderPosts(data));
-                }
-            });
         });
-    </script>
-</body>
-</html>
+
+        // Render posts
+        function renderPosts(posts) {
+            posts.forEach(post => {
+                const postCard = document.createElement('div');
+                postCard.className = 'post-card';
+                postCard.innerHTML = `
+                    <div class="post-header">
+                        <img src="${post.profilePic}" alt="${post.username}'s profile picture" class="post-profile-pic">
+                        <div class="post-info">
+                            <span class="real-name">${post.realName}</span>
+                            <span class="username">@${post.username}</span>
+                            <span class="post-date">• ${post.postedDate}</span>
+                        </div>
+                        <i class="fas fa-ellipsis-h"></i>
+                    </div>
+                    ${post.description ? `<div class="post-description"><p>${post.description}</p></div>` : ''}
+                    <img src="${post.postImage}" alt="Post image" class="post-image">
+                    <div class="post-actions">
+                        <button class="post-action-button"><i class="fas fa-heart"></i> Like</button>
+                        <button class="post-action-button"><i class="fas fa-comment"></i> Comment</button>
+                        <button class="post-action-button"><i class="fas fa-share-alt"></i> Share</button>
+                        ${!post.isOwner ? `<button class="post-action-button follow-btn"><i class="fas fa-user-plus"></i> Follow</button>` : ''}
+                    </div>
+                    <div class="post-actions">
+                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-retweet"></i> Repost</button>` : ''}
+                        <button class="post-action-button"><i class="fas fa-bookmark"></i> Save Post</button>
+                    </div>
+                    <div class="post-actions">
+                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-bell"></i> Notifications</button>` : ''}
+                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-user-slash"></i> Block</button>` : ''}
+                        <button class="post-action-button"><i class="fas fa-eye-slash"></i> Hide Post</button>
+                    </div>
+                    <div class="post-actions">
+                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-flag"></i> Report</button>` : ''}
+                    </div>
+                    <div class="post-analytics">
+                        <span>${post.views} views</span>
+                        <span>Analytics</span>
+                    </div>
+                `;
+                postsContainer.appendChild(postCard);
+            });
+        }
+
+        // Infinite scroll placeholder
+        window.addEventListener('scroll', () => {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                // Backend call for more posts here
+            }
+        });
+
+        // Example calls
+        // renderStories(storiesData);
+        // renderPosts(postsData);
+    });
+</script>
+{% endblock %}
