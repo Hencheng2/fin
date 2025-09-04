@@ -7,13 +7,13 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
         :root {
-            --primary-color: #3b5998; /* A vibrant blue for main elements */
-            --secondary-color: #e9ebee; /* A light gray for backgrounds */
-            --accent-color: #f0f2f5; /* Off-white for cards/containers */
-            --text-color: #1c1e21; /* Dark gray for text */
-            --icon-color: #65676b; /* Gray for icons */
-            --link-color: #1877f2; /* Bright blue for links */
-            --admin-color: #dc3545; /* Red for admin-specific elements */
+            --primary-color: #3b5998;
+            --secondary-color: #e9ebee;
+            --accent-color: #f0f2f5;
+            --text-color: #1c1e21;
+            --icon-color: #65676b;
+            --link-color: #1877f2;
+            --admin-color: #dc3545;
             --border-radius: 8px;
             --box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
         }
@@ -21,12 +21,11 @@
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             margin: 0;
-            padding: 60px 0; /* Adjusted padding to accommodate the two navbars */
+            padding: 60px 0;
             background-color: var(--secondary-color);
             color: var(--text-color);
         }
 
-        /* --- Navigation Bars --- */
         .navbar-top, .navbar-bottom {
             position: fixed;
             width: 100%;
@@ -40,7 +39,7 @@
 
         .navbar-top {
             top: 0;
-            flex-wrap: wrap; /* Allows items to wrap on smaller screens */
+            flex-wrap: wrap;
         }
 
         .navbar-bottom {
@@ -57,7 +56,7 @@
             font-weight: 500;
             transition: color 0.3s ease;
             text-align: center;
-            padding: 5px; /* Added padding for touch targets */
+            padding: 5px;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -77,24 +76,22 @@
             display: none;
         }
 
-        /* --- Main Content Area --- */
         .main-content {
             padding: 20px;
-            min-height: calc(100vh - 120px); /* Adjust height to fill space between navbars */
-            box-sizing: border-box; /* Include padding in height calculation */
+            min-height: calc(100vh - 120px);
+            box-sizing: border-box;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* --- Responsive Styles for smaller screens (e.g., mobile) --- */
         @media (max-width: 600px) {
             .nav-item {
-                font-size: 10px; /* Smaller font for labels */
-                flex: 1; /* Distributes items evenly */
+                font-size: 10px;
+                flex: 1;
             }
 
             .nav-item .icon {
-                font-size: 20px; /* Slightly smaller icons */
+                font-size: 20px;
             }
         }
     </style>
@@ -103,68 +100,72 @@
 </head>
 <body>
 
-    <!-- Top Navigation Bar -->
     <nav class="navbar-top">
-        <a href="home.html" class="nav-item active">
+        <a href="/home" class="nav-item active">
             <i class="fas fa-home icon"></i>
             <span>Home</span>
         </a>
-        <a href="inbox.html" class="nav-item">
+        <a href="/inbox" class="nav-item">
             <i class="fas fa-inbox icon"></i>
             <span>Inbox</span>
         </a>
-        <a href="my_profile.html" class="nav-item">
+        <a href="/my_profile" class="nav-item">
             <i class="fas fa-user-circle icon"></i>
             <span>Profile</span>
         </a>
-        <a href="notifications.html" class="nav-item">
+        <a href="/notifications" class="nav-item">
             <i class="fas fa-bell icon"></i>
             <span>Notifications</span>
         </a>
-        <a href="search.html" class="nav-item">
+        <a href="/search" class="nav-item">
             <i class="fas fa-search icon"></i>
             <span>Search</span>
         </a>
-        <a href="menu.html" class="nav-item">
+        <a href="/menu" class="nav-item">
             <i class="fas fa-bars icon"></i>
             <span>Menu</span>
         </a>
-        <!-- The admin link -->
-        <a href="admin_dashboard.html" class="nav-item admin hidden" id="admin-link">
+        <a href="/admin_dashboard" class="nav-item admin hidden" id="admin-link">
             <i class="fas fa-tachometer-alt icon"></i>
             <span>Admin</span>
         </a>
     </nav>
 
-    <!-- Main content will go here -->
     <div class="main-content">
         {% block content %}{% endblock %}
     </div>
 
-    <!-- Bottom Navigation Bar -->
     <nav class="navbar-bottom">
-        <a href="friends.html" class="nav-item">
+        <a href="/friends" class="nav-item">
             <i class="fas fa-user-friends icon"></i>
             <span>Friends</span>
         </a>
-        <a href="add.html" class="nav-item">
+        <a href="/add" class="nav-item">
             <i class="fas fa-plus-square icon"></i>
             <span>Add to</span>
         </a>
-        <a href="reels.html" class="nav-item">
+        <a href="/reels" class="nav-item">
             <i class="fas fa-video icon"></i>
             <span>Reels</span>
         </a>
     </nav>
 
-    <!-- Script to show/hide the admin link -->
     <script>
-        // This is a placeholder for logic to determine if the user is an admin.
-        const isAdmin = true; // Set to 'true' to show the link, 'false' to hide it
-
-        if (isAdmin) {
-            document.getElementById('admin-link').classList.remove('hidden');
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = localStorage.getItem('token');
+            if (token) {
+                fetch('/api/is_admin', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_admin) {
+                        document.getElementById('admin-link').classList.remove('hidden');
+                    }
+                })
+                .catch(error => console.error('Error checking admin status:', error));
+            }
+        });
     </script>
 
     {% block extra_scripts %}{% endblock %}
