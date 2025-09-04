@@ -89,12 +89,12 @@
         background-color: #0056b3;
     }
     
-    .action-btn.message-btn {
+    .action-btn.message-btn, .action-btn.secondary-btn {
         background-color: var(--light-grey);
         color: var(--dark-grey);
     }
     
-    .action-btn.message-btn:hover {
+    .action-btn.message-btn:hover, .action-btn.secondary-btn:hover {
         background-color: #ddd;
     }
 
@@ -194,19 +194,21 @@
             <div class="buttons-section">
                 <button class="action-btn" id="follow-btn">Follow</button>
                 <button class="action-btn message-btn" id="message-btn">Message</button>
+                <button class="action-btn secondary-btn" id="block-btn">Block</button>
+                <button class="action-btn secondary-btn" id="report-btn">Report</button>
             </div>
+            <div class="mutual-friends" id="mutual-friends"></div>
         </div>
     </div>
 
     <div class="bio-section">
         <div class="section-title">Biography</div>
         <p id="biography"></p>
-        <div class="mutual-friends" id="mutual-friends"></div>
     </div>
 
     <div class="gallery-navbar">
-        <button class="gallery-nav-btn active" data-tab="posts"><i class="fas fa-th"></i> Posts</button>
-        <button class="gallery-nav-btn" data-tab="reels"><i class="fas fa-video"></i> Reels</button>
+        <button class="gallery-nav-btn active" data-tab="posts"><i class="fas fa-th"></i></button>
+        <button class="gallery-nav-btn" data-tab="reels"><i class="fas fa-video"></i></button>
     </div>
 
     <div class="gallery-views">
@@ -223,6 +225,11 @@
 {% block extra_scripts %}
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+    const token = localStorage.getItem('token');
+    const headers = { 'Authorization': `Bearer ${token}` };
+    const username = '{{ username }}';
+
+    // Tab switching
     const tabs = document.querySelectorAll('.gallery-nav-btn');
     const galleryViews = document.querySelectorAll('.gallery-view');
     
@@ -241,16 +248,95 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Backend hooks
-    function updateProfileInfo() {}
-    function updateCounts() {}
-    function loadPosts() {}
-    function loadReels() {}
+    // Fetch profile info
+    function updateProfileInfo() {
+        fetch(`/api/other_profile/${username}`, { headers })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    window.location.href = '/home';
+                    return;
+                }
+                document.getElementById('profile-photo').src = data.profile_pic || 'default.jpg';
+                document.getElementById('real-name').textContent = data.real_name || username;
+                document.getElementById('friends-count').textContent = data.friends_count;
+                document.getElementById('followers-count').textContent = data.followers_count;
+                document.getElementById('following-count').textContent = data.following_count;
+                document.getElementById('biography').textContent = data.biography || 'No biography available';
+                document.getElementById('mutual-friends').textContent = data.mutual_friends.length 
+                    ? `Mutual friends: ${data.mutual_friends.map(f => f.username).join(', ')}` 
+                    : 'No mutual friends';
+            });
+    }
 
-    document.getElementById('follow-btn').addEventListener('click', () => {});
-    document.getElementById('message-btn').addEventListener('click', () => {
-        window.location.href = 'chat.html';
+    // Fetch posts
+    function loadPosts() {
+        fetch(`/api/other_profile/${username}/posts`, { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('posts-grid');
+                grid.innerHTML = '';
+                data.posts.forEach(post => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<img src="${post.post_image}" alt="Post">`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    // Fetch reels
+    function loadReels() {
+        fetch(`/api/other_profile/${username}/reels`, { headers })
+            .then(response => response.json())
+            .then(data => {
+                const grid = document.getElementById('reels-grid');
+                grid.innerHTML = '';
+                data.reels.forEach(reel => {
+                    const item = document.createElement('div');
+                    item.className = 'gallery-item';
+                    item.innerHTML = `<video src="${reel.post_image}" controls></video>`;
+                    grid.appendChild(item);
+                });
+            });
+    }
+
+    // Button handlers
+    document.getElementById('follow-btn').addEventListener('click', () => {
+        fetch(`/api/users/${username}/follow`, { method: 'POST', headers })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Follow request sent');
+                }
+            });
     });
+
+    document.getElementById('message-btn').addEventListener('click', () => {
+        // Implement messaging logic (e.g., redirect to messaging page)
+        alert('Messaging functionality not yet implemented');
+    });
+
+    document.getElementById('block-btn').addEventListener('click', () => {
+        fetch(`/api/users/${username}/block`, { method: 'POST', headers })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('User blocked');
+                    window.location.href = '/home';
+                }
+            });
+    });
+
+    document.getElementById('report-btn').addEventListener('click', () => {
+        // Implement reporting logic
+        alert('Reporting functionality not yet implemented');
+    });
+
+    // Initial load
+    updateProfileInfo();
+    loadPosts();
+    loadReels();
 });
 </script>
 {% endblock %}
