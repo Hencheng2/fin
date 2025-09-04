@@ -22,56 +22,64 @@
             background-color: var(--dark-bg);
             color: var(--dark-text);
             margin: 0;
-            display: flex;
-            min-height: 100vh;
         }
 
-        .sidebar {
-            width: 250px;
+        /* Dropdown menu styles */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+            width: 100%;
             background-color: var(--dark-card);
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
+        }
+
+        .dropbtn {
+            background-color: var(--dark-card);
+            color: var(--dark-text);
+            padding: 15px 20px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
             display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .dropbtn:hover {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: var(--dark-card);
+            min-width: 200px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 1;
             flex-direction: column;
-            gap: 15px;
         }
 
-        .logo {
-            text-align: center;
-            font-size: 24px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: var(--primary-blue);
-        }
-
-        .nav-item {
+        .dropdown-content button {
             background: none;
             border: none;
             color: var(--dark-text);
             text-align: left;
-            padding: 12px 15px;
+            padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
-            border-radius: var(--border-radius);
-            transition: background-color 0.3s, color 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
+            width: 100%;
         }
 
-        .nav-item:hover, .nav-item.active {
+        .dropdown-content button:hover {
             background-color: var(--primary-blue);
             color: #fff;
         }
 
         .content-area {
-            flex-grow: 1;
             padding: 20px;
-            margin-left: 250px;
+            margin-top: 10px;
         }
 
         .section-header {
@@ -97,7 +105,7 @@
             background-color: var(--dark-card);
             border-radius: var(--border-radius);
             padding: 20px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
         }
 
         .card h3 {
@@ -180,36 +188,43 @@
         .hidden {
             display: none;
         }
+
+        /* Arrow back button */
+        .back-arrow {
+            display: inline-flex;
+            align-items: center;
+            margin-bottom: 20px;
+            cursor: pointer;
+            color: var(--primary-blue);
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        .back-arrow i {
+            margin-right: 8px;
+        }
     </style>
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo">SociaFam Admin</div>
-        <button class="nav-item active" data-target="dashboard">
-            <i class="fas fa-tachometer-alt"></i> Dashboard
-        </button>
-        <button class="nav-item" data-target="users">
-            <i class="fas fa-users"></i> Users
-        </button>
-        <button class="nav-item" data-target="groups">
-            <i class="fas fa-user-friends"></i> Groups
-        </button>
-        <button class="nav-item" data-target="inbox">
-            <i class="fas fa-inbox"></i> Inbox
-        </button>
-        <button class="nav-item" data-target="reports">
-            <i class="fas fa-exclamation-triangle"></i> Reports
-        </button>
-        <button class="nav-item" data-target="story">
-            <i class="fas fa-fire"></i> Post Story
-        </button>
-        <button class="nav-item" data-target="broadcast">
-            <i class="fas fa-bullhorn"></i> Broadcast
-        </button>
+    <!-- Dropdown menu -->
+    <div class="dropdown">
+        <button class="dropbtn">☰ Menu <i class="fas fa-chevron-down"></i></button>
+        <div class="dropdown-content">
+            <button onclick="location.href='home.html'"><i class="fas fa-home"></i> Home</button>
+            <button data-target="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</button>
+            <button data-target="users"><i class="fas fa-users"></i> Users</button>
+            <button data-target="groups"><i class="fas fa-user-friends"></i> Groups</button>
+            <button data-target="inbox"><i class="fas fa-inbox"></i> Inbox</button>
+            <button data-target="reports"><i class="fas fa-exclamation-triangle"></i> Reports</button>
+            <button data-target="story"><i class="fas fa-fire"></i> Post Story</button>
+            <button data-target="broadcast"><i class="fas fa-bullhorn"></i> Broadcast</button>
+        </div>
     </div>
 
     <div class="content-area">
+        <a href="menu.html" class="back-arrow"><i class="fas fa-arrow-left"></i> Back to Menu</a>
+
         <div id="dashboard" class="content-section">
             <div class="section-header">
                 <h1>Dashboard Overview</h1>
@@ -244,9 +259,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="users-table-body">
-                    <!-- User data will be dynamically loaded here -->
-                </tbody>
+                <tbody id="users-table-body"></tbody>
             </table>
         </div>
 
@@ -263,9 +276,7 @@
                         <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody id="groups-table-body">
-                    <!-- Group data will be dynamically loaded here -->
-                </tbody>
+                <tbody id="groups-table-body"></tbody>
             </table>
         </div>
 
@@ -275,21 +286,17 @@
             </div>
             <div class="card">
                 <h3>Chats from Users</h3>
-                <div id="inbox-list">
-                    <!-- Support chats will be loaded here -->
-                </div>
+                <div id="inbox-list"></div>
             </div>
         </div>
-        
+
         <div id="reports" class="content-section hidden">
             <div class="section-header">
                 <h1>Reports</h1>
             </div>
             <div class="card">
                 <h3>Reported Content & Users</h3>
-                <div id="reports-list">
-                    <!-- Reports will be loaded here -->
-                </div>
+                <div id="reports-list"></div>
             </div>
         </div>
 
@@ -317,112 +324,45 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const navItems = document.querySelectorAll('.nav-item');
-            const contentSections = document.querySelectorAll('.content-section');
-            const usersTableBody = document.getElementById('users-table-body');
-            const groupsTableBody = document.getElementById('groups-table-body');
-
-            navItems.forEach(item => {
-                item.addEventListener('click', () => {
-                    navItems.forEach(nav => nav.classList.remove('active'));
-                    item.classList.add('active');
-
-                    contentSections.forEach(section => {
-                        section.classList.add('hidden');
-                    });
-                    document.getElementById(item.dataset.target).classList.remove('hidden');
-
-                    // Call a fetch function for the active tab
-                    if (item.dataset.target === 'users') {
-                        fetchUsers();
-                    } else if (item.dataset.target === 'groups') {
-                        fetchGroups();
-                    }
-                });
-            });
-
-            // Note: The following logic for the admin login credentials would be handled on your backend.
-            // On the user registration page, your backend API would check if the requested username
-            // and password match "Henry" and "Dec@2003" respectively. If they do, the registration
-            // request would be denied to reserve those credentials for the admin.
-
-            // Admin Functions (Backend API integration points)
-            function fetchUsers() {
-                // Your backend API call to get all user data
-                // fetch('/api/admin/users')
-                //     .then(response => response.json())
-                //     .then(users => {
-                //         renderUsers(users);
-                //     });
-                // Since no mock data is allowed, we'll clear the table
-                usersTableBody.innerHTML = '';
-            }
-
-            function fetchGroups() {
-                // Your backend API call to get all group data
-                // fetch('/api/admin/groups')
-                //     .then(response => response.json())
-                //     .then(groups => {
-                //         renderGroups(groups);
-                //     });
-                // Since no mock data is allowed, we'll clear the table
-                groupsTableBody.innerHTML = '';
-            }
-
-            // Function to render user data (placeholder)
-            function renderUsers(users) {
-                usersTableBody.innerHTML = '';
-                // users.forEach(user => {
-                //     const row = document.createElement('tr');
-                //     row.innerHTML = `
-                //         <td>${user.id}</td>
-                //         <td>${user.username}</td>
-                //         <td>${user.realName}</td>
-                //         <td>${user.status}</td>
-                //         <td>
-                //             <button class="action-btn warn" onclick="warnUser('${user.id}')"><i class="fas fa-exclamation-triangle"></i> Warn</button>
-                //             <button class="action-btn ban" onclick="banUser('${user.id}')"><i class="fas fa-ban"></i> Ban</button>
-                //             <button class="action-btn delete" onclick="deleteUser('${user.id}')"><i class="fas fa-trash"></i> Delete</button>
-                //         </td>
-                //     `;
-                //     usersTableBody.appendChild(row);
-                // });
-            }
-
-            // Functions for admin actions (placeholders for backend calls)
-            window.warnUser = (userId) => {
-                // fetch(`/api/admin/warn/${userId}`, { method: 'POST' });
-                console.log(`Warning user: ${userId}`);
-            };
-
-            window.banUser = (userId) => {
-                // fetch(`/api/admin/ban/${userId}`, { method: 'POST' });
-                console.log(`Banning user: ${userId}`);
-            };
-
-            window.deleteUser = (userId) => {
-                // fetch(`/api/admin/delete/${userId}`, { method: 'POST' });
-                console.log(`Deleting user: ${userId}`);
-            };
-            
-            // Other admin action functions (similarly structured)
-            document.getElementById('post-story-btn').addEventListener('click', () => {
-                const content = document.getElementById('story-content').value;
-                // fetch('/api/admin/post_story', { method: 'POST', body: JSON.stringify({ content }) });
-                console.log('Posting SociaFam story');
-            });
-            
-            document.getElementById('send-broadcast-btn').addEventListener('click', () => {
-                const message = document.getElementById('broadcast-message').value;
-                // fetch('/api/admin/broadcast', { method: 'POST', body: JSON.stringify({ message }) });
-                console.log('Sending broadcast message');
-            });
-
-            // Initial fetch to populate the dashboard
-            fetchUsers();
-            fetchGroups();
+        // Dropdown toggle
+        const dropbtn = document.querySelector('.dropbtn');
+        const dropdownContent = document.querySelector('.dropdown-content');
+        dropbtn.addEventListener('click', () => {
+            dropdownContent.style.display = dropdownContent.style.display === 'flex' ? 'none' : 'flex';
         });
+
+        // Handle content switching
+        const navButtons = dropdownContent.querySelectorAll('[data-target]');
+        const sections = document.querySelectorAll('.content-section');
+
+        navButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                sections.forEach(s => s.classList.add('hidden'));
+                document.getElementById(btn.dataset.target).classList.remove('hidden');
+                dropdownContent.style.display = 'none';
+            });
+        });
+
+        // Placeholder backend hooks
+        const usersTableBody = document.getElementById('users-table-body');
+        const groupsTableBody = document.getElementById('groups-table-body');
+
+        function fetchUsers() { usersTableBody.innerHTML = ''; }
+        function fetchGroups() { groupsTableBody.innerHTML = ''; }
+
+        document.getElementById('post-story-btn').addEventListener('click', () => {
+            const content = document.getElementById('story-content').value;
+            console.log('Posting SociaFam story:', content);
+        });
+
+        document.getElementById('send-broadcast-btn').addEventListener('click', () => {
+            const message = document.getElementById('broadcast-message').value;
+            console.log('Sending broadcast message:', message);
+        });
+
+        // Initial fetch
+        fetchUsers();
+        fetchGroups();
     </script>
 </body>
 </html>
