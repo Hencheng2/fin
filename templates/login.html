@@ -1,197 +1,266 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Log In</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --background-color: #f0f2f5;
-            --card-color: #fff;
-            --text-color: #333;
-            --border-color: #ccc;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sociafam - Log In</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    :root {
+        --primary-blue: #007bff;
+        --background-color: #f0f2f5;
+        --card-color: #fff;
+        --text-color: #333;
+        --border-color: #ccc;
+        --border-radius: 12px;
+        --medium-radius: 8px;
+    }
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--background-color);
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 15px;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: var(--background-color);
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        padding: 15px;
+    }
 
+    .container {
+        width: 100%;
+        max-width: 400px;
+        background-color: var(--card-color);
+        padding: 30px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        box-sizing: border-box;
+        position: relative;
+    }
+
+    .header {
+        text-align: center;
+        margin-bottom: 25px;
+    }
+
+    .header h1 {
+        font-size: 26px;
+        margin: 0;
+        color: var(--text-color);
+    }
+
+    .header p {
+        font-size: 14px;
+        color: #888;
+        margin-top: 5px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: var(--text-color);
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: var(--medium-radius);
+        box-sizing: border-box;
+        font-size: 16px;
+        transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 12px;
+        background-color: var(--primary-blue);
+        color: #fff;
+        border: none;
+        border-radius: var(--medium-radius);
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        position: relative;
+    }
+
+    .submit-btn:hover {
+        background-color: #0056b3;
+    }
+
+    .links {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 14px;
+    }
+
+    .links a {
+        color: var(--primary-blue);
+        text-decoration: none;
+        margin: 0 10px;
+        transition: color 0.2s;
+    }
+
+    .links a:hover {
+        text-decoration: underline;
+        color: #0056b3;
+    }
+
+    /* Loader */
+    .loader {
+        border: 3px solid #f3f3f3;
+        border-top: 3px solid var(--primary-blue);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        animation: spin 1s linear infinite;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 10px;
+        display: none;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg);}
+        100% { transform: rotate(360deg);}
+    }
+
+    /* Error/Success messages */
+    .message {
+        margin-top: 10px;
+        font-size: 14px;
+        padding: 8px 12px;
+        border-radius: var(--medium-radius);
+        display: none;
+    }
+
+    .message.error {
+        background-color: #f8d7da;
+        color: #721c24;
+    }
+
+    .message.success {
+        background-color: #d4edda;
+        color: #155724;
+    }
+
+    @media (max-width: 480px) {
         .container {
-            width: 100%;
-            max-width: 400px;
-            background-color: var(--card-color);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            box-sizing: border-box;
+            padding: 20px;
         }
-
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-        }
-
         .header h1 {
-            font-size: 26px;
-            margin: 0;
-            color: var(--text-color);
+            font-size: 22px;
         }
-
-        .header p {
-            font-size: 14px;
-            color: #888;
-            margin-top: 5px;
-        }
-
-        .form-group {
-            margin-bottom: 15px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: var(--text-color);
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border-color);
-            border-radius: var(--medium-radius);
-            box-sizing: border-box;
-            font-size: 16px;
-            transition: border-color 0.3s;
-        }
-
-        .form-group input:focus {
-            outline: none;
-            border-color: var(--primary-blue);
-        }
-
         .submit-btn {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            border-radius: var(--medium-radius);
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            font-size: 15px;
+            padding: 10px;
         }
+    }
 
-        .submit-btn:hover {
-            background-color: #0056b3;
+    @media (min-width: 768px) and (max-width: 1024px) {
+        .container {
+            padding: 25px;
         }
-
-        .links {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 14px;
-        }
-
-        .links a {
-            color: var(--primary-blue);
-            text-decoration: none;
-            margin: 0 10px;
-            transition: color 0.2s;
-        }
-
-        .links a:hover {
-            text-decoration: underline;
-            color: #0056b3;
-        }
-
-        @media (max-width: 480px) {
-            .container {
-                padding: 20px;
-            }
-            .header h1 {
-                font-size: 22px;
-            }
-            .submit-btn {
-                font-size: 15px;
-                padding: 10px;
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .container {
-                padding: 25px;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Log In</h1>
-            <p>Welcome back to Sociafam</p>
-        </div>
-        <form id="login-form">
-            <div class="form-group">
-                <label for="username_email">Username or Email</label>
-                <input type="text" id="username_email" name="username_email" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <button type="submit" class="submit-btn">Log In</button>
-        </form>
-        <div class="links">
-            <a href="{% url 'register' %}">Register</a>
-            <a href="{% url 'forgot_password' %}">Forgot Password?</a>
-        </div>
+<div class="container">
+    <div class="header">
+        <h1>Log In</h1>
+        <p>Welcome back to Sociafam</p>
     </div>
+    <form id="login-form">
+        <div class="form-group">
+            <label for="username_email">Username or Email</label>
+            <input type="text" id="username_email" name="username_email" required>
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit" class="submit-btn">
+            Log In
+            <span class="loader" id="login-loader"></span>
+        </button>
+        <div class="message" id="login-message"></div>
+    </form>
+    <div class="links">
+        <a href="{% url 'register' %}">Register</a>
+        <a href="{% url 'forgot_password' %}">Forgot Password?</a>
+    </div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const form = document.getElementById('login-form');
-            const usernameEmailInput = document.getElementById('username_email');
-            const passwordInput = document.getElementById('password');
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('login-form');
+    const usernameEmailInput = document.getElementById('username_email');
+    const passwordInput = document.getElementById('password');
+    const loader = document.getElementById('login-loader');
+    const messageDiv = document.getElementById('login-message');
 
-            form.addEventListener('submit', async (event) => {
-                event.preventDefault();
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault();
 
-                const usernameOrEmail = usernameEmailInput.value.trim();
-                const password = passwordInput.value.trim();
+        const usernameOrEmail = usernameEmailInput.value.trim();
+        const password = passwordInput.value.trim();
 
-                // Placeholder for backend API integration
-                // Example:
-                // try {
-                //     const response = await fetch('/api/login', {
-                //         method: 'POST',
-                //         headers: { 'Content-Type': 'application/json' },
-                //         body: JSON.stringify({ identifier: usernameOrEmail, password })
-                //     });
-                //     const data = await response.json();
-                //
-                //     if (response.ok) {
-                //         console.log('Login successful!', data);
-                //         window.location.href = '/home'; // redirect after login
-                //     } else {
-                //         alert(data.message || 'Login failed');
-                //     }
-                // } catch (error) {
-                //     console.error('Login error:', error);
-                // }
-            });
-        });
-    </script>
+        // Reset message and show loader
+        messageDiv.style.display = 'none';
+        loader.style.display = 'inline-block';
+
+        // Placeholder for backend API integration
+        try {
+            // Simulate network delay for demo
+            await new Promise(res => setTimeout(res, 1000));
+
+            // Replace below with real fetch POST request to backend
+            // Example:
+            // const response = await fetch('/api/login', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ identifier: usernameOrEmail, password })
+            // });
+            // const data = await response.json();
+
+            // Demo response
+            const demoSuccess = usernameOrEmail === "demo" && password === "demo";
+
+            if (demoSuccess) {
+                messageDiv.textContent = "Login successful!";
+                messageDiv.className = "message success";
+                messageDiv.style.display = "block";
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = '/home'; 
+                }, 1000);
+            } else {
+                messageDiv.textContent = "Invalid username/email or password.";
+                messageDiv.className = "message error";
+                messageDiv.style.display = "block";
+            }
+
+        } catch (error) {
+            messageDiv.textContent = "An error occurred. Please try again.";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+        } finally {
+            loader.style.display = 'none';
+        }
+    });
+});
+</script>
 </body>
 </html>
