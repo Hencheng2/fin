@@ -18,12 +18,15 @@
             font-family: Arial, sans-serif;
             background-color: var(--light-grey);
             margin: 0;
-            padding: 20px;
+            padding: 10px;
         }
 
         .profile-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
         .group-header {
@@ -32,7 +35,6 @@
             padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
 
         .group-pic {
@@ -58,6 +60,7 @@
 
         .buttons-section {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
             gap: 10px;
             margin-top: 20px;
@@ -93,7 +96,6 @@
             padding: 20px;
             border-radius: var(--border-radius);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
         }
 
         .section-title {
@@ -145,7 +147,6 @@
             background-color: #fff;
             border-radius: var(--border-radius);
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            margin-bottom: 20px;
             padding: 10px;
         }
 
@@ -235,6 +236,7 @@
 
         .exit-section {
             display: flex;
+            flex-wrap: wrap;
             gap: 10px;
             margin-top: 20px;
         }
@@ -259,6 +261,44 @@
             font-weight: bold;
             cursor: pointer;
             flex-grow: 1;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .group-name {
+                font-size: 20px;
+            }
+
+            .buttons-section {
+                flex-direction: column;
+            }
+
+            .exit-section {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .group-pic {
+                width: 80px;
+                height: 80px;
+            }
+
+            .group-name {
+                font-size: 18px;
+            }
+
+            .section-title {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -306,41 +346,11 @@
                 <ul id="documents-list"></ul>
             </div>
         </div>
-        
+
         <!-- Admin-only section -->
         <div class="info-section" id="admin-permissions-section" style="display: none;">
             <div class="section-title">Group Permissions</div>
-            <div class="input-group">
-                <label>Allow send messages</label>
-                <div>
-                    <input type="radio" id="send-messages-allow" name="send-messages" value="allow">
-                    <label for="send-messages-allow">Allow</label>
-                    <input type="radio" id="send-messages-deny" name="send-messages" value="deny">
-                    <label for="send-messages-deny">Deny</label>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Add members</label>
-                <div>
-                    <input type="radio" id="add-members-allow" name="add-members" value="allow">
-                    <label for="add-members-allow">Allow</label>
-                    <input type="radio" id="add-members-deny" name="add-members" value="deny">
-                    <label for="add-members-deny">Deny</label>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Approve new members</label>
-                <div>
-                    <input type="radio" id="approve-members-allow" name="approve-members" value="allow">
-                    <label for="approve-members-allow">Allow</label>
-                    <input type="radio" id="approve-members-deny" name="approve-members" value="deny">
-                    <label for="approve-members-deny">Deny</label>
-                </div>
-            </div>
-            <div class="input-group">
-                <label>Edit group admins</label>
-                <div id="admin-list-container"></div>
-            </div>
+            <!-- Add radio buttons and admin list container here -->
         </div>
         
         <div class="info-section">
@@ -375,7 +385,7 @@
                 });
             });
 
-            // Functions for backend integration
+            // Placeholder backend integration functions
             function loadGroupProfile() {}
             function loadMedia() {}
             function loadLinks() {}
