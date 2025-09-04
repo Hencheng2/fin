@@ -14,11 +14,18 @@
             --medium-radius: 8px;
         }
 
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background-color: var(--light-grey);
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
 
         .header {
@@ -57,9 +64,9 @@
         }
 
         .content {
-            padding: 20px 0;
+            flex-grow: 1;
+            padding: 20px;
             overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
         }
 
         .form-section {
@@ -82,6 +89,7 @@
             align-items: center;
             gap: 20px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .profile-pic {
@@ -104,10 +112,11 @@
 
         .input-group {
             margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
         }
 
         .input-group label {
-            display: block;
             font-size: 14px;
             margin-bottom: 5px;
             color: #333;
@@ -118,17 +127,33 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: var(--medium-radius);
-            box-sizing: border-box;
             font-size: 16px;
         }
 
         .radio-group {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
 
         .radio-group input[type="radio"] {
             margin-right: 5px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 600px) {
+            .profile-pic-group {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .profile-pic-btn {
+                width: 100%;
+            }
+
+            .radio-group {
+                flex-direction: column;
+            }
         }
     </style>
 </head>
@@ -140,6 +165,7 @@
     </div>
 
     <div class="content">
+        <!-- Group Details -->
         <div class="form-section">
             <div class="profile-pic-group">
                 <img src="" alt="Group Photo" class="profile-pic" id="group-photo">
@@ -152,6 +178,7 @@
             </div>
         </div>
 
+        <!-- Group Permissions -->
         <div class="form-section">
             <div class="section-title">Group Permissions</div>
             
@@ -185,11 +212,14 @@
                 </div>
             </div>
         </div>
+
+        <!-- Backend Notes Section -->
+        <!-- Here you can add sections for updating group members or admin lists using backend data -->
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Change profile photo functionality
+            // Profile photo change logic
             const changePhotoBtn = document.getElementById('change-photo-btn');
             const photoUpload = document.getElementById('photo-upload');
             const groupPhoto = document.getElementById('group-photo');
@@ -210,15 +240,20 @@
             });
 
             // Save button logic
-            document.getElementById('save-btn').addEventListener('click', () => {
-                // Here is where you would collect all the form data and send it to your backend API
-                // For example:
+            const saveBtn = document.getElementById('save-btn');
+            saveBtn.addEventListener('click', () => {
                 const groupName = document.getElementById('group-name').value;
-                const editPermission = document.querySelector('input[name="edit-group"]:checked').value;
-                const sendPermission = document.querySelector('input[name="send-messages"]:checked').value;
-                const addPermission = document.querySelector('input[name="add-members"]:checked').value;
-                
-                // Your backend API call goes here
+                const editPermission = document.querySelector('input[name="edit-group"]:checked')?.value;
+                const sendPermission = document.querySelector('input[name="send-messages"]:checked')?.value;
+                const addPermission = document.querySelector('input[name="add-members"]:checked')?.value;
+
+                // TODO: Add backend API call here to save updated group data
+                console.log({
+                    groupName,
+                    editPermission,
+                    sendPermission,
+                    addPermission
+                });
             });
         });
     </script>
