@@ -15,7 +15,7 @@
             --border-radius: 12px;
             --medium-radius: 8px;
         }
-        
+
         body {
             font-family: Arial, sans-serif;
             background-color: var(--background-color);
@@ -24,15 +24,17 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 15px;
         }
 
         .container {
-            width: 90%;
+            width: 100%;
             max-width: 400px;
             background-color: var(--card-color);
             padding: 30px;
             border-radius: var(--border-radius);
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
         }
 
         .header {
@@ -41,7 +43,7 @@
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 26px;
             margin: 0;
             color: var(--text-color);
         }
@@ -49,6 +51,7 @@
         .header p {
             font-size: 14px;
             color: #888;
+            margin-top: 5px;
         }
 
         .form-group {
@@ -70,6 +73,7 @@
             border-radius: var(--medium-radius);
             box-sizing: border-box;
             font-size: 16px;
+            transition: border-color 0.3s;
         }
 
         .form-group input:focus {
@@ -99,15 +103,36 @@
             margin-top: 20px;
             font-size: 14px;
         }
-        
+
         .links a {
             color: var(--primary-blue);
             text-decoration: none;
             margin: 0 10px;
+            transition: color 0.2s;
         }
 
         .links a:hover {
             text-decoration: underline;
+            color: #0056b3;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 20px;
+            }
+            .header h1 {
+                font-size: 22px;
+            }
+            .submit-btn {
+                font-size: 15px;
+                padding: 10px;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .container {
+                padding: 25px;
+            }
         }
     </style>
 </head>
@@ -146,8 +171,8 @@
                 const usernameOrEmail = usernameEmailInput.value.trim();
                 const password = passwordInput.value.trim();
 
-                // Your backend API call to authenticate the user goes here
-                // Example fetch:
+                // Placeholder for backend API integration
+                // Example:
                 // try {
                 //     const response = await fetch('/api/login', {
                 //         method: 'POST',
@@ -158,12 +183,12 @@
                 //
                 //     if (response.ok) {
                 //         console.log('Login successful!', data);
-                //         // Redirect the user to their home page
+                //         window.location.href = '/home'; // redirect after login
                 //     } else {
-                //         console.error('Login failed:', data.message);
+                //         alert(data.message || 'Login failed');
                 //     }
                 // } catch (error) {
-                //     console.error('An error occurred during login:', error);
+                //     console.error('Login error:', error);
                 // }
             });
         });
