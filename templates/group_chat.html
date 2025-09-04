@@ -1,261 +1,383 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Group Chat</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-        }
-        
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            overflow: hidden;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sociafam - Group Chat</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    :root {
+      --primary-blue: #007bff;
+      --light-grey: #f0f2f5;
+      --dark-grey: #555;
+      --border-radius: 12px;
+    }
 
-        /* --- Top Navbar --- */
-        .chat-navbar {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background-color: #fff;
-            padding: 10px 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 1000;
-        }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--light-grey);
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
 
-        .chat-navbar .left-section {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .chat-navbar .profile-pic {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
+    /* --- Navbar --- */
+    .chat-navbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #fff;
+      padding: 10px 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
 
-        .chat-navbar .group-info {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .chat-navbar .group-name {
-            font-weight: bold;
-            font-size: 16px;
-        }
+    .chat-navbar .left-section {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
 
-        /* --- Dropdown Menu --- */
-        .dropdown {
-            position: relative;
-        }
+    .chat-navbar .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-        .dropdown-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--dark-grey);
-            cursor: pointer;
-        }
+    .chat-navbar .group-info {
+      display: flex;
+      flex-direction: column;
+    }
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            top: 45px;
-            right: 0;
-            background-color: #fff;
-            min-width: 200px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            border-radius: var(--border-radius);
-            overflow: hidden;
-        }
+    .chat-navbar .group-name {
+      font-weight: bold;
+      font-size: 16px;
+    }
 
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-            cursor: pointer;
-        }
+    .chat-navbar .group-status {
+      font-size: 12px;
+      color: #777;
+    }
 
-        .dropdown-content a:hover {
-            background-color: var(--light-grey);
-        }
+    /* --- Dropdown --- */
+    .dropdown { position: relative; }
+    .dropdown-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--dark-grey);
+      cursor: pointer;
+    }
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      top: 45px;
+      right: 0;
+      background-color: #fff;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      z-index: 1;
+    }
+    .dropdown-content a {
+      display: block;
+      padding: 12px 16px;
+      font-size: 14px;
+      color: #000;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .dropdown-content a:hover { background-color: var(--light-grey); }
+    .dropdown-content.show { display: block; }
 
-        .dropdown-content.show {
-            display: block;
-        }
+    /* --- Chat body --- */
+    .chat-body {
+      flex-grow: 1;
+      padding: 20px 10px;
+      padding-top: 70px;
+      padding-bottom: 70px;
+      overflow-y: auto;
+    }
 
-        /* --- Main Message Area --- */
-        .chat-body {
-            flex-grow: 1;
-            padding: 20px 10px;
-            padding-top: 70px; /* Space for the fixed top navbar */
-            padding-bottom: 70px; /* Space for the fixed bottom message area */
-            overflow-y: auto;
-        }
+    .message {
+      display: flex;
+      flex-direction: column;
+      max-width: 80%;
+      margin-bottom: 10px;
+    }
+    .message.own { align-self: flex-end; text-align: right; }
+    .message.other { align-self: flex-start; }
 
-        /* --- Message Input Area --- */
-        .message-input-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            background-color: #fff;
-            padding: 10px 15px;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            box-sizing: border-box;
-            z-index: 1000;
-        }
+    .sender-info {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 3px;
+    }
+    .sender-info img {
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    .sender-name {
+      font-size: 12px;
+      font-weight: bold;
+      color: #333;
+    }
 
-        .message-input-area .icon-btn {
-            background: none;
-            border: none;
-            font-size: 20px;
-            color: var(--dark-grey);
-            cursor: pointer;
-            padding: 8px;
-        }
-        
-        .message-input-area .text-input {
-            flex-grow: 1;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 20px;
-            font-size: 16px;
-            resize: none;
-            box-sizing: border-box;
-            max-height: 80px;
-            overflow-y: auto;
-        }
+    .bubble {
+      padding: 10px 14px;
+      border-radius: var(--border-radius);
+      word-wrap: break-word;
+      font-size: 14px;
+    }
+    .own .bubble {
+      background-color: var(--primary-blue);
+      color: #fff;
+      border-bottom-right-radius: 2px;
+    }
+    .other .bubble {
+      background-color: #fff;
+      color: #000;
+      border-bottom-left-radius: 2px;
+    }
 
-        .message-input-area .send-btn {
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-    </style>
+    .meta {
+      font-size: 11px;
+      color: #888;
+      margin-top: 2px;
+    }
+
+    .seen-status {
+      font-size: 11px;
+      color: var(--dark-grey);
+      margin-top: 5px;
+      text-align: right;
+    }
+
+    /* --- Typing Indicator --- */
+    .typing-indicator {
+      font-size: 13px;
+      color: #777;
+      font-style: italic;
+      margin: 5px 10px;
+    }
+
+    /* --- Input area --- */
+    .message-input-area {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background-color: #fff;
+      padding: 10px 15px;
+      box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      box-sizing: border-box;
+      z-index: 1000;
+    }
+    .message-input-area .icon-btn {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--dark-grey);
+      cursor: pointer;
+      padding: 8px;
+    }
+    .message-input-area .text-input {
+      flex-grow: 1;
+      padding: 10px 15px;
+      border: 1px solid #ddd;
+      border-radius: 20px;
+      font-size: 16px;
+      resize: none;
+      max-height: 80px;
+      overflow-y: auto;
+    }
+    .message-input-area .send-btn {
+      background-color: var(--primary-blue);
+      color: #fff;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  </style>
 </head>
 <body>
-    <div class="chat-navbar">
-        <div class="left-section">
-            <a href="inbox.html" class="back-btn">
-                <i class="fas fa-arrow-left"></i>
-            </a>
-            <img src="" alt="Group profile" class="profile-pic" id="group-pic">
-            <div class="group-info">
-                <span class="group-name" id="group-name"></span>
-            </div>
+  <!-- Navbar -->
+  <div class="chat-navbar">
+    <div class="left-section">
+      <a href="inbox.html" class="back-btn"><i class="fas fa-arrow-left"></i></a>
+      <img src="" alt="Group profile" class="profile-pic" id="group-pic">
+      <div class="group-info">
+        <span class="group-name" id="group-name"></span>
+        <span class="group-status" id="group-status"></span>
+      </div>
+    </div>
+    <div class="right-section">
+      <div class="dropdown">
+        <button class="dropdown-btn" id="dropdown-toggle"><i class="fas fa-ellipsis-v"></i></button>
+        <div class="dropdown-content" id="dropdown-menu">
+          <a href="#" id="change-wallpaper-btn">Change chat wallpaper</a>
+          <a href="#" id="search-messages-btn">Search in chat</a>
+          <a href="#" id="view-group-btn">Group info</a>
+          <a href="#" id="disappearing-messages-btn">Disappearing messages</a>
+          <a href="#" id="leave-group-btn">Leave group</a>
+          <a href="#" id="report-group-btn">Report group</a>
         </div>
-        <div class="right-section">
-            <div class="dropdown">
-                <button class="dropdown-btn" id="dropdown-toggle">
-                    <i class="fas fa-ellipsis-v"></i>
-                </button>
-                <div class="dropdown-content" id="dropdown-menu">
-                    <a href="#" id="change-wallpaper-btn">Change chat wallpaper</a>
-                    <a href="#" id="search-messages-btn">Search in chat</a>
-                    <a href="#" id="view-group-btn">Group info</a>
-                    <a href="#" id="disappearing-messages-btn">Disappearing messages</a>
-                    <a href="#" id="leave-group-btn">Leave group</a>
-                    <a href="#" id="report-group-btn">Report group</a>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    
-    <div class="chat-body" id="chat-body">
-        <!-- Messages will be dynamically loaded here -->
-    </div>
-    
-    <div class="message-input-area">
-        <button class="icon-btn"><i class="fas fa-laugh"></i></button>
-        <button class="icon-btn"><i class="fas fa-paperclip"></i></button>
-        <button class="icon-btn"><i class="fas fa-camera"></i></button>
-        <textarea class="text-input" placeholder="Type a message..." rows="1" id="message-text"></textarea>
-        <button class="icon-btn"><i class="fas fa-microphone"></i></button>
-        <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
-    </div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const dropdownToggle = document.getElementById('dropdown-toggle');
-            const dropdownMenu = document.getElementById('dropdown-menu');
-            const messageInput = document.getElementById('message-text');
-            const sendButton = document.getElementById('send-btn');
-            const chatBody = document.getElementById('chat-body');
+  <!-- Chat body -->
+  <div class="chat-body" id="chat-body">
+    <!-- Messages injected here -->
+  </div>
 
-            dropdownToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                dropdownMenu.classList.toggle('show');
-            });
-            
-            document.addEventListener('click', (e) => {
-                if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
-                    dropdownMenu.classList.remove('show');
-                }
-            });
+  <!-- Typing indicator -->
+  <div class="typing-indicator" id="typing-indicator" style="display:none;">Someone is typing...</div>
 
-            messageInput.addEventListener('input', () => {
-                messageInput.style.height = 'auto';
-                messageInput.style.height = messageInput.scrollHeight + 'px';
-            });
-            
-            // Function to handle sending a message
-            function sendMessage() {
-                const message = messageInput.value.trim();
-                if (!message) return;
-                
-                messageInput.value = '';
-                messageInput.style.height = 'auto';
-            }
-            
-            sendButton.addEventListener('click', sendMessage);
-            messageInput.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            });
+  <!-- Input -->
+  <div class="message-input-area">
+    <button class="icon-btn"><i class="fas fa-laugh"></i></button>
+    <button class="icon-btn"><i class="fas fa-paperclip"></i></button>
+    <button class="icon-btn"><i class="fas fa-camera"></i></button>
+    <textarea class="text-input" placeholder="Type a message..." rows="1" id="message-text"></textarea>
+    <button class="icon-btn"><i class="fas fa-microphone"></i></button>
+    <button class="send-btn" id="send-btn"><i class="fas fa-paper-plane"></i></button>
+  </div>
 
-            // Dropdown menu button logic
-            document.getElementById('change-wallpaper-btn').addEventListener('click', () => {});
-            document.getElementById('search-messages-btn').addEventListener('click', () => {});
-            document.getElementById('view-group-btn').addEventListener('click', () => {});
-            document.getElementById('disappearing-messages-btn').addEventListener('click', () => {});
-            document.getElementById('leave-group-btn').addEventListener('click', () => {});
-            document.getElementById('report-group-btn').addEventListener('click', () => {});
-        });
-    </script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const dropdownToggle = document.getElementById('dropdown-toggle');
+      const dropdownMenu = document.getElementById('dropdown-menu');
+      const messageInput = document.getElementById('message-text');
+      const sendButton = document.getElementById('send-btn');
+      const chatBody = document.getElementById('chat-body');
+      const typingIndicator = document.getElementById('typing-indicator');
+
+      /* --- Dropdown --- */
+      dropdownToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        dropdownMenu.classList.toggle('show');
+      });
+      document.addEventListener('click', (e) => {
+        if (!dropdownToggle.contains(e.target) && !dropdownMenu.contains(e.target)) {
+          dropdownMenu.classList.remove('show');
+        }
+      });
+
+      /* --- Auto-expand textarea --- */
+      messageInput.addEventListener('input', () => {
+        messageInput.style.height = 'auto';
+        messageInput.style.height = messageInput.scrollHeight + 'px';
+      });
+
+      /* --- Render messages --- */
+      function renderMessage(msg, isOwn = false) {
+        const msgEl = document.createElement('div');
+        msgEl.classList.add('message');
+        msgEl.classList.add(isOwn ? 'own' : 'other');
+
+        if (!isOwn) {
+          const senderInfo = document.createElement('div');
+          senderInfo.classList.add('sender-info');
+          const pic = document.createElement('img');
+          pic.src = msg.senderPic;
+          const name = document.createElement('span');
+          name.classList.add('sender-name');
+          name.textContent = msg.senderName;
+          senderInfo.appendChild(pic);
+          senderInfo.appendChild(name);
+          msgEl.appendChild(senderInfo);
+        }
+
+        const bubble = document.createElement('div');
+        bubble.classList.add('bubble');
+        bubble.textContent = msg.content;
+        msgEl.appendChild(bubble);
+
+        const meta = document.createElement('div');
+        meta.classList.add('meta');
+        meta.textContent = msg.time;
+        msgEl.appendChild(meta);
+
+        chatBody.appendChild(msgEl);
+        chatBody.scrollTop = chatBody.scrollHeight;
+      }
+
+      /* --- Seen by indicator --- */
+      function updateSeenBy(seenList) {
+        const lastOwn = chatBody.querySelector('.message.own:last-child');
+        if (!lastOwn) return;
+        let seenEl = lastOwn.querySelector('.seen-status');
+        if (!seenEl) {
+          seenEl = document.createElement('div');
+          seenEl.classList.add('seen-status');
+          lastOwn.appendChild(seenEl);
+        }
+        seenEl.textContent = `Seen by ${seenList.join(', ')}`;
+      }
+
+      /* --- Typing indicator --- */
+      function showTyping(users) {
+        if (users.length > 0) {
+          typingIndicator.style.display = 'block';
+          typingIndicator.textContent = `${users.join(', ')} ${users.length > 1 ? 'are' : 'is'} typing...`;
+        } else {
+          typingIndicator.style.display = 'none';
+        }
+      }
+
+      /* --- Sending message --- */
+      function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        // render locally
+        renderMessage({ content: message, time: 'Now' }, true);
+
+        // clear input
+        messageInput.value = '';
+        messageInput.style.height = 'auto';
+
+        // TODO: backend API: send group message
+        // fetch('/api/group/send', { method: 'POST', body: JSON.stringify({ message }) })
+      }
+
+      sendButton.addEventListener('click', sendMessage);
+      messageInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          sendMessage();
+        }
+      });
+
+      /* --- Backend hooks placeholders --- */
+      // TODO: fetch group info -> set group pic, name, and members
+      // TODO: fetch group messages -> loop renderMessage()
+      // TODO: subscribe to real-time events (typing, new message, seen updates)
+      // Example: updateSeenBy(['Alice','Bob']);
+      // Example: showTyping(['Charlie']);
+    });
+  </script>
 </body>
 </html>
