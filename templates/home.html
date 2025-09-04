@@ -10,7 +10,6 @@
         padding: 0;
     }
 
-    /* --- Stories Section --- */
     .stories-container {
         display: flex;
         overflow-x: auto;
@@ -19,10 +18,10 @@
         background-color: #fff;
         border-bottom: 1px solid #ddd;
         white-space: nowrap;
-        scrollbar-width: none; /* Firefox */
+        scrollbar-width: none;
     }
     .stories-container::-webkit-scrollbar {
-        display: none; /* Chrome, Safari */
+        display: none;
     }
     .story-item {
         display: inline-block;
@@ -56,7 +55,6 @@
         text-overflow: ellipsis;
     }
 
-    /* --- Story Modal --- */
     .story-modal {
         position: fixed;
         top: 0;
@@ -104,7 +102,6 @@
         margin: 0 1px;
     }
 
-    /* --- Posts Section --- */
     .posts-container {
         display: flex;
         flex-direction: column;
@@ -188,10 +185,8 @@
 
 {% block content %}
 <div class="container">
-    <!-- --- Stories Section --- -->
     <div class="stories-container" id="stories-container"></div>
     
-    <!-- --- Story Modal --- -->
     <div class="story-modal" id="story-modal">
         <div class="story-progress-bar-container" id="story-progress-bar-container"></div>
         <div class="modal-content">
@@ -199,7 +194,6 @@
         </div>
     </div>
 
-    <!-- --- Posts Section --- -->
     <div class="posts-container" id="posts-container"></div>
 </div>
 {% endblock %}
@@ -207,9 +201,16 @@
 {% block extra_scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // These arrays will be populated with data from your backend.
+        const token = localStorage.getItem('token');
+        if (!token) {
+            window.location.href = '/login';
+            return;
+        }
+
         let storiesData = [];
         let postsData = [];
+        let currentPage = 1;
+        let isLoading = false;
 
         const storiesContainer = document.getElementById('stories-container');
         const postsContainer = document.getElementById('posts-container');
@@ -221,7 +222,6 @@
         let currentStoryUserIndex = 0;
         let currentStoryTimer;
 
-        // Render stories
         function renderStories(stories) {
             storiesContainer.innerHTML = '';
             stories.forEach((user, userIndex) => {
@@ -229,7 +229,7 @@
                 storyItem.className = 'story-item';
                 storyItem.innerHTML = `
                     <div class="story-circle">
-                        <img src="${user.profilePic}" alt="${user.username}'s profile picture">
+                        <img src="${user.profilePic || '/static/default_profile.jpg'}" alt="${user.username}'s profile picture">
                     </div>
                     <span class="story-username">${user.username}</span>
                 `;
@@ -238,19 +238,18 @@
             });
         }
 
-        // Open/close story modal
         function openStoryModal(userIndex, storyIndex) {
             currentStoryUserIndex = userIndex;
             currentStoryIndex = storyIndex;
             storyModal.style.display = 'flex';
             updateStory();
         }
+
         function closeStoryModal() {
             storyModal.style.display = 'none';
             clearTimeout(currentStoryTimer);
         }
 
-        // Update story display
         function updateStory() {
             const user = storiesData[currentStoryUserIndex];
             if (!user || currentStoryIndex >= user.stories.length || currentStoryIndex < 0) {
@@ -276,8 +275,7 @@
                 goToNextStory();
             }, duration);
         }
-        
-        // Story navigation
+
         function goToNextStory() {
             const user = storiesData[currentStoryUserIndex];
             if (currentStoryIndex < user.stories.length - 1) {
@@ -287,6 +285,7 @@
                 goToNextUserStory();
             }
         }
+
         function goToPreviousStory() {
             if (currentStoryIndex > 0) {
                 currentStoryIndex--;
@@ -295,6 +294,7 @@
                 goToPreviousUserStory();
             }
         }
+
         function goToNextUserStory() {
             if (currentStoryUserIndex < storiesData.length - 1) {
                 openStoryModal(currentStoryUserIndex + 1, 0);
@@ -302,6 +302,7 @@
                 closeStoryModal();
             }
         }
+
         function goToPreviousUserStory() {
             if (currentStoryUserIndex > 0) {
                 const prevUser = storiesData[currentStoryUserIndex - 1];
@@ -309,7 +310,6 @@
             }
         }
 
-        // Swipe & tap functionality
         let touchStartY = 0;
         let touchStartX = 0;
         storyModal.addEventListener('touchstart', (e) => {
@@ -317,12 +317,14 @@
             touchStartX = e.touches[0].clientX;
             clearTimeout(currentStoryTimer);
         });
+
         storyModal.addEventListener('touchmove', (e) => {
             const deltaY = e.touches[0].clientY - touchStartY;
             if (deltaY > 50) {
                 closeStoryModal();
             }
         });
+
         storyModal.addEventListener('touchend', (e) => {
             const deltaX = e.changedTouches[0].clientX - touchStartX;
             const deltaY = e.changedTouches[0].clientY - touchStartY;
@@ -338,14 +340,13 @@
             }
         });
 
-        // Render posts
         function renderPosts(posts) {
             posts.forEach(post => {
                 const postCard = document.createElement('div');
                 postCard.className = 'post-card';
                 postCard.innerHTML = `
                     <div class="post-header">
-                        <img src="${post.profilePic}" alt="${post.username}'s profile picture" class="post-profile-pic">
+                        <img src="${post.profilePic || '/static/default_profile.jpg'}" alt="${post.username}'s profile picture" class="post-profile-pic">
                         <div class="post-info">
                             <span class="real-name">${post.realName}</span>
                             <span class="username">@${post.username}</span>
@@ -356,22 +357,22 @@
                     ${post.description ? `<div class="post-description"><p>${post.description}</p></div>` : ''}
                     <img src="${post.postImage}" alt="Post image" class="post-image">
                     <div class="post-actions">
-                        <button class="post-action-button"><i class="fas fa-heart"></i> Like</button>
-                        <button class="post-action-button"><i class="fas fa-comment"></i> Comment</button>
-                        <button class="post-action-button"><i class="fas fa-share-alt"></i> Share</button>
-                        ${!post.isOwner ? `<button class="post-action-button follow-btn"><i class="fas fa-user-plus"></i> Follow</button>` : ''}
+                        <button class="post-action-button" onclick="handleAction(${post.id}, 'like')"><i class="fas fa-heart"></i> Like</button>
+                        <button class="post-action-button" onclick="handleAction(${post.id}, 'comment')"><i class="fas fa-comment"></i> Comment</button>
+                        <button class="post-action-button" onclick="handleAction(${post.id}, 'share')"><i class="fas fa-share-alt"></i> Share</button>
+                        ${!post.isOwner ? `<button class="post-action-button follow-btn" onclick="handleAction(${post.userId}, 'follow')"><i class="fas fa-user-plus"></i> Follow</button>` : ''}
                     </div>
                     <div class="post-actions">
-                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-retweet"></i> Repost</button>` : ''}
-                        <button class="post-action-button"><i class="fas fa-bookmark"></i> Save Post</button>
+                        ${!post.isOwner ? `<button class="post-action-button" onclick="handleAction(${post.id}, 'repost')"><i class="fas fa-retweet"></i> Repost</button>` : ''}
+                        <button class="post-action-button" onclick="handleAction(${post.id}, 'save')"><i class="fas fa-bookmark"></i> Save Post</button>
                     </div>
                     <div class="post-actions">
-                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-bell"></i> Notifications</button>` : ''}
-                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-user-slash"></i> Block</button>` : ''}
-                        <button class="post-action-button"><i class="fas fa-eye-slash"></i> Hide Post</button>
+                        ${!post.isOwner ? `<button class="post-action-button" onclick="handleAction(${post.id}, 'notifications')"><i class="fas fa-bell"></i> Notifications</button>` : ''}
+                        ${!post.isOwner ? `<button class="post-action-button" onclick="handleAction(${post.userId}, 'block')"><i class="fas fa-user-slash"></i> Block</button>` : ''}
+                        <button class="post-action-button" onclick="handleAction(${post.id}, 'hide')"><i class="fas fa-eye-slash"></i> Hide Post</button>
                     </div>
                     <div class="post-actions">
-                        ${!post.isOwner ? `<button class="post-action-button"><i class="fas fa-flag"></i> Report</button>` : ''}
+                        ${!post.isOwner ? `<button class="post-action-button" onclick="handleAction(${post.id}, 'report')"><i class="fas fa-flag"></i> Report</button>` : ''}
                     </div>
                     <div class="post-analytics">
                         <span>${post.views} views</span>
@@ -382,16 +383,84 @@
             });
         }
 
-        // Infinite scroll placeholder
-        window.addEventListener('scroll', () => {
-            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-                // Backend call for more posts here
+        async function handleAction(id, action) {
+            const actions = {
+                'like': `/api/posts/${id}/like`,
+                'comment': `/api/posts/${id}/comment`,
+                'share': `/api/posts/${id}/share`,
+                'save': `/api/posts/${id}/save`,
+                'report': `/api/posts/${id}/report`,
+                'hide': `/api/posts/${id}/hide`,
+                'notifications': `/api/posts/${id}/notifications`,
+                'follow': `/api/users/${id}/follow`,
+                'block': `/api/users/${id}/block`
+            };
+            const body = action === 'comment' ? { comment_text: prompt('Enter your comment:') } :
+                         action === 'notifications' ? { enabled: true } : {};
+            try {
+                const response = await fetch(actions[action], {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: Object.keys(body).length ? JSON.stringify(body) : undefined
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    alert(data.message);
+                } else {
+                    alert(data.error || 'Action failed');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred');
             }
-        });
+        }
 
-        // Example calls
-        // renderStories(storiesData);
-        // renderPosts(postsData);
+        async function fetchStories() {
+            try {
+                const response = await fetch('/api/stories', {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                storiesData = await response.json();
+                renderStories(storiesData);
+            } catch (error) {
+                console.error('Error fetching stories:', error);
+            }
+        }
+
+        async function fetchPosts(page = 1) {
+            if (isLoading) return;
+            isLoading = true;
+            try {
+                const response = await fetch(`/api/posts?page=${page}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+                postsData = postsData.concat(data.posts);
+                renderPosts(data.posts);
+                currentPage = page;
+                isLoading = false;
+                if (!data.hasMore) {
+                    window.removeEventListener('scroll', handleScroll);
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+                isLoading = false;
+            }
+        }
+
+        function handleScroll() {
+            if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+                fetchPosts(currentPage + 1);
+            }
+        }
+
+        window.addEventListener('scroll', handleScroll);
+
+        fetchStories();
+        fetchPosts();
     });
 </script>
 {% endblock %}
