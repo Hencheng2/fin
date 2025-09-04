@@ -1,377 +1,327 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Friends</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            padding: 20px 0;
-        }
+{% block title %}Sociafam - Friends{% endblock %}
 
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-            background-color: #fff;
-            padding: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            border-radius: var(--border-radius);
-        }
-        
-        /* --- Search Bar --- */
-        .search-bar {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        
-        /* --- Tabbed Navbar --- */
-        .friends-navbar {
-            display: flex;
-            justify-content: space-between;
-            overflow-x: auto;
-            border-bottom: 1px solid #ddd;
-            margin-bottom: 20px;
-        }
-        .friends-navbar button {
-            background-color: transparent;
-            border: none;
-            padding: 10px 15px;
-            cursor: pointer;
-            font-size: 14px;
-            color: var(--dark-grey);
-            white-space: nowrap;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            transition: color 0.3s ease;
-        }
-        .friends-navbar button.active {
-            color: var(--primary-blue);
-            border-bottom: 2px solid var(--primary-blue);
-        }
-        .friends-navbar span.count {
-            font-size: 10px;
-            font-weight: bold;
-            color: #aaa;
-            margin-top: 2px;
-        }
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #007bff;
+        --light-grey: #f0f2f5;
+        --dark-grey: #555;
+        --border-radius: 12px;
+    }
 
-        /* --- User List Section --- */
-        .user-list-container {
-            display: none;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .user-list-container.active {
-            display: flex;
-        }
-        
-        .user-list-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 10px;
-            background-color: #f9f9f9;
-            border-radius: var(--border-radius);
-            box-shadow: 0 1px 4px rgba(0,0,0,0.05);
-        }
-        
-        .user-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            flex-grow: 1;
-        }
-        .profile-pic {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            object-fit: cover;
-        }
-        .text-info {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-        .real-name {
-            font-weight: bold;
-        }
-        .mutual-count {
-            font-size: 12px;
-            color: #777;
-        }
+    body {
+        background-color: var(--light-grey);
+    }
 
-        /* --- Action Buttons --- */
-        .action-buttons {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .action-buttons .fa-solid {
-            font-size: 20px;
-            color: var(--dark-grey);
-            cursor: pointer;
-        }
-        .action-buttons button {
-            background-color: var(--primary-blue);
-            color: #fff;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background-color 0.2s ease;
-        }
-        .action-buttons button.decline {
-            background-color: #f44336;
-        }
-        .action-buttons button.remove {
-            background-color: #9e9e9e;
-        }
-        .action-buttons button:hover {
-            opacity: 0.9;
-        }
+    .container {
+        max-width: 600px;
+        margin: 80px auto 100px auto; /* adjust for fixed navbars */
+        background-color: #fff;
+        padding: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        border-radius: var(--border-radius);
+    }
+    
+    /* --- Search Bar --- */
+    .search-bar {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+    
+    /* --- Tabbed Navbar --- */
+    .friends-navbar {
+        display: flex;
+        justify-content: space-between;
+        overflow-x: auto;
+        border-bottom: 1px solid #ddd;
+        margin-bottom: 20px;
+    }
+    .friends-navbar button {
+        background-color: transparent;
+        border: none;
+        padding: 10px 15px;
+        cursor: pointer;
+        font-size: 14px;
+        color: var(--dark-grey);
+        white-space: nowrap;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        transition: color 0.3s ease;
+    }
+    .friends-navbar button.active {
+        color: var(--primary-blue);
+        border-bottom: 2px solid var(--primary-blue);
+    }
+    .friends-navbar span.count {
+        font-size: 10px;
+        font-weight: bold;
+        color: #aaa;
+        margin-top: 2px;
+    }
 
-        /* --- Dropdown Menu --- */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #fff;
-            min-width: 120px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            right: 0;
-            top: 30px;
-            border-radius: 8px;
-        }
-        .dropdown-content a {
-            color: black;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-            font-size: 14px;
-        }
-        .dropdown-content a:hover {background-color: #f1f1f1}
-        .dropdown:hover .dropdown-content {
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <!-- Search Bar -->
-        <input type="text" id="search-bar" class="search-bar" placeholder="Search for users...">
+    /* --- User List Section --- */
+    .user-list-container {
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .user-list-container.active {
+        display: flex;
+    }
+    
+    .user-list-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: var(--border-radius);
+        box-shadow: 0 1px 4px rgba(0,0,0,0.05);
+    }
+    
+    .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        cursor: pointer;
+        flex-grow: 1;
+    }
+    .profile-pic {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+    .text-info {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+    }
+    .real-name {
+        font-weight: bold;
+    }
+    .mutual-count {
+        font-size: 12px;
+        color: #777;
+    }
 
-        <!-- Tabbed Navigation -->
-        <div class="friends-navbar" id="friends-navbar">
-            <button id="followers-tab" class="active" data-list="followers">Followers<span class="count" id="followers-count">0</span></button>
-            <button id="following-tab" data-list="following">Following<span class="count" id="following-count">0</span></button>
-            <button id="friends-tab" data-list="friends">Friends<span class="count" id="friends-count">0</span></button>
-            <button id="requests-tab" data-list="requests">Requests<span class="count" id="requests-count">0</span></button>
-            <button id="suggested-tab" data-list="suggested">Suggested<span class="count" id="suggested-count">0</span></button>
-        </div>
+    /* --- Action Buttons --- */
+    .action-buttons {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .action-buttons .fa-solid {
+        font-size: 20px;
+        color: var(--dark-grey);
+        cursor: pointer;
+    }
+    .action-buttons button {
+        background-color: var(--primary-blue);
+        color: #fff;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    .action-buttons button.decline {
+        background-color: #f44336;
+    }
+    .action-buttons button.remove {
+        background-color: #9e9e9e;
+    }
+    .action-buttons button:hover {
+        opacity: 0.9;
+    }
 
-        <!-- User Lists -->
-        <div class="user-list-container active" id="followers-list"></div>
-        <div class="user-list-container" id="following-list"></div>
-        <div class="user-list-container" id="friends-list"></div>
-        <div class="user-list-container" id="requests-list"></div>
-        <div class="user-list-container" id="suggested-list"></div>
+    /* --- Dropdown Menu --- */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        min-width: 120px;
+        box-shadow: 0px 8px 16px rgba(0,0,0,0.2);
+        z-index: 1;
+        right: 0;
+        top: 30px;
+        border-radius: 8px;
+    }
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+        font-size: 14px;
+    }
+    .dropdown-content a:hover {
+        background-color: #f1f1f1
+    }
+    .dropdown:hover .dropdown-content {
+        display: block;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <!-- Search Bar -->
+    <input type="text" id="search-bar" class="search-bar" placeholder="Search for users...">
+
+    <!-- Tabbed Navigation -->
+    <div class="friends-navbar" id="friends-navbar">
+        <button id="followers-tab" class="active" data-list="followers">
+            Followers<span class="count" id="followers-count">0</span>
+        </button>
+        <button id="following-tab" data-list="following">
+            Following<span class="count" id="following-count">0</span>
+        </button>
+        <button id="friends-tab" data-list="friends">
+            Friends<span class="count" id="friends-count">0</span>
+        </button>
+        <button id="requests-tab" data-list="requests">
+            Requests<span class="count" id="requests-count">0</span>
+        </button>
+        <button id="suggested-tab" data-list="suggested">
+            Suggested<span class="count" id="suggested-count">0</span>
+        </button>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const searchBar = document.getElementById('search-bar');
-            const navBar = document.getElementById('friends-navbar');
-            const listContainers = {
-                followers: document.getElementById('followers-list'),
-                following: document.getElementById('following-list'),
-                friends: document.getElementById('friends-list'),
-                requests: document.getElementById('requests-list'),
-                suggested: document.getElementById('suggested-list')
-            };
+    <!-- User Lists -->
+    <div class="user-list-container active" id="followers-list"></div>
+    <div class="user-list-container" id="following-list"></div>
+    <div class="user-list-container" id="friends-list"></div>
+    <div class="user-list-container" id="requests-list"></div>
+    <div class="user-list-container" id="suggested-list"></div>
+</div>
+{% endblock %}
 
-            // These arrays will be populated by your backend API
-            let allUsers = {
-                followers: [],
-                following: [],
-                friends: [],
-                requests: [],
-                suggested: []
-            };
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const searchBar = document.getElementById('search-bar');
+    const navBar = document.getElementById('friends-navbar');
+    const listContainers = {
+        followers: document.getElementById('followers-list'),
+        following: document.getElementById('following-list'),
+        friends: document.getElementById('friends-list'),
+        requests: document.getElementById('requests-list'),
+        suggested: document.getElementById('suggested-list')
+    };
 
-            // Set up initial counts to zero
-            document.querySelectorAll('.friends-navbar .count').forEach(span => {
-                span.textContent = '0';
-            });
+    let allUsers = {
+        followers: [],
+        following: [],
+        friends: [],
+        requests: [],
+        suggested: []
+    };
+
+    // Reset counts
+    document.querySelectorAll('.friends-navbar .count').forEach(span => {
+        span.textContent = '0';
+    });
+
+    function renderUserList(type, users) {
+        const container = listContainers[type];
+        container.innerHTML = '';
+        users.forEach(user => {
+            const listItem = document.createElement('div');
+            listItem.className = 'user-list-item';
             
-            // --- Backend API Integration Functions ---
-            // Replace these functions with your actual API calls.
-            async function fetchFollowers() {
-                // Example: fetch('/api/followers').then(res => res.json()).then(data => {
-                //    allUsers.followers = data;
-                //    renderUserList('followers', allUsers.followers);
-                //    document.getElementById('followers-count').textContent = allUsers.followers.length;
-                // });
-            }
-
-            async function fetchFollowing() {
-                // Example: fetch('/api/following').then(res => res.json()).then(data => {
-                //    allUsers.following = data;
-                //    renderUserList('following', allUsers.following);
-                //    document.getElementById('following-count').textContent = allUsers.following.length;
-                // });
-            }
+            const actionsHtml = getActionButtons(type);
             
-            async function fetchFriends() {
-                // Example: fetch('/api/friends').then(res => res.json()).then(data => {
-                //    allUsers.friends = data;
-                //    renderUserList('friends', allUsers.friends);
-                //    document.getElementById('friends-count').textContent = allUsers.friends.length;
-                // });
-            }
-            
-            async function fetchRequests() {
-                // Example: fetch('/api/requests').then(res => res.json()).then(data => {
-                //    allUsers.requests = data;
-                //    renderUserList('requests', allUsers.requests);
-                //    document.getElementById('requests-count').textContent = allUsers.requests.length;
-                // });
-            }
-            
-            async function fetchSuggested() {
-                // Example: fetch('/api/suggested').then(res => res.json()).then(data => {
-                //    allUsers.suggested = data;
-                //    renderUserList('suggested', allUsers.suggested);
-                //    document.getElementById('suggested-count').textContent = allUsers.suggested.length;
-                // });
-            }
-
-            // --- UI Rendering Logic ---
-            function renderUserList(type, users) {
-                const container = listContainers[type];
-                container.innerHTML = '';
-                users.forEach(user => {
-                    const listItem = document.createElement('div');
-                    listItem.className = 'user-list-item';
-                    
-                    const actionsHtml = getActionButtons(type);
-                    
-                    listItem.innerHTML = `
-                        <div class="user-info" onclick="window.location.href = 'other_profile.html?user=${user.username}'">
-                            <img src="${user.profilePic}" alt="${user.realName}" class="profile-pic">
-                            <div class="text-info">
-                                <span class="real-name">${user.realName}</span>
-                                <span class="mutual-count">${user.mutuals} mutual friends/followers</span>
-                            </div>
-                        </div>
-                        <div class="action-buttons">
-                            ${actionsHtml}
-                        </div>
-                    `;
-                    container.appendChild(listItem);
-                });
-            }
-
-            function getActionButtons(type) {
-                let buttons = '';
-                switch(type) {
-                    case 'followers':
-                        buttons = `<i class="fa-solid fa-message"></i><i class="fa-solid fa-user-slash"></i>`;
-                        break;
-                    case 'following':
-                    case 'friends':
-                        buttons = `
-                            <i class="fa-solid fa-message"></i>
-                            <div class="dropdown">
-                                <i class="fa-solid fa-ellipsis-h"></i>
-                                <div class="dropdown-content">
-                                    <a href="#">Unfollow</a>
-                                    <a href="#">Block</a>
-                                </div>
-                            </div>
-                        `;
-                        break;
-                    case 'requests':
-                        buttons = `
-                            <button class="accept-btn">Accept</button>
-                            <button class="decline">Decline</button>
-                            <button class="block">Block</button>
-                        `;
-                        break;
-                    case 'suggested':
-                        buttons = `
-                            <button>Follow</button>
-                            <button class="remove">Remove</button>
-                            <button class="block">Block</button>
-                        `;
-                        break;
-                }
-                return buttons;
-            }
-
-            // --- UI Navigation and Filtering ---
-            navBar.addEventListener('click', (e) => {
-                const target = e.target.closest('button');
-                if (!target) return;
-
-                document.querySelectorAll('.friends-navbar button').forEach(btn => btn.classList.remove('active'));
-                target.classList.add('active');
-
-                const listId = target.dataset.list;
-                document.querySelectorAll('.user-list-container').forEach(container => container.classList.remove('active'));
-                listContainers[listId].classList.add('active');
-                
-                // Re-render the list for the newly activated tab
-                const filteredUsers = filterUsers(searchBar.value, allUsers[listId]);
-                renderUserList(listId, filteredUsers);
-            });
-
-            searchBar.addEventListener('input', (e) => {
-                const query = e.target.value.toLowerCase();
-                const activeTab = document.querySelector('.friends-navbar button.active').dataset.list;
-                const filteredUsers = filterUsers(query, allUsers[activeTab]);
-                renderUserList(activeTab, filteredUsers);
-            });
-
-            function filterUsers(query, users) {
-                if (!query) return users;
-                
-                const byName = users.filter(user => user.realName.toLowerCase().startsWith(query));
-                const byUsername = users.filter(user => user.username.toLowerCase().startsWith(query));
-                
-                const combined = [...new Set([...byName, ...byUsername])];
-                return combined;
-            }
-            
-            // --- Initial Load (Trigger your fetch functions here) ---
-            fetchFollowers();
-            fetchFollowing();
-            fetchFriends();
-            fetchRequests();
-            fetchSuggested();
+            listItem.innerHTML = `
+                <div class="user-info" onclick="window.location.href = '/profile/${user.username}'">
+                    <img src="${user.profilePic}" alt="${user.realName}" class="profile-pic">
+                    <div class="text-info">
+                        <span class="real-name">${user.realName}</span>
+                        <span class="mutual-count">${user.mutuals} mutual friends/followers</span>
+                    </div>
+                </div>
+                <div class="action-buttons">${actionsHtml}</div>
+            `;
+            container.appendChild(listItem);
         });
-    </script>
-</body>
-</html>
+    }
+
+    function getActionButtons(type) {
+        switch(type) {
+            case 'followers':
+                return `<i class="fa-solid fa-message"></i><i class="fa-solid fa-user-slash"></i>`;
+            case 'following':
+            case 'friends':
+                return `
+                    <i class="fa-solid fa-message"></i>
+                    <div class="dropdown">
+                        <i class="fa-solid fa-ellipsis-h"></i>
+                        <div class="dropdown-content">
+                            <a href="#">Unfollow</a>
+                            <a href="#">Block</a>
+                        </div>
+                    </div>
+                `;
+            case 'requests':
+                return `
+                    <button class="accept-btn">Accept</button>
+                    <button class="decline">Decline</button>
+                    <button class="block">Block</button>
+                `;
+            case 'suggested':
+                return `
+                    <button>Follow</button>
+                    <button class="remove">Remove</button>
+                    <button class="block">Block</button>
+                `;
+            default:
+                return '';
+        }
+    }
+
+    navBar.addEventListener('click', (e) => {
+        const target = e.target.closest('button');
+        if (!target) return;
+
+        document.querySelectorAll('.friends-navbar button').forEach(btn => btn.classList.remove('active'));
+        target.classList.add('active');
+
+        const listId = target.dataset.list;
+        document.querySelectorAll('.user-list-container').forEach(container => container.classList.remove('active'));
+        listContainers[listId].classList.add('active');
+
+        const filteredUsers = filterUsers(searchBar.value, allUsers[listId]);
+        renderUserList(listId, filteredUsers);
+    });
+
+    searchBar.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        const activeTab = document.querySelector('.friends-navbar button.active').dataset.list;
+        const filteredUsers = filterUsers(query, allUsers[activeTab]);
+        renderUserList(activeTab, filteredUsers);
+    });
+
+    function filterUsers(query, users) {
+        if (!query) return users;
+        const byName = users.filter(user => user.realName.toLowerCase().startsWith(query));
+        const byUsername = users.filter(user => user.username.toLowerCase().startsWith(query));
+        return [...new Set([...byName, ...byUsername])];
+    }
+
+    // Placeholder backend fetch calls
+    // fetch('/api/friends').then(...).then(data => { allUsers.friends = data; renderUserList('friends', data); })
+});
+</script>
+{% endblock %}
