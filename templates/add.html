@@ -1,122 +1,8 @@
 {% extends 'base.html' %}
-{% block title %}Add Content{% endblock %}
+
+{% block title %}Add To{% endblock %}
+
 {% block content %}
-<style>
-    .add-container {
-        padding: 20px;
-        max-width: 600px;
-        margin: 0 auto;
-        background-color: var(--accent-color);
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-    }
-
-    .add-navbar {
-        display: flex;
-        justify-content: space-around;
-        background-color: #fff;
-        border-radius: var(--border-radius);
-        margin-bottom: 20px;
-        box-shadow: var(--box-shadow);
-    }
-
-    .add-nav-btn {
-        background: none;
-        border: none;
-        color: var(--icon-color);
-        font-weight: 600;
-        cursor: pointer;
-        padding: 15px 0;
-        flex-grow: 1;
-        text-align: center;
-        transition: color 0.3s ease, border-bottom 0.3s ease;
-    }
-
-    .add-nav-btn.active {
-        color: var(--link-color);
-        border-bottom: 2px solid var(--link-color);
-    }
-
-    .content-form {
-        display: none;
-        background-color: #fff;
-        padding: 20px;
-        border-radius: var(--border-radius);
-        box-shadow: var(--box-shadow);
-    }
-
-    .content-form.active {
-        display: block;
-    }
-
-    .form-group {
-        margin-bottom: 15px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 5px;
-        font-weight: 600;
-        color: var(--text-color);
-    }
-
-    .form-group input[type="file"],
-    .form-group textarea,
-    .form-group select {
-        width: 100%;
-        padding: 10px;
-        border-radius: var(--border-radius);
-        border: 1px solid var(--secondary-color);
-        box-sizing: border-box;
-        font-family: inherit;
-        color: var(--text-color);
-    }
-
-    .form-group textarea {
-        resize: vertical;
-        min-height: 80px;
-    }
-
-    .post-btn {
-        display: block;
-        width: 100%;
-        padding: 12px;
-        border: none;
-        background-color: var(--primary-color);
-        color: #fff;
-        font-weight: 600;
-        border-radius: var(--border-radius);
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .post-btn:hover {
-        background-color: var(--link-color);
-    }
-
-    .error-message {
-        color: var(--admin-color);
-        font-size: 12px;
-        margin-top: 5px;
-        display: none;
-    }
-
-    /* Responsive adjustments */
-    @media (max-width: 600px) {
-        .add-container {
-            padding: 15px;
-        }
-
-        .add-nav-btn {
-            font-size: 14px;
-        }
-
-        .form-group textarea {
-            min-height: 60px;
-        }
-    }
-</style>
-
 <div class="add-container">
     <div class="add-navbar">
         <button class="add-nav-btn active" id="post-tab-btn">Post</button>
@@ -128,42 +14,115 @@
         <div class="form-group">
             <label for="post-media">Add Photo/Video</label>
             <input type="file" id="post-media" accept="image/*,video/*">
-            <span class="error-message" id="post-media-error">Please select a file.</span>
         </div>
         <div class="form-group">
             <label for="post-text">Description</label>
-            <textarea id="post-text" rows="4" placeholder="What's on your mind?"></textarea>
+            <textarea id="post-text" rows="4"></textarea>
         </div>
-        <button class="post-btn" data-form="post">Share Post</button>
+        <button class="post-btn">Share Post</button>
     </div>
 
     <div id="reel-form" class="content-form">
         <div class="form-group">
             <label for="reel-media">Add Video/Photo with Audio</label>
             <input type="file" id="reel-media" accept="video/*,image/*">
-            <span class="error-message" id="reel-media-error">Please select a file.</span>
         </div>
         <div class="form-group">
             <label for="reel-text">Description</label>
-            <textarea id="reel-text" rows="4" placeholder="Describe your reel..."></textarea>
+            <textarea id="reel-text" rows="4"></textarea>
         </div>
-        <button class="post-btn" data-form="reel">Share Reel</button>
+        <button class="post-btn">Share Reel</button>
     </div>
 
     <div id="story-form" class="content-form">
         <div class="form-group">
             <label for="story-media">Add Story</label>
             <input type="file" id="story-media" accept="image/*,video/*,audio/*">
-            <span class="error-message" id="story-media-error">Please select a file.</span>
         </div>
         <div class="form-group">
             <label for="story-text">Description</label>
-            <textarea id="story-text" rows="2" placeholder="Add a caption to your story..."></textarea>
+            <textarea id="story-text" rows="2"></textarea>
         </div>
-        <button class="post-btn" data-form="story">Share Story</button>
+        <button class="post-btn">Share Story</button>
     </div>
 </div>
+{% endblock %}
 
+{% block extra_styles %}
+<style>
+    .add-container {
+        padding: 20px;
+    }
+    .add-navbar {
+        display: flex;
+        justify-content: space-around;
+        background-color: #fff;
+        border-radius: var(--border-radius);
+        margin-bottom: 20px;
+        box-shadow: var(--box-shadow);
+    }
+    .add-nav-btn {
+        background: none;
+        border: none;
+        color: var(--icon-color);
+        font-weight: bold;
+        cursor: pointer;
+        padding: 15px 0;
+        flex-grow: 1;
+        text-align: center;
+        transition: color 0.2s ease;
+    }
+    .add-nav-btn.active {
+        color: var(--link-color);
+        border-bottom: 2px solid var(--link-color);
+    }
+    .content-form {
+        display: none;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: var(--border-radius);
+        box-shadow: var(--box-shadow);
+    }
+    .content-form.active {
+        display: block;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #555;
+    }
+    .form-group input[type="file"],
+    .form-group textarea,
+    .form-group select {
+        width: 100%;
+        padding: 10px;
+        border-radius: var(--border-radius);
+        border: 1px solid #ddd;
+        box-sizing: border-box;
+    }
+    .post-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background-color: var(--link-color);
+        color: #fff;
+        font-weight: bold;
+        border-radius: var(--border-radius);
+        cursor: pointer;
+        transition: background-color 0.2s ease;
+    }
+    .post-btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const postBtn = document.getElementById('post-tab-btn');
@@ -174,65 +133,28 @@
         const reelForm = document.getElementById('reel-form');
         const storyForm = document.getElementById('story-form');
 
-        const showForm = (form, btn) => {
-            document.querySelectorAll('.add-nav-btn').forEach(b => b.classList.remove('active'));
+        const showForm = (form) => {
+            document.querySelectorAll('.add-nav-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.content-form').forEach(f => f.classList.remove('active'));
             form.classList.add('active');
-            btn.classList.add('active');
         };
 
-        postBtn.addEventListener('click', () => showForm(postForm, postBtn));
-        reelBtn.addEventListener('click', () => showForm(reelForm, reelBtn));
-        storyBtn.addEventListener('click', () => showForm(storyForm, storyBtn));
+        postBtn.addEventListener('click', () => {
+            showForm(postForm);
+            postBtn.classList.add('active');
+        });
+        reelBtn.addEventListener('click', () => {
+            showForm(reelForm);
+            reelBtn.classList.add('active');
+        });
+        storyBtn.addEventListener('click', () => {
+            showForm(storyForm);
+            storyBtn.classList.add('active');
+        });
 
-        // Form validation and submission
-        document.querySelectorAll('.post-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const formType = e.target.getAttribute('data-form');
-                const mediaInput = document.getElementById(`${formType}-media`);
-                const mediaError = document.getElementById(`${formType}-media-error`);
-                const textInput = document.getElementById(`${formType}-text`);
-
-                // Reset error state
-                mediaError.style.display = 'none';
-
-                // Validate media input
-                if (!mediaInput.files || mediaInput.files.length === 0) {
-                    mediaError.style.display = 'block';
-                    return;
-                }
-
-                // Collect form data
-                const formData = new FormData();
-                formData.append('media', mediaInput.files[0]);
-                formData.append('description', textInput.value);
-                formData.append('type', formType);
-
-                // Placeholder for backend API call
-                console.log(`Submitting ${formType} with data:`, {
-                    media: mediaInput.files[0]?.name,
-                    description: textInput.value
-                });
-
-                // Example: POST to /api/submit-content (uncomment and configure for actual backend)
-                /*
-                fetch('/api/submit-content', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    console.log(`${formType} submitted successfully:`, data);
-                    alert(`${formType.charAt(0).toUpperCase() + formType.slice(1)} shared!`);
-                    mediaInput.value = '';
-                    textInput.value = '';
-                })
-                .catch(error => {
-                    console.error('Error submitting:', error);
-                    alert('Failed to share. Please try again.');
-                });
-                */
-            });
+        // Backend integration placeholder
+        document.querySelector('#post-form .post-btn').addEventListener('click', () => {
+            // TODO: API call for post creation
         });
     });
 </script>
