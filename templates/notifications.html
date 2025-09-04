@@ -1,156 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sociafam - Notifications</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-        :root {
-            --primary-blue: #007bff;
-            --light-grey: #f0f2f5;
-            --dark-grey: #555;
-            --border-radius: 12px;
-            --medium-radius: 8px;
-        }
+{% extends "base.html" %}
 
-        body {
-            font-family: Arial, sans-serif;
-            background-color: var(--light-grey);
-            margin: 0;
-            padding: 20px 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+{% block title %}Sociafam - Notifications{% endblock %}
 
-        .header {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            border-radius: var(--border-radius);
-            margin-bottom: 20px;
-        }
+{% block extra_styles %}
+<style>
+    :root {
+        --primary-blue: #007bff;
+        --light-grey: #f0f2f5;
+        --dark-grey: #555;
+        --border-radius: 12px;
+        --medium-radius: 8px;
+    }
 
-        .header .title {
-            font-size: 20px;
-            font-weight: bold;
-        }
+    body {
+        font-family: Arial, sans-serif;
+        background-color: var(--light-grey);
+    }
 
-        .notifications-container {
-            width: 100%;
-            max-width: 800px;
-            padding: 0 20px;
-        }
+    .notifications-container {
+        width: 100%;
+        max-width: 800px;
+        margin: 80px auto 100px auto; /* padding for fixed navs */
+        padding: 0 20px;
+    }
+    
+    .notification-item {
+        background-color: #fff;
+        padding: 15px;
+        border-radius: var(--medium-radius);
+        margin-bottom: 10px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        display: flex;
+        align-items: flex-start;
+        gap: 15px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .notification-item:hover {
+        background-color: #f9f9f9;
+    }
+
+    .notification-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .notification-content {
+        flex-grow: 1;
+    }
+
+    .notification-content p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.4;
+    }
+
+    .notification-content .time {
+        font-size: 12px;
+        color: #888;
+        margin-top: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="notifications-container">
+    <div id="notifications-list">
+        <!-- Notifications will be dynamically populated -->
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const notificationsList = document.getElementById('notifications-list');
+
+    function renderNotifications(notifications) {
+        notificationsList.innerHTML = '';
         
-        .notification-item {
-            background-color: #fff;
-            padding: 15px;
-            border-radius: var(--medium-radius);
-            margin-bottom: 10px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-            display: flex;
-            align-items: flex-start;
-            gap: 15px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+        notifications.forEach(notification => {
+            const item = document.createElement('div');
+            item.className = 'notification-item';
 
-        .notification-item:hover {
-            background-color: #f9f9f9;
-        }
+            const iconHtml = `<img src="${notification.profilePic}" alt="Icon" class="notification-icon">`;
+            const contentHtml = `
+                <div class="notification-content">
+                    <p>${notification.message}</p>
+                    <span class="time">${notification.time}</span>
+                </div>
+            `;
 
-        .notification-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            object-fit: cover;
-            flex-shrink: 0;
-        }
-
-        .notification-content {
-            flex-grow: 1;
-        }
-
-        .notification-content p {
-            margin: 0;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-
-        .notification-content .time {
-            font-size: 12px;
-            color: #888;
-            margin-top: 5px;
-        }
-
-    </style>
-</head>
-<body>
-    <div class="header">
-        <span class="title">Notifications</span>
-    </div>
-
-    <div class="notifications-container">
-        <div id="notifications-list">
-            <!-- Notifications will be dynamically added here by JavaScript -->
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const notificationsList = document.getElementById('notifications-list');
-
-            function renderNotifications(notifications) {
-                // Clear existing notifications
-                notificationsList.innerHTML = '';
-                
-                // Example of how to structure a notification
-                notifications.forEach(notification => {
-                    const item = document.createElement('div');
-                    item.className = 'notification-item';
-
-                    // You would replace the icon with a user profile pic or a relevant icon based on notification type
-                    const iconHtml = `<img src="${notification.profilePic}" alt="Icon" class="notification-icon">`;
-                    
-                    const contentHtml = `
-                        <div class="notification-content">
-                            <p>${notification.message}</p>
-                            <span class="time">${notification.time}</span>
-                        </div>
-                    `;
-
-                    item.innerHTML = iconHtml + contentHtml;
-                    notificationsList.appendChild(item);
-                });
-            }
-
-            // This function will be called when you fetch data from your backend
-            function fetchNotifications() {
-                // Your backend API call to get notifications goes here
-                // Example:
-                // fetch('/api/notifications')
-                //     .then(response => response.json())
-                //     .then(data => {
-                //         renderNotifications(data);
-                //     });
-
-                // Since no mock data is allowed, we will just call renderNotifications with an empty array
-                // The API call will be added by you later
-                renderNotifications([]);
-            }
-            
-            // Initial fetch
-            fetchNotifications();
+            item.innerHTML = iconHtml + contentHtml;
+            notificationsList.appendChild(item);
         });
-    </script>
-</body>
-</html>
+    }
+
+    function fetchNotifications() {
+        // Example backend call:
+        // fetch('/api/notifications')
+        //   .then(res => res.json())
+        //   .then(data => renderNotifications(data));
+
+        renderNotifications([]); // placeholder
+    }
+
+    fetchNotifications();
+});
+</script>
+{% endblock %}
