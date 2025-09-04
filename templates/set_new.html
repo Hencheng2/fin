@@ -97,6 +97,24 @@ body {
     background-color: #0056b3;
 }
 
+.message {
+    margin-top: 10px;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: var(--medium-radius);
+    display: none;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message.success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
 @media (max-width: 480px) {
     .container {
         padding: 20px;
@@ -121,12 +139,17 @@ body {
         <div class="form-group">
             <label for="new_password">New Password</label>
             <input type="password" id="new_password" name="new_password" required>
+            <span id="password-error" class="error-message">
+                Password must be 6+ characters with at least one number, one letter, and one special character.
+            </span>
         </div>
         <div class="form-group">
             <label for="confirm_password">Confirm Password</label>
             <input type="password" id="confirm_password" name="confirm_password" required>
+            <span id="confirm-error" class="error-message">Passwords do not match.</span>
         </div>
         <button type="submit" class="submit-btn">Set Password</button>
+        <div class="message" id="set-password-message"></div>
     </form>
 </div>
 
@@ -135,6 +158,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('set-new-password-form');
     const newPasswordInput = document.getElementById('new_password');
     const confirmPasswordInput = document.getElementById('confirm_password');
+    const passwordError = document.getElementById('password-error');
+    const confirmError = document.getElementById('confirm-error');
+    const messageDiv = document.getElementById('set-password-message');
+
+    function validatePassword(password) {
+        const regex = /^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).{6,}$/;
+        return regex.test(password);
+    }
 
     form.addEventListener('submit', async (event) => {
         event.preventDefault();
@@ -142,24 +173,43 @@ document.addEventListener('DOMContentLoaded', () => {
         const newPassword = newPasswordInput.value.trim();
         const confirmPassword = confirmPasswordInput.value.trim();
 
-        // Backend API call to update the password goes here
-        // Example:
-        // try {
-        //     const response = await fetch('/api/reset_password', {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify({ newPassword })
-        //     });
-        //     const data = await response.json();
-        //     if (response.ok) {
-        //         console.log('Password updated successfully!');
-        //         setTimeout(() => { window.location.href = '{% url "login" %}'; }, 1000);
-        //     } else {
-        //         console.error('Password update failed:', data.message);
-        //     }
-        // } catch (error) {
-        //     console.error('Error updating password:', error);
-        // }
+        passwordError.style.display = 'none';
+        confirmError.style.display = 'none';
+        messageDiv.style.display = 'none';
+
+        if (!validatePassword(newPassword)) {
+            passwordError.style.display = 'block';
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            confirmError.style.display = 'block';
+            return;
+        }
+
+        try {
+            const response = await fetch('/set_new_password', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ new_password: newPassword })
+            });
+            const data = await response.json();
+
+            if (response.ok) {
+                messageDiv.textContent = "Password updated successfully! Redirecting to login...";
+                messageDiv.className = "message success";
+                messageDiv.style.display = "block";
+                setTimeout(() => { window.location.href = '/login'; }, 1000);
+            } else {
+                messageDiv.textContent = data.error || "Password update failed.";
+                messageDiv.className = "message error";
+                messageDiv.style.display = "block";
+            }
+        } catch (error) {
+            messageDiv.textContent = "An error occurred. Please try again.";
+            messageDiv.className = "message error";
+            messageDiv.style.display = "block";
+        }
     });
 });
 </script>
