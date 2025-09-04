@@ -202,7 +202,7 @@ body {
         <div class="message" id="register-message"></div>
     </form>
     <div class="links">
-        <a href="{% url 'login' %}">Already have an account? Log in</a>
+        <a href="/login">Already have an account? Log in</a>
     </div>
 </div>
 
@@ -233,29 +233,37 @@ document.addEventListener('DOMContentLoaded', () => {
         messageDiv.style.display = 'none';
         loader.style.display = 'inline-block';
 
-        if(!validatePassword(password)){
+        if (!validatePassword(password)) {
             passwordError.style.display = 'block';
             loader.style.display = 'none';
             return;
         }
 
-        if(password !== confirm){
+        if (password !== confirm) {
             confirmError.style.display = 'block';
             loader.style.display = 'none';
             return;
         }
 
-        try{
-            // Simulated network delay for demo
-            await new Promise(res => setTimeout(res, 1000));
+        try {
+            const response = await fetch('/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, password })
+            });
+            const data = await response.json();
 
-            // Demo success
-            messageDiv.textContent = "Registration successful!";
-            messageDiv.className = "message success";
-            messageDiv.style.display = "block";
-            setTimeout(()=>{ window.location.href='/login'; }, 1000);
-
-        } catch(error){
+            if (response.ok) {
+                messageDiv.textContent = `Registration successful! Your recovery key is: ${data.recovery_key}. Save it securely.`;
+                messageDiv.className = "message success";
+                messageDiv.style.display = "block";
+                setTimeout(() => { window.location.href = '/login'; }, 3000);
+            } else {
+                messageDiv.textContent = data.error || "An error occurred. Please try again.";
+                messageDiv.className = "message error";
+                messageDiv.style.display = "block";
+            }
+        } catch (error) {
             messageDiv.textContent = "An error occurred. Please try again.";
             messageDiv.className = "message error";
             messageDiv.style.display = "block";
